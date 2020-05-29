@@ -1,0 +1,31 @@
+{
+  "default": {
+    "locale": "en-US",
+    "contract": "https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/contracts/IdentityCard",
+    "card": {
+      "title": "Verified Credential Ninja",
+      "issuedBy": "Microsoft",
+      "backgroundColor": "#000000",
+      "textColor": "#ffffff",
+      "logo": {
+        "uri": "https://storagebeta.blob.core.windows.net/static/ninja-icon.png",
+        "description": "Ninja Logo"
+      },
+      "description": "Use your verified credential ninja card to prove to anyone that you know all about verifiable credentials."
+    },
+    "consent": {
+      "title": "Do you want to get your Verified Credential Ninja card?",
+      "instructions": "Sign in with your account to get your card."
+    },
+    "claims": {
+      "vc.credentialSubject.firstName": {
+        "type": "String",
+        "label": "First name"
+      },
+      "vc.credentialSubject.lastName": {
+        "type": "String",
+        "label": "Last name"
+      }
+    }
+  }
+}

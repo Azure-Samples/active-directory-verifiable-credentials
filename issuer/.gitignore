@@ -102,3 +102,14 @@ dist
 
 # TernJS port file
 .tern-port
+
+# NpmRC file
+.npmrc
+
+# Self-signed certs
+*.key
+*.crt
+
+# Leave this out for now
+package-lock.json
+

@@ -1,0 +1,21 @@
+{
+  "credentialIssuer": "https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/card/issue",
+  "issuer": "did:ion:EiARML0CG8vUJHoKPBIVU-PiP4d2umBpzJD-yB9nOavQgA?-ion-initial-state=eyJkZWx0YV9oYXNoIjoiRWlCUTlwSHdpY2RMU0E4TS11ejYwdE94aXJ1UTRRaXp5UEtQRnpNUm5ITEowQSIsInJlY292ZXJ5X2tleSI6eyJrdHkiOiJFQyIsImNydiI6InNlY3AyNTZrMSIsIngiOiJMdS1iUk5RQ3MtYTNIUWNWMDJwOHVoRUpxQWJaS1lOVVBmN29DYk84bnhBIiwieSI6IlFMQ0QxOUZpS09xQkFXeV9GWk1QcmdiZlV1c0RGQ0xUZ190MDV6SzZIVVEifSwicmVjb3ZlcnlfY29tbWl0bWVudCI6IkVpREtCY2dFUU9kanhXa2Z6SEMyc2s5UWVkQ1VJcFdqQU5QSWVzc29xT3gyY2cifQ.eyJ1cGRhdGVfY29tbWl0bWVudCI6IkVpRGhpZUp5SzMtQTZHM0tKVElGaWxZcThPM09NOGtMTWVEZ3J2RTdkcnJOOWciLCJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJzaWdfZDc0ODViNjYiLCJ0eXBlIjoiRWNkc2FTZWNwMjU2azFWZXJpZmljYXRpb25LZXkyMDE5IiwiandrIjp7Imt0eSI6IkVDIiwiY3J2Ijoic2VjcDI1NmsxIiwieCI6IkFaTEZycC1NNzUtVl9MT2RlSXJKaTlYQUFmd3QwbkZYbDFCNDVBRElWTUUiLCJ5IjoiUU5OLTlVTjN2X2ZUV0JFQ1NwcVJyOS00S01JempDdkpsMHZVNjhjYVRlayJ9LCJ1c2FnZSI6WyJvcHMiLCJhdXRoIiwiZ2VuZXJhbCJdfV19fV19",
+  "attestations": {
+    "idTokens": [
+      {
+        "mapping": {
+          "firstName": { "claim": "given_name" },
+          "lastName": { "claim": "family_name" }
+        },
+        "configuration": "https://verifiablecreds.b2clogin.com/verifiablecreds.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1_sisu",
+        "client_id": "7c0c4ab2-2410-4361-994a-4c03ca576cd7",
+        "redirect_uri": "portableidentity://verify"
+      }
+    ]
+  },
+  "validityInterval": 2592000,
+  "vc": {
+    "type": ["VerifiedCredentialNinja"]
+  }
+}

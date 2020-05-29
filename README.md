@@ -1,11 +1,11 @@
 ---
 page_type: sample
 languages:
-- csharp
+- javascript
 products:
-- dotnet
-description: "Add 150 character max description"
-urlFragment: "update-this-to-unique-url-stub"
+- active-directory
+description: "A code sample demonstrating issuance and verification of verifiable credentials."
+urlFragment: "verifiable-credentials"
 ---
 
 # Official Microsoft Sample

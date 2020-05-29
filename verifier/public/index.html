@@ -1,0 +1,39 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+
+<html>
+<body>
+    <button style="margin-bottom: 20px;" type="button" id="sign-in">Prove you are a verified credential ninja!</button>
+    <div id="qrcode"></div>
+    <div id="message"></div>
+    
+    <script src="qrcode.min.js"></script>
+    <script>
+        var signIn = document.getElementById('sign-in');
+        var signOut = document.getElementById('sign-out');
+        var display = document.getElementById('display');
+        var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
+
+        signIn.addEventListener('click', () => {
+            fetch('/presentation-request')
+            .then(function(response) {
+                response.text().then(function(message) {
+                    qrcode.makeCode(message);
+                }).catch(error => {
+                    console.log(error.message);
+                })
+            }).catch(error => {
+                console.log(error.message);
+            })
+        })
+
+        setInterval( function () {
+            fetch('/presentation-request')
+            .then(response => response.text())
+            .catch(error => document.getElementById("message").innerHTML = error)
+            .then(response => document.getElementById("message").innerHTML = response)
+        }, 1000);
+        
+    </script>
+</body>
+</html>
