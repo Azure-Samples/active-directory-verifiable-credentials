@@ -14,6 +14,6 @@
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "secure-random": "^1.1.2",
-    "verifiablecredentials-verification-sdk-typescript": "^0.7.0"
+    "verifiablecredentials-verification-sdk-typescript": "^0.7.1"
   }
 }
