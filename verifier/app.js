@@ -25,6 +25,13 @@ var { CryptoBuilder,
       ValidatorBuilder
     } = require('verifiablecredentials-verification-sdk-typescript');
 
+
+//////////// Main Express server function
+// Note: You'll want to update the hostname and port values for your setup.
+const app = express()
+const port = 8082
+const hostname = '192.168.1.4'
+
 /////////// OpenID Connect Client Registration
 const client = {
   client_name: 'Sample Verifier',
@@ -53,11 +60,7 @@ const crypto = new CryptoBuilder(did, signingKeyReference).build();
   crypto.builder.did = longFormDid;
 })();
 
-//////////// Main Express server function
-// Note: You'll want to update the hostname and port values for your setup.
-const app = express()
-const port = 8082
-const hostname = '192.168.1.4'
+
 
 // Serve static files out of the /public directory
 app.use(express.static('public'))
@@ -129,8 +132,8 @@ app.get('/presentation-request.jwt', async (req, res) => {
 
   // Look up the issue reqeust by session ID
   sessionStore.get(req.query.id, (error, session) => {
-    console.log(session.issueRequest.request)
-    res.send(session.issueRequest.request);
+    console.log(session.presentationRequest.request)
+    res.send(session.presentationRequest.request);
   })
 
 })
@@ -191,7 +194,7 @@ app.post('/presentation-response', parser, async (req, res) => {
   // Store the successful presentation in session storage
   sessionStore.get(req.body.state, (error, session) => {
 
-    session.verifiedCredential = issuedCredential;
+    session.verifiedCredential = presentedCredential;
     sessionStore.set(req.body.state, session, (error) => {
       res.send();
     });
