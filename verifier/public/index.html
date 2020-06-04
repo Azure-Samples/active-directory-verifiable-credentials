@@ -28,7 +28,7 @@
         })
 
         setInterval( function () {
-            fetch('/presentation-request')
+            fetch('/presentation-response')
             .then(response => response.text())
             .catch(error => document.getElementById("message").innerHTML = error)
             .then(response => document.getElementById("message").innerHTML = response)
