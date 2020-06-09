@@ -16,12 +16,6 @@ var secureRandom = require('secure-random');
 var { CryptoBuilder, 
       LongFormDid, 
       RequestorBuilder, 
-      BasicValidatorOptions, 
-      VerifiableCredentialTokenValidator, 
-      VerifiablePresentationTokenValidator, 
-      SiopTokenValidator, 
-      ManagedHttpResolver, 
-      TokenType,
       ValidatorBuilder
     } = require('verifiablecredentials-verification-sdk-typescript');
 
@@ -130,7 +124,6 @@ app.get('/issue-request.jwt', async (req, res) => {
 
   // Look up the issue reqeust by session ID
   sessionStore.get(req.query.id, (error, session) => {
-    console.log(session.issueRequest.request)
     res.send(session.issueRequest.request);
   })
 
@@ -144,51 +137,26 @@ app.get('/issue-request.jwt', async (req, res) => {
 var parser = bodyParser.urlencoded({ extended: false });
 app.post('/issue-response', parser, async (req, res) => {
 
-  // Set up the Verifiable Credentials SDK to validate all signatures
-  // and claims in the credential presentation.
   const clientId = `${req.protocol}://${hostname}:${port}/issue-response`
-
-  var validatorOptions = new BasicValidatorOptions(
-    new ManagedHttpResolver("https://beta.discover.did.microsoft.com/1.0/identifiers")
-  )
-
-  var credentialValidator = new VerifiableCredentialTokenValidator(
-    validatorOptions, 
-    { type: TokenType.verifiableCredential, contractIssuers: [issuerDid]}
-  )
-
-  var presentationValidator = new VerifiablePresentationTokenValidator(
-    validatorOptions,
-    { type: TokenType.verifiablePresentation, didAudience: clientId }
-  )
-                                        
-  var siopTokenValidator = new SiopTokenValidator(
-    validatorOptions, 
-    { type: TokenType.siop,  audience: clientId }
-  )
-
-  // BUGBUG: FetchError: invalid json response body at https://beta.discover.did.microsoft.com/1.0/identifiers/1.0/identifiers/did:ion:EiCMz-xFT7V0QBHUeSgXcezoyMx2dyYnebXLoDtodQFSxw?-ion-initial-state=eyJkZWx0YV9oYXNoIjoiRWlBWjlvb1B3R0J5dTMwQm4waVh1bTEzQUlGWUxsckhlbXJnaDBpdXFqcHVKQSIsInJlY292ZXJ5X2tleSI6eyJrdHkiOiJFQyIsImNydiI6InNlY3AyNTZrMSIsIngiOiIxT2JqOFJKcmFoOXFuRVgtTVBNbmV6UjRtcldYSXZsTnNGSUFsMl9uMkpJIiwieSI6ImZuTEx5V0VGV0pyV0o3eGJCd3dqbmxGUTB1TmR3eGR2Y0todVZkMWw4bUEifSwicmVjb3ZlcnlfY29tbWl0bWVudCI6IkVpQnNPNFd6cHA4VFRHbVNRRVA2aEJGVWkzanlYWk8xNnF4cEtyRXltVVZuclEifQ.eyJ1cGRhdGVfY29tbWl0bWVudCI6IkVpRDM2R0pMS2I1UjJsVVl5cElvWDNTT2d2LTg1NWtqLVNCbnYyVVQ3YmZreUEiLCJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJrM29fc2lnbl94UFZnREYwZ18xIiwidHlwZSI6IkVjZHNhU2VjcDI1NmsxVmVyaWZpY2F0aW9uS2V5MjAxOSIsImp3ayI6eyJrdHkiOiJFQyIsImNydiI6InNlY3AyNTZrMSIsIngiOiIxT2JqOFJKcmFoOXFuRVgtTVBNbmV6UjRtcldYSXZsTnNGSUFsMl9uMkpJIiwieSI6ImZuTEx5V0VGV0pyV0o3eGJCd3dqbmxGUTB1TmR3eGR2Y0todVZkMWw4bUEifSwidXNhZ2UiOlsib3BzIiwiYXV0aCIsImdlbmVyYWwiXX1dfX1dfQ
-  var validator = new ValidatorBuilder()
-                        .useValidators([siopTokenValidator, presentationValidator, credentialValidator])
-                        .build();
-  
-  console.log(req.body.id_token);
-
-  try {
 
     // Validate the credential presentation and extract the credential's attributes.
     // If this check succeeds, the user is a Verified Credential Ninja.
     // Log a message to the console indicating successful verification of the credential.
-    var validation = await validator.validate(req.body.id_token);
-    var issuedCredential = validation.validationResult.verifiableCredentials[0];
-    console.log(`Successfully issued Verified Credential Ninja card to ${issuedCredential.credentialSubject.firstName} ${issuedCredential.credentialSubject.lastName}.`);
-  }
-  catch (error) {
-    console.log(error);
-  }
+    const validator = new ValidatorBuilder(crypto)
+      .useTrustedIssuersForVerifiableCredentials([issuerDid])
+      .useAudienceUrl(clientId)
+      .build();
 
-  res.send();
+    const validationResult = await validator.validate(req.body.id_token);
+    
+    if (!validationResult.result) {
+        console.error(`Validation failed: ${validationResult.detailedError}`);
+        return res.send()
+    }
 
+    var issuedCredential = validationResult.validationResult.verifiableCredentials[credentialType];
+    console.log(`Successfully issued Verified Credential Ninja card to ${issuedCredential.vc.credentialSubject.firstName} ${issuedCredential.vc.credentialSubject.lastName}.`);
+    res.send();
 })
 
 // To test this issuer with Authenticator, your server will need to

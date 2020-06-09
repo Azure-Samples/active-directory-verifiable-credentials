@@ -5,7 +5,7 @@
 <body>
     <button style="margin-bottom: 20px;" type="button" id="sign-in">Prove you are a verified credential ninja!</button>
     <div id="qrcode"></div>
-    <div id="message"></div>
+    <div style="margin-top:20px" id="message"></div>
     
     <script src="qrcode.min.js"></script>
     <script>
@@ -31,7 +31,10 @@
             fetch('/presentation-response')
             .then(response => response.text())
             .catch(error => document.getElementById("message").innerHTML = error)
-            .then(response => document.getElementById("message").innerHTML = response)
+            .then(response => {
+                if (response.length > 0)
+                    document.getElementById("message").innerHTML = response;
+            })
         }, 1000);
         
     </script>
