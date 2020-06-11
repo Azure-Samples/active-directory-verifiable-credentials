@@ -10,40 +10,72 @@ urlFragment: "verifiable-credentials"
 
 # Verifiable Credentials Code Sample
 
-This code sample demonstrates how to use Microsoft's Verifiable Credential preview to issue and consume verifiable credentials. 
+This code sample demonstrates how to use Microsoft's verifiable credential preview to issue and consume verifiable credentials. 
 
 ## About this sample
 
+Welcome to Verifiable Credentials, powered by Azure. In this hello world code sample, we'll teach you to issue your first verifiable credential: a Verified Credential Ninja Card. You'll then use this card to prove to a verifier that you are a Verified Credential Ninja, mastered in the art of digital credentialing.
 
+![Screenshot of a verifiable ninja card](./img/ninja-card.png)
+
+There are two ways to run this code sample. 
+
+- Run the code as-is. The sample is set up to issue anyone a Credential Ninja Card, using a issuer in the cloud run by Microsoft. 
+- Set up your own issuer, and change the code to use that issuer to issue a verifiable credential. Our [documentation](https://aka.ms/didfordevs) describes how to set up your own issuer.
+
+Read on for more instructions, and good luck ninjas!
+
+> NOTE: Verifiable Credentials are currently in an invitation-only preview. Only approved participants in the preview will be able to set up their own issuer. Furthermore, Verifiable Credentials must **not** be used for production use cases at this time. Please contact us if you would like to join the preview.
 
 ## Contents
 
-Outline the file contents of the repository. It helps users navigate the codebase, build configuration and any related assets.
+This repository contains two NodeJS servers: an `issuer` website, and a `verifier` website. These two websites represent the participating parties in a verifiable credential exchange:
 
-| File/folder       | Description                                |
-|-------------------|--------------------------------------------|
-| `src`             | Sample source code.                        |
-| `.gitignore`      | Define what to ignore at commit time.      |
-| `CHANGELOG.md`    | List of changes to the sample.             |
-| `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
-| `README.md`       | This README file.                          |
-| `LICENSE`         | The license for the sample.                |
+![diagram of an issuer and a verifier](./img/issuer-verifier.png)
+
+Each website in this code sample is intentionally plain. They contain only a single page, the home page, that displays a QR code and shows a message. We've kept the code as simple as possible to help you keep the focus on the verifiable credentials implementation. You'll notice the code in both websites is very similar. The files in this repo are organized as follows.
+
+| File/folder                   | Description                                |
+|-------------------------------|--------------------------------------------|
+| `issuer/`                     | The website acting as the issuer of the verifiable credential. |
+| `issuer/README.md`            | Instructions for running the issuer website and issuing a verifiable credential. |
+| `issuer/app.js`               | The simple NodeJS server containing all code used to issue a verifiable credential. |
+| `issuer/certs/`               | Contains helpful files for running the code sample locally on your machine. See the README for more. |
+| `issuer/issuer_config/`       | Contains the example rules and display files used in the creation of this code sample. Refer to our [documentation](https://aka.ms/didfordevs) for more. |
+| `issuer/public/`              | Contains HTML and javascript files used in the issuer website. The code in these files is not important for understanding verifiable credentials. |
+| `verifier/`                   | The website acting as the verifier of the verifiable credential. |
+| `verifier/README.md`          | Instructions for running the verifier website and consuming a verifiable credential. |
+| `verifier/app.js`             | The simple NodeJS server containing all code used to consume a verifiable credential. |
+| `verifier/certs/`             | Contains helpful files for running the code sample locally on your machine. See the README for more. |
+| `verifier/public/`            | Contains HTML and javascript files used in the verifier website. The code in these files is not important for understanding verifiable credentials. |
 
 ## Prerequisites
 
-Outline the required components and tools that a user might need to have on their machine in order to run the sample. This can be anything from frameworks, SDKs, OS versions or IDE releases.
+Running this code sample will require:
 
-## Setup
+- NodeJS version `10.14` or higher installed on your machine.
+- Git installed on your machine.
+- An Android device.
 
-Explain how to prepare the sample once the user clones or downloads the repository. The section should outline every step necessary to install dependencies and set up any settings (for example, API keys and output folders).
+To run this code sample with your own issuer, you will require a few more things:
 
-## Running the sample
+- An Azure Active Directory tenant, with a free trial of Azure AD Premium.
+- An Azure subscription where you have access to create Azure storage accounts and Azure key vaults.
+- An identity provider, such as Azure AD or Azure AD B2C, that will authenticate users that receive verifiable credentials.
 
-Outline step-by-step instructions to execute the sample and see its output. Include steps for executing the sample from the IDE, starting specific services in the Azure portal or anything related to the overall launch of the code.
+Refer to our [documentation](https://aka.ms/didfordevs) for more instructions on creating your own issuer.
 
 ## Key concepts
 
-Provide users with more context on the tools and services used in the sample. Explain some of the code that is being used and how services interact with each other.
+The code in this sample demonstrates proper usage of the VC SDK, which is available on NPM:
+
+```
+npm install verifiablecredentials-verification-sdk-typescript
+```
+
+The VC SDK provides classes and functions for implementing verifiable credential exchanges. This includes issuing credentials, requesting credentials from users, validating credentials, registering decentralized identifiers, and more. The VC SDK is currently in preview; you should expect breaking changes to occur with each release.
+
+In addition to the VC SDK, this code sample will use the Microsoft Authenticator mobile app for Android. The README for each website provides instructions on installing Authenticator. Verifiable credential support in Authenticator is not available for iOS at this time.
 
 ## Contributing
 

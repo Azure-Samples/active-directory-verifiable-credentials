@@ -162,8 +162,8 @@ app.post('/issue-response', parser, async (req, res) => {
 // To test this issuer with Authenticator, your server will need to
 // use SSL. Here, we've used a self-signed cert and configured our
 // mobile device to trust this certificate.
-var privateKey  = fs.readFileSync('certs/510-stratford.key', 'utf8');
-var certificate = fs.readFileSync('certs/510-stratford.crt', 'utf8');
+var privateKey  = fs.readFileSync('certs/server.key', 'utf8');
+var certificate = fs.readFileSync('certs/server.crt', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
 var httpsServer = https.createServer(credentials, app);
 
