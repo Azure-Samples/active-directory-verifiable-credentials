@@ -1,24 +1,3 @@
-## Steps to run verifier sample using pre-configured Verified Credential Ninja card on your local machine
-
-1. Run the issuer sample to get your Verified Credential Ninja card.
-2. `npm install`
-3. Use the same approach you used in the issuer sample to connect your mobile device to your local machine.
-4. `node app.js`. Navigate to the home page and click the button to display a QR code.
-5. Open Authenticator, and click the QR scanning button on the Cards tab. Scan the QR code.
-6. Approve the request to prove you are a Verified Credential Ninja!
-
-## Setup
-
-Explain how to prepare the sample once the user clones or downloads the repository. The section should outline every step necessary to install dependencies and set up any settings (for example, API keys and output folders).
-
-## Running the sample
-
-Outline step-by-step instructions to execute the sample and see its output. Include steps for executing the sample from the IDE, starting specific services in the Azure portal or anything related to the overall launch of the code.
-
-
-
-
-
 
 
 # Verifiable Credentials Issuer Website

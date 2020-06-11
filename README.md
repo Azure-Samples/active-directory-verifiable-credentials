@@ -35,19 +35,22 @@ This repository contains two NodeJS servers: an `issuer` website, and a `verifie
 
 Each website in this code sample is intentionally plain. They contain only a single page, the home page, that displays a QR code and shows a message. We've kept the code as simple as possible to help you keep the focus on the verifiable credentials implementation. You'll notice the code in both websites is very similar. The files in this repo are organized as follows.
 
-| File/folder                   | Description                                |
-|-------------------------------|--------------------------------------------|
-| `issuer/`                     | The website acting as the issuer of the verifiable credential. |
-| `issuer/README.md`            | Instructions for running the issuer website and issuing a verifiable credential. |
-| `issuer/app.js`               | The simple NodeJS server containing all code used to issue a verifiable credential. |
-| `issuer/certs/`               | Contains helpful files for running the code sample locally on your machine. See the README for more. |
-| `issuer/issuer_config/`       | Contains the example rules and display files used in the creation of this code sample. Refer to our [documentation](https://aka.ms/didfordevs) for more. |
-| `issuer/public/`              | Contains HTML and javascript files used in the issuer website. The code in these files is not important for understanding verifiable credentials. |
-| `verifier/`                   | The website acting as the verifier of the verifiable credential. |
-| `verifier/README.md`          | Instructions for running the verifier website and consuming a verifiable credential. |
-| `verifier/app.js`             | The simple NodeJS server containing all code used to consume a verifiable credential. |
-| `verifier/certs/`             | Contains helpful files for running the code sample locally on your machine. See the README for more. |
-| `verifier/public/`            | Contains HTML and javascript files used in the verifier website. The code in these files is not important for understanding verifiable credentials. |
+
+```
+issuer                    The website acting as the issuer of the verifiable credential.
+issuer/README.md          Instructions for running the issuer website.
+issuer/app.js             The simple NodeJS server containing all code.
+issuer/certs/             Contains helpful files for running the code sample locally on your machine.
+issuer/issuer_config/     Contains the example rules and display files used in the creation of this code sample.
+issuer/public/            Contains HTML and javascript files used in the issuer website.
+```
+```
+verifier                  The website acting as the verifier of the verifiable credential.
+verifier/README.md        Instructions for running the verifier website and consuming a verifiable credential.
+verifier/app.js           The simple NodeJS server containing all code.
+verifier/certs/           Contains helpful files for running the code sample locally on your machine.
+verifier/public/          Contains HTML and javascript files used in the issuer website.
+```
 
 ## Prerequisites
 
