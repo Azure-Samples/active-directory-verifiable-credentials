@@ -8,7 +8,7 @@
           "firstName": { "claim": "given_name" },
           "lastName": { "claim": "family_name" }
         },
-        "configuration": "https://verifiablecreds.b2clogin.com/verifiablecreds.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1_sisu",
+        "configuration": "https://verifiablecreds.b2clogin.com/verifiablecreds.onmicrosoft.com/B2C_1_sisu/v2.0/.well-known/openid-configuration",
         "client_id": "7c0c4ab2-2410-4361-994a-4c03ca576cd7",
         "redirect_uri": "portableidentity://verify"
       }
