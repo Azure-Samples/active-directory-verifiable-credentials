@@ -23,7 +23,7 @@ var { CryptoBuilder,
 // Note: You'll want to update the host and port values for your setup.
 const app = express()
 const port = 8082
-const host = 'https://eee855fe00b5.ngrok.io'
+const host = 'https://bf78b9d81182.ngrok.io'
 
 /////////// OpenID Connect Client Registration
 const client = {
@@ -103,8 +103,7 @@ app.get('/presentation-request', async (req, res) => {
       ]
     }
   }).useNonce(nonce)
-    .useState(state)
-    .allowIssuance(false);
+    .useState(state);
 
   // Cache the issue request on the server
   req.session.presentationRequest = await requestBuilder.build().create();

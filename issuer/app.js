@@ -51,7 +51,7 @@ const crypto = new CryptoBuilder(did, signingKeyReference).build();
 // Note: You'll want to update the hostname and port values for your setup.
 const app = express()
 const port = 8081
-const host = 'https://3e2930a3fd96.ngrok.io'
+const host = 'https://41654125a78a.ngrok.io'
 
 // Serve static files out of the /public directory
 app.use(express.static('public'))
@@ -102,7 +102,7 @@ app.get('/issue-request', async (req, res) => {
     }
   }).useNonce(nonce)
     .useState(state)
-    .allowIssuance(true);
+    .allowIssuance();
 
   // Cache the issue request on the server
   req.session.issueRequest = await requestBuilder.build().create();
