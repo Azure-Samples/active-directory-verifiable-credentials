@@ -3,7 +3,6 @@
 
 ////////////// Node packages
 var http = require('http');
-var https = require('https');
 var fs = require('fs');
 var path = require('path');
 var express = require('express')
@@ -28,7 +27,7 @@ const client = {
 }
 
 /////////// Verifiable Credential configuration values
-const credential = 'https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/contracts/Ninja Card';
+const credential = 'https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/contracts/Ninja%20Card';
 const credentialType = 'VerifiedCredentialNinja';
 const issuerDid = 'did:ion:EiDp6Ye7hdwR-KkLJfM-xTkyla6mKDSvekWGKeV1BaO5hw?-ion-initial-state=eyJkZWx0YV9oYXNoIjoiRWlCNUN0OVIwdmJCSXJ4VV8tNmtOX2pRam4xRkxselAydHFKTXpFMHZQSjMxdyIsInJlY292ZXJ5X2tleSI6eyJrdHkiOiJFQyIsImNydiI6InNlY3AyNTZrMSIsIngiOiJGOHpHSVBuaE5RM1YzbVZpSnlNeVI3RFJ1ei1PWE93Y2hrd2t5RHU1U0RRIiwieSI6InVxc1dEZURpaDBLQ1R2a1Iyal9TZWkwdUZOQ29xVE5tSGRwNlVNMXNrUjgifSwicmVjb3ZlcnlfY29tbWl0bWVudCI6IkVpQUFiZHo2YzlmcjhsODFma1FRa29sVEswY2o2Z0JhSThnd3h6SUowTWxoU0EifQ.eyJ1cGRhdGVfY29tbWl0bWVudCI6IkVpQ0thbXE2NFpjYVdtR2xjUlIwc1k2Qk43Tm5iSWV1cmQyMmV4UDM2akpVVWciLCJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJzaWdfNWVkNTc1ZmIiLCJ0eXBlIjoiRWNkc2FTZWNwMjU2azFWZXJpZmljYXRpb25LZXkyMDE5IiwiandrIjp7Imt0eSI6IkVDIiwiY3J2Ijoic2VjcDI1NmsxIiwieCI6Ilo4YWlENlUzMy1DVm1aU0lBejAxdGVBV3NvRnE2SmlVZGxpYVB3MlkxeWsiLCJ5IjoiUC02U3BSdXhkdjZQQmR6QS13WTJuRVVVdFd0QzU1c3kxUUlfcVpvNkNjYyJ9LCJ1c2FnZSI6WyJvcHMiLCJhdXRoIiwiZ2VuZXJhbCJdfV19fV19';
 
@@ -52,7 +51,7 @@ const crypto = new CryptoBuilder(did, signingKeyReference).build();
 // Note: You'll want to update the hostname and port values for your setup.
 const app = express()
 const port = 8081
-const hostname = '192.168.1.4'
+const host = 'https://3e2930a3fd96.ngrok.io'
 
 // Serve static files out of the /public directory
 app.use(express.static('public'))
@@ -82,7 +81,7 @@ app.get('/issue-request', async (req, res) => {
   // using the verifiable credential issuer service
   const state = base64url.encode(Buffer.from(secureRandom.randomUint8Array(10)));
   const nonce = base64url.encode(Buffer.from(secureRandom.randomUint8Array(10)));
-  const clientId = `${req.protocol}://${hostname}:${port}/issue-response`;
+  const clientId = `${host}/issue-response`;
 
   const requestBuilder = new RequestorBuilder({
     crypto: crypto,
@@ -103,15 +102,14 @@ app.get('/issue-request', async (req, res) => {
     }
   }).useNonce(nonce)
     .useState(state)
-    .allowIssuance(true)
-    .useVerifiablePresentationExpiry(10);
+    .allowIssuance(true);
 
   // Cache the issue request on the server
   req.session.issueRequest = await requestBuilder.build().create();
   
   // Return a reference to the issue request that can be encoded as a QR code
-  var requestUri = encodeURIComponent(`${req.protocol}://${hostname}:${port}/issue-request.jwt?id=${req.session.id}`);
-  var issueRequestReference = 'openid://?request_uri=' + requestUri + '&client_id=' +  clientId;
+  var requestUri = encodeURIComponent(`${host}/issue-request.jwt?id=${req.session.id}`);
+  var issueRequestReference = 'verifiablecredential://?request_uri=' + requestUri + '&client_id=' +  clientId;
   res.send(issueRequestReference);
 
 })
@@ -137,13 +135,13 @@ app.get('/issue-request.jwt', async (req, res) => {
 var parser = bodyParser.urlencoded({ extended: false });
 app.post('/issue-response', parser, async (req, res) => {
 
-  const clientId = `${req.protocol}://${hostname}:${port}/issue-response`
+  const clientId = `${host}/issue-response`
 
     // Validate the credential presentation and extract the credential's attributes.
     // If this check succeeds, the user is a Verified Credential Ninja.
     // Log a message to the console indicating successful verification of the credential.
     const validator = new ValidatorBuilder(crypto)
-      .useTrustedIssuersForVerifiableCredentials([issuerDid])
+      .useTrustedIssuersForVerifiableCredentials({[credentialType]: [issuerDid]})
       .useAudienceUrl(clientId)
       .build();
 
@@ -154,18 +152,10 @@ app.post('/issue-response', parser, async (req, res) => {
         return res.send()
     }
 
-    var issuedCredential = validationResult.validationResult.verifiableCredentials[credentialType];
+    var issuedCredential = validationResult.validationResult.verifiableCredentials[credentialType].decodedToken;
     console.log(`Successfully issued Verified Credential Ninja card to ${issuedCredential.vc.credentialSubject.firstName} ${issuedCredential.vc.credentialSubject.lastName}.`);
     res.send();
 })
 
-// To test this issuer with Authenticator, your server will need to
-// use SSL. Here, we've used a self-signed cert and configured our
-// mobile device to trust this certificate.
-var privateKey  = fs.readFileSync('certs/server.key', 'utf8');
-var certificate = fs.readFileSync('certs/server.crt', 'utf8');
-var credentials = {key: privateKey, cert: certificate};
-var httpsServer = https.createServer(credentials, app);
-
 // start server
-httpsServer.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))

@@ -40,7 +40,6 @@ Each website in this code sample is intentionally plain. They contain only a sin
 issuer                    The website acting as the issuer of the verifiable credential.
 issuer/README.md          Instructions for running the issuer website.
 issuer/app.js             The simple NodeJS server containing all code.
-issuer/certs/             Contains helpful files for running the code sample locally on your machine.
 issuer/issuer_config/     Contains the example rules and display files used in the creation of this code sample.
 issuer/public/            Contains HTML and javascript files used in the issuer website.
 ```
@@ -48,7 +47,6 @@ issuer/public/            Contains HTML and javascript files used in the issuer 
 verifier                  The website acting as the verifier of the verifiable credential.
 verifier/README.md        Instructions for running the verifier website and consuming a verifiable credential.
 verifier/app.js           The simple NodeJS server containing all code.
-verifier/certs/           Contains helpful files for running the code sample locally on your machine.
 verifier/public/          Contains HTML and javascript files used in the issuer website.
 ```
 

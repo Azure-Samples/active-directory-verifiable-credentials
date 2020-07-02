@@ -3,7 +3,6 @@
 
 ////////////// Node packages
 var http = require('http');
-var https = require('https');
 var fs = require('fs');
 var path = require('path');
 var express = require('express')
@@ -21,10 +20,10 @@ var { CryptoBuilder,
 
 
 //////////// Main Express server function
-// Note: You'll want to update the hostname and port values for your setup.
+// Note: You'll want to update the host and port values for your setup.
 const app = express()
 const port = 8082
-const hostname = '192.168.1.4'
+const host = 'https://eee855fe00b5.ngrok.io'
 
 /////////// OpenID Connect Client Registration
 const client = {
@@ -39,7 +38,7 @@ const credentialType = 'VerifiedCredentialNinja';
 const issuerDid = 'did:ion:EiDp6Ye7hdwR-KkLJfM-xTkyla6mKDSvekWGKeV1BaO5hw?-ion-initial-state=eyJkZWx0YV9oYXNoIjoiRWlCNUN0OVIwdmJCSXJ4VV8tNmtOX2pRam4xRkxselAydHFKTXpFMHZQSjMxdyIsInJlY292ZXJ5X2tleSI6eyJrdHkiOiJFQyIsImNydiI6InNlY3AyNTZrMSIsIngiOiJGOHpHSVBuaE5RM1YzbVZpSnlNeVI3RFJ1ei1PWE93Y2hrd2t5RHU1U0RRIiwieSI6InVxc1dEZURpaDBLQ1R2a1Iyal9TZWkwdUZOQ29xVE5tSGRwNlVNMXNrUjgifSwicmVjb3ZlcnlfY29tbWl0bWVudCI6IkVpQUFiZHo2YzlmcjhsODFma1FRa29sVEswY2o2Z0JhSThnd3h6SUowTWxoU0EifQ.eyJ1cGRhdGVfY29tbWl0bWVudCI6IkVpQ0thbXE2NFpjYVdtR2xjUlIwc1k2Qk43Tm5iSWV1cmQyMmV4UDM2akpVVWciLCJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJzaWdfNWVkNTc1ZmIiLCJ0eXBlIjoiRWNkc2FTZWNwMjU2azFWZXJpZmljYXRpb25LZXkyMDE5IiwiandrIjp7Imt0eSI6IkVDIiwiY3J2Ijoic2VjcDI1NmsxIiwieCI6Ilo4YWlENlUzMy1DVm1aU0lBejAxdGVBV3NvRnE2SmlVZGxpYVB3MlkxeWsiLCJ5IjoiUC02U3BSdXhkdjZQQmR6QS13WTJuRVVVdFd0QzU1c3kxUUlfcVpvNkNjYyJ9LCJ1c2FnZSI6WyJvcHMiLCJhdXRoIiwiZ2VuZXJhbCJdfV19fV19';
 
 /////////// Load credentials for issuer organization from Key Vault
-// TODO: Update this sample to use Key Vault when bug is fixed
+// TODO: Update this sample to use Key Vault
 
 /////////// Load credentials for issuer organization from file
 // TODO: Update this sample to use same long form DID on every app start
@@ -85,7 +84,7 @@ app.get('/presentation-request', async (req, res) => {
   // using the verifiable credential issuer service
   state = req.session.id;
   const nonce = base64url.encode(Buffer.from(secureRandom.randomUint8Array(10)));
-  const clientId = `${req.protocol}://${hostname}:${port}/presentation-response`;
+  const clientId = `${host}/presentation-response`;
 
   const requestBuilder = new RequestorBuilder({
     crypto: crypto,
@@ -105,15 +104,14 @@ app.get('/presentation-request', async (req, res) => {
     }
   }).useNonce(nonce)
     .useState(state)
-    .allowIssuance(false)
-    .useVerifiablePresentationExpiry(10);
+    .allowIssuance(false);
 
   // Cache the issue request on the server
   req.session.presentationRequest = await requestBuilder.build().create();
   
   // Return a reference to the presentation request that can be encoded as a QR code
-  var requestUri = encodeURIComponent(`${req.protocol}://${hostname}:${port}/presentation-request.jwt?id=${req.session.id}`);
-  var presentationRequestReference = 'openid://?request_uri=' + requestUri + '&client_id=' +  clientId;
+  var requestUri = encodeURIComponent(`${host}/presentation-request.jwt?id=${req.session.id}`);
+  var presentationRequestReference = 'verifiablecredential://?request_uri=' + requestUri + '&client_id=' +  clientId;
   res.send(presentationRequestReference);
 
 })
@@ -126,7 +124,6 @@ app.get('/presentation-request.jwt', async (req, res) => {
 
   // Look up the issue reqeust by session ID
   sessionStore.get(req.query.id, (error, session) => {
-    console.log(session.presentationRequest.request)
     res.send(session.presentationRequest.request);
   })
 
@@ -140,22 +137,15 @@ app.get('/presentation-request.jwt', async (req, res) => {
 var parser = bodyParser.urlencoded({ extended: false });
 app.post('/presentation-response', parser, async (req, res) => {
 
-  // Temporary fix to get state value while not exposed
-  // in SDK or in reqeust body
-  var tokenParts = req.body.id_token.split('.')
-  var decodedBody = base64url.decode(tokenParts[1])
-  var payload = JSON.parse(decodedBody)
-  var state = payload.state
-    
   // Set up the Verifiable Credentials SDK to validate all signatures
   // and claims in the credential presentation.
-  const clientId = `${req.protocol}://${hostname}:${port}/presentation-response`
+  const clientId = `${host}/presentation-response`
 
   // Validate the credential presentation and extract the credential's attributes.
   // If this check succeeds, the user is a Verified Credential Ninja.
   // Log a message to the console indicating successful verification of the credential.
   const validator = new ValidatorBuilder(crypto)
-    .useTrustedIssuersForVerifiableCredentials([issuerDid])
+    .useTrustedIssuersForVerifiableCredentials({[credentialType]: [issuerDid]})
     .useAudienceUrl(clientId)
     .build();
 
@@ -166,14 +156,14 @@ app.post('/presentation-response', parser, async (req, res) => {
       return res.send()
   }
 
-  var verifiedCredential = validationResult.validationResult.verifiableCredentials[credentialType];
+  var verifiedCredential = validationResult.validationResult.verifiableCredentials[credentialType].decodedToken;
   console.log(`${verifiedCredential.vc.credentialSubject.firstName} ${verifiedCredential.vc.credentialSubject.lastName} is a Verified Credential Ninja!`);
 
   // Store the successful presentation in session storage
-  sessionStore.get(state, (error, session) => {
+  sessionStore.get(req.body.state, (error, session) => {
 
     session.verifiedCredential = verifiedCredential;
-    sessionStore.set(state, session, (error) => {
+    sessionStore.set(req.body.state, session, (error) => {
       res.send();
     });
   })
@@ -198,13 +188,5 @@ app.get('/presentation-response', async (req, res) => {
 
 })
 
-// To test this issuer with Authenticator, your server will need to
-// use SSL. Here, we've used a self-signed cert and configured our
-// mobile device to trust this certificate.
-var privateKey  = fs.readFileSync('certs/510-stratford.key', 'utf8');
-var certificate = fs.readFileSync('certs/510-stratford.crt', 'utf8');
-var credentials = {key: privateKey, cert: certificate};
-var httpsServer = https.createServer(credentials, app);
-
 // start server
-httpsServer.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))

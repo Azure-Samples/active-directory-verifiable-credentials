@@ -31,24 +31,25 @@ To run this website, you'll need to first issue a verifiable credential to Authe
 ### Connecting Authenticator to your local Node server
 
 Your android device will need to be able to communicate with your Node server via HTTPS requests. Setting this up can be a bit tricky - you have a few options to choose from:
+Your android device will need to be able to communicate with your Node server via HTTPS requests. Setting this up can be a bit tricky - you have a few options to choose from:
 
 1. You can deploy the Node server to the cloud, so that Authenticator can communicate with it over the public internet.
-2. You can expose your local machine over the public internet using a proxy tool.
-3. You can connect your android device to your machine via USB and configure the network settings appropriately.
-4. You can connect your android device to the same wifi network as your machine, and communicate over the LAN.
+2. You can connect your android device to your machine via USB and configure the network settings appropriately.
+3. You can connect your android device to the same wifi network as your machine, and communicate over the LAN.
+4. You can expose your local machine over the public internet using a tool like ngrok.
 
 We recommend the last option. Here are the steps we used to do so:
 
-1. Modify the contents of the `./certs/ssl.conf` file to reflect your local environment. Replace the IP addresses with the local IP address of your machine on the wifi network. Optionally, replace the DNS name with the host name of your local machine.
-2. Generate a self-signed certificate using Open SSL and the `./certs/ssl.conf` file:
+1. Go to [ngrok.com/](https://ngrok.com/) and create an account.
+2. Follow the instructions to install and configure ngrok.
+3. Start ngrok, exposing your server, which uses port 8082 by default:
 
 ```
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./certs/server.key -out ./certs/server.crt -config ./certs/ssl.conf
+ngrok http 8082
 ```
 
-3. Install the `.crt` file onto your android device. Go to **Settings** --> **Security** --> **Encryption & Credentials**, and install the certificate as a trusted certificate on your android device.
-4. If necessary, modify your machine's firewall rules to allow inbound HTTPS requests.
-5. If necessary, update the `hostname` and `port` in the `app.js` file to the correct values for your environment.
+4. Copy the `https://` URL output by ngrok. Copy its value into the `host` variable in `app.js`.
+5. Run the website, and navigate to the site in a browser usign the ngrok URL.
 
 ### Using the website
 
