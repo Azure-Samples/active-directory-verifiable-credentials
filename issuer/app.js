@@ -51,7 +51,7 @@ const crypto = new CryptoBuilder(did, signingKeyReference).build();
 // Note: You'll want to update the hostname and port values for your setup.
 const app = express()
 const port = 8081
-const host = 'https://41654125a78a.ngrok.io'
+const host = 'https://e3299ee72906.ngrok.io'
 
 // Serve static files out of the /public directory
 app.use(express.static('public'))

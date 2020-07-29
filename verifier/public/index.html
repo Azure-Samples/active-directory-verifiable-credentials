@@ -20,9 +20,14 @@
             fetch('/presentation-request')
             .then(function(response) {
                 response.text().then(function(message) {
-                    qrcode.makeCode(message);
-                    deeplink.href=message
-                    deeplink.style.display="block"
+                    if( /Android/i.test(navigator.userAgent) ) {
+                        console.log(`Android device! Using deep link (${message}).`);
+                        window.location.href = message; setTimeout(function () {
+                        window.location.href = "https://play.google.com/store/apps/details?id=com.azure.authenticator"; }, 2000);
+                    } else {
+                        console.log(`Not Android. Generating QR code encoded with ${message}`);
+                        qrcode.makeCode(message);
+                    }
                 }).catch(error => {
                     console.log(error.message);
                 })
