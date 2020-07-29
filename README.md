@@ -12,7 +12,7 @@ urlFragment: "verifiable-credentials"
 
 This code sample demonstrates how to use Microsoft's verifiable credential preview to issue and consume verifiable credentials. 
 
-## About this sample
+## About this sample app
 
 Welcome to Verifiable Credentials, powered by Azure. In this hello world code sample, we'll teach you to issue your first verifiable credential: a Verified Credential Ninja Card. You'll then use this card to prove to a verifier that you are a Verified Credential Ninja, mastered in the art of digital credentialing.
 
