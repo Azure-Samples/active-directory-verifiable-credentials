@@ -109,7 +109,7 @@ app.get('/issue-request', async (req, res) => {
   
   // Return a reference to the issue request that can be encoded as a QR code
   var requestUri = encodeURIComponent(`${host}/issue-request.jwt?id=${req.session.id}`);
-  var issueRequestReference = 'verifiablecredential://?request_uri=' + requestUri + '&client_id=' +  clientId;
+  var issueRequestReference = 'openid://vc/?request_uri=' + requestUri;
   res.send(issueRequestReference);
 
 })

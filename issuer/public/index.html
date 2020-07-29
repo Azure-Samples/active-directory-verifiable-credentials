@@ -5,6 +5,7 @@
 <body>
     <button style="margin-bottom: 20px;" type="button" id="sign-in">Get your verified credential ninja card!</button>
     <div id="qrcode"></div>
+    <a id="deeplink" style="display: none;margin-top: 10px;">Tap to open Authenticator on mobile</a>
     
     <script src="qrcode.min.js"></script>
     <script>
@@ -12,12 +13,15 @@
         var signOut = document.getElementById('sign-out');
         var display = document.getElementById('display');
         var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
+        var deeplink = document.getElementById('deeplink');
 
         signIn.addEventListener('click', () => {
             fetch('/issue-request')
             .then(function(response) {
                 response.text().then(function(message) {
                     qrcode.makeCode(message);
+                    deeplink.href=message
+                    deeplink.style.display="block"
                 }).catch(error => {
                     console.log(error.message);
                 })
