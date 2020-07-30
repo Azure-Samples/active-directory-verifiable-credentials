@@ -2,11 +2,10 @@
 
 # Verifiable Credentials Issuer Website
 
-This folder contains a sample website written in NodeJS that issues a verifiable credential. All code for the website is contained in `app.js`. Essentially, this website does three things:
+This folder contains a sample website written in NodeJS that issues a verifiable credential. All code for the website is contained in `app.js`. Essentially, this website does two things:
 
 1. It generates a QR code and displays it in a browser.
 2. It generates a credential issuance request, which is sent to Microsoft Authenticator after the QR code is scanned. Authenticator then communicates with a cloud issuer service to issue the verifiable credential.
-3. When the credential is issued, it receives a copy of the credential and validates it.
 
 See our [documentation](https://aka.ms/didfordevs) for a more detailed explanation of the credential issuance process.
 
@@ -63,7 +62,6 @@ To issue a verifiable credential, run the website and navigate to the homepage. 
 If you've created your own issuer following our [documentation](https://aka.ms/didfordevs), you can edit the code in `app.js` to use your issuer.
 
 1. Update the `credential` and `credentialType` values for your verifiable credential.
-2. Update the `issuerDid` value to your service's DID.
-3. Optionally, update the `client` values to reflect your issuer website.
+2. Optionally, update the `client` values to reflect your issuer website.
 
 More instructions on using the VC SDK to issue verifiable credentials can be found in our [documentation](https://aka.ms/didfordevs).
