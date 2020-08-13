@@ -37,7 +37,6 @@ const crypto = new CryptoBuilder(did, signingKeyReference).build();
 // Note: You'll want to update the hostname and port values for your setup.
 const app = express()
 const port = 8081
-const host = 'https://d7ed8827238f.ngrok.io'
 
 // Serve static files out of the /public directory
 app.use(express.static('public'))
@@ -81,7 +80,7 @@ app.get('/issue-request', async (req, res) => {
   req.session.issueRequest = await requestBuilder.build().create();
   
   // Return a reference to the issue request that can be encoded as a QR code
-  var requestUri = encodeURIComponent(`${host}/issue-request.jwt?id=${req.session.id}`);
+  var requestUri = encodeURIComponent(`https://${req.hostname}/issue-request.jwt?id=${req.session.id}`);
   var issueRequestReference = 'openid://vc/?request_uri=' + requestUri;
   res.send(issueRequestReference);
 

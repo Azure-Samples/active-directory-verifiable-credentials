@@ -1,38 +1,66 @@
 <!-- Copyright (c) Microsoft Corporation. All rights reserved.
      Licensed under the MIT License. -->
 
-<html>
-<body>
-    <button style="margin-bottom: 20px;" type="button" id="sign-in">Get your verified credential ninja card!</button>
-    <div id="qrcode"></div>
-    <a id="deeplink" style="display: none;margin-top: 10px;">Tap to open Authenticator on mobile</a>
-    
-    <script src="qrcode.min.js"></script>
-    <script>
-        var signIn = document.getElementById('sign-in');
-        var signOut = document.getElementById('sign-out');
-        var display = document.getElementById('display');
-        var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
+     <html lang="en">
 
-        signIn.addEventListener('click', () => {
-            fetch('/issue-request')
-            .then(function(response) {
-                response.text().then(function(message) {
-                    if( /Android/i.test(navigator.userAgent) ) {
-                        console.log(`Android device! Using deep link (${message}).`);
-                        window.location.href = message; setTimeout(function () {
-                        window.location.href = "https://play.google.com/store/apps/details?id=com.azure.authenticator"; }, 2000);
-                    } else {
-                        console.log(`Not Android. Generating QR code encoded with ${message}`);
-                        qrcode.makeCode(message);
-                    }
-                }).catch(error => {
-                    console.log(error.message);
+        <head>
+            <meta charset="utf-8">
+            <title>NinjaCard Credential</title>
+            <meta name="description" content="NinjaCard Verifiable Credentials">
+            <meta name="author" content="Microsoft">
+            <link rel="stylesheet" href="styles.css">
+            <link rel="icon" href="favicon.png">
+          
+        </head>
+        
+        <body>
+            <div id="wrap">
+            <div style="text-align: center;">
+                <img src="ninja-icon.png" height=200px; />
+                <h1>NinjaCard Credential Issuance</h1>
+        
+            <button type="button" id="sign-in" class="button">GET CREDENTIAL</button>
+            <div id="qrText"  style="display:none;">
+                <p class="small-text">
+                    <img src="authenticator-icon.png" alt="Authenticator icon" class="icon-small"><br>
+                    Scan with Microsoft Authenticator
+                </p>
+            </div>
+            <a id="deeplink" style="display: none;margin-top: 10px;">Tap to open Authenticator on mobile</a>
+            <div id="qrcode" style="text-align: center"></div>
+        
+            <script src="qrcode.min.js"></script>
+            <script>
+                var signIn = document.getElementById('sign-in');
+                var signOut = document.getElementById('sign-out');
+                var display = document.getElementById('display');
+                var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
+        
+                signIn.addEventListener('click', () => {
+                    fetch('/issue-request')
+                    .then(function(response) {
+                        response.text().then(function(message) {
+                            if( /Android/i.test(navigator.userAgent) ) {
+                                console.log(`Android device! Using deep link (${message}).`);
+                                window.location.href = message; setTimeout(function () {
+                                window.location.href = "https://play.google.com/store/apps/details?id=com.azure.authenticator"; }, 2000);
+                            } else {
+                                console.log(`Not Android. Generating QR code encoded with ${message}`);
+                                qrcode.makeCode(message);
+                            }
+                        }).catch(error => {
+                            console.log(error.message);
+                        })
+                    }).catch(error => {
+                        console.log(error.message);
+                    })
                 })
-            }).catch(error => {
-                console.log(error.message);
-            })
-        })
-    </script>
-</body>
-</html>
+            </script>
+            </div>
+            <footer>
+                <p class="text-center text-gray tiny-text margin-top-75"><strong>SDK Version:</strong> 0.10.0-preview.0</BR>
+                <strong>Minimum MS Authenticator version required:</strong> 6.2007.5012</p>
+            </footer>
+            </div>
+        </body>
+        </html>

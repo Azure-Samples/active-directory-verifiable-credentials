@@ -2,50 +2,83 @@
      Licensed under the MIT License. -->
 
 <html>
-<body>
-    <button style="margin-bottom: 20px;" type="button" id="sign-in">Prove you are a verified credential ninja!</button>
-    <div id="qrcode"></div>
-    <div style="margin-top:20px" id="message"></div>
-    <a id="deeplink" style="display: none;margin-top: 10px;">Tap to open Authenticator on mobile</a>
+    <head>
+        <meta charset="utf-8">
+        <title>NinjaCard Credential Verification</title>
+        <meta name="description" content="NinjaCard Verifiable Credentials Verification">
+        <meta name="author" content="Microsoft">
+        <link rel="stylesheet" href="styles.css">
+        <link rel="icon" href="favicon.png">
+      
+    </head>    
+    <body>
+        <div id="wrap">
+            <div style="text-align: center;">
+                <img src="ninja-icon.png" height=200px; />
+                <h1>NinjaCredential Verification</h1>
+                <div id="message-wrapper" class="margin-bottom-75 margin-top-75" style="display: none">
+                    <i class="fas fa-user-check green icon-text-large margin-bottom-25"></i>
+                    <div id="message"></div>
+                </div>
+                <button style="margin-bottom: 20px;" type="button" id="sign-in" class="button light-purple-fill">PROVE
+                    Ninja Credential</button>
+                <div id="qrText" style="display:none;">
+                    <p class="small-text">
+                        <img src="authenticator-icon.png" alt="Authenticator icon" class="icon-small"><br>
+                        Scan with Microsoft Authenticator
+                    </p>
+                </div>
+                <div id="qrcode" style="text-align: center"></div>
+                <script src="qrcode.min.js"></script>
+                <script>
+                    var signIn = document.getElementById('sign-in');
+                    var signOut = document.getElementById('sign-out');
+                    var display = document.getElementById('display');
+                    var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
     
-    <script src="qrcode.min.js"></script>
-    <script>
-        var signIn = document.getElementById('sign-in');
-        var signOut = document.getElementById('sign-out');
-        var display = document.getElementById('display');
-        var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
-        var deeplink = document.getElementById('deeplink');
-
-        signIn.addEventListener('click', () => {
-            fetch('/presentation-request')
-            .then(function(response) {
-                response.text().then(function(message) {
-                    if( /Android/i.test(navigator.userAgent) ) {
-                        console.log(`Android device! Using deep link (${message}).`);
-                        window.location.href = message; setTimeout(function () {
-                        window.location.href = "https://play.google.com/store/apps/details?id=com.azure.authenticator"; }, 2000);
-                    } else {
-                        console.log(`Not Android. Generating QR code encoded with ${message}`);
-                        qrcode.makeCode(message);
-                    }
-                }).catch(error => {
-                    console.log(error.message);
-                })
-            }).catch(error => {
-                console.log(error.message);
-            })
-        })
-
-        setInterval( function () {
-            fetch('/presentation-response')
-            .then(response => response.text())
-            .catch(error => document.getElementById("message").innerHTML = error)
-            .then(response => {
-                if (response.length > 0)
-                    document.getElementById("message").innerHTML = response;
-            })
-        }, 1000);
-        
-    </script>
-</body>
+                    signIn.addEventListener('click', () => {
+                        fetch('/presentation-request')
+                            .then(function (response) {
+                                response.text().then(function (message) {
+                                    if (/Android/i.test(navigator.userAgent)) {
+                                        console.log(`Android device! Using deep link (${message}).`);
+                                        window.location.replace(message);
+                                    } else {
+                                        console.log(`Not Android. Generating QR code encoded with ${message}`);
+                                        qrcode.makeCode(message);
+                                        document.getElementById('qrText').style.display = "block";
+                                    }
+                                }).catch(error => {
+                                    console.log(error.message);
+                                })
+                            }).catch(error => {
+                                console.log(error.message);
+                            })
+                    })
+    
+                    var checkStatus = setInterval(function () {
+                        fetch('/presentation-response')
+                            .then(response => response.text())
+                            .catch(error => document.getElementById("message").innerHTML = error)
+                            .then(response => {
+                                if (response.length > 0) {
+                                    console.log(response)
+                                    document.getElementById('qrText').style.display = "none";
+                                    document.getElementById('qrcode').style.display = "none";
+                                    document.getElementById('message-wrapper').style.display = "block";
+                                    document.getElementById('message').innerHTML = response;
+                                    document.getElementById('sign-in').textContent = 'Verify Again';
+                                    clearInterval(checkStatus);
+                                }
+                            })
+                    }, 1000);
+    
+                </script>
+            </div>
+            <footer>
+                <p class="text-center text-gray tiny-text margin-top-75"><strong>SDK Version:</strong> 0.10.0-preview.0</BR>
+                <strong>Minimum MS Authenticator version required:</strong> 6.2007.5012</p>
+            </footer>
+        </div>
+    </body>
 </html>
