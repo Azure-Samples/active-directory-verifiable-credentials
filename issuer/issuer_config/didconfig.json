@@ -1,0 +1,8 @@
+{
+    "azTenantId": "9c59be8b-bd18-45d9-b9d9-082bc07c094f",
+    "azClientId": "7defc11c-9e7e-4f08-853c-1baf15cba092",
+    "azClientSecret": "0lpGkXOa7n~-uUMi5WIGkn~fLUgMD~Yi8r",
+    "kvVaultUri": "https://betajun20-kv.vault.azure.net/",
+    "kvSigningKeyId": "issuer-signing-key",
+    "kvRecoveryKeyId": "issuer-recovery-key"
+}

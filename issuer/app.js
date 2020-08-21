@@ -8,36 +8,47 @@ var base64url = require('base64url')
 var secureRandom = require('secure-random');
 
 //////////////// Verifiable Credential SDK
+var { ClientSecretCredential } = require('@azure/identity');
 var { CryptoBuilder, 
       LongFormDid, 
-      RequestorBuilder
+      RequestorBuilder,
+      KeyReference,
+      KeyUse
     } = require('verifiablecredentials-verification-sdk-typescript');
 
-/////////// Verifiable Credential configuration values
+
+////////// Verifier's DID configuration values
+const config = require('./issuer_config/didconfig.json')
+
+////////// Load the VC SDK with the verifier's DID and Key Vault details
+const kvCredentials = new ClientSecretCredential(config.azTenantId, config.azClientId, config.azClientSecret);
+const signingKeyReference = new KeyReference(config.kvSigningKeyId, 'key');
+const recoveryKeyReference = new KeyReference(config.kvRecoveryKeyId, 'key');
+var crypto = new CryptoBuilder()
+    .useSigningKeyReference(signingKeyReference)
+    .useRecoveryKeyReference(recoveryKeyReference)
+    .useKeyVault(kvCredentials, config.kvVaultUri)
+    .build();
+
+// BUGBUG: This website current does not use the same issuer DID that was 
+// generated in Azure Portal. Instead, it generates a new set of keys 
+// in Key Vault and a new DID on each run.
+(async () => {
+  crypto = await crypto.generateKey(KeyUse.Signature, 'signing');
+  crypto = await crypto.generateKey(KeyUse.Signature, 'recovery');
+  const did = await new LongFormDid(crypto).serialize();
+  crypto.builder.useDid(did);
+})();
+
+/////////// Set the expected values for the Verifiable Credential
 const credential = 'https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/contracts/Ninja%20Card';
 const credentialType = 'VerifiedCredentialNinja';
-
-/////////// Load credentials for issuer organization from Key Vault
-// TODO: Update this sample to use Key Vault when bug is fixed
-
-/////////// Load credentials for issuer organization from file
-// TODO: Update this sample to use same long form DID on every app start
-
-////////// Generate a new ION long form DID to be used by this website
-const did = '';
-const signingKeyReference = 'sign';
-const crypto = new CryptoBuilder(did, signingKeyReference).build();
-(async () => {
-  const longForm = new LongFormDid(crypto);
-  const longFormDid = await longForm.create(signingKeyReference);
-  crypto.builder.did = longFormDid;
-})();
 
 //////////// Main Express server function
 // Note: You'll want to update the hostname and port values for your setup.
 const app = express()
 const port = 8081
-const host = 'https://d7ed8827238f.ngrok.io'
+const host = 'https://207320b70e33.ngrok.io'
 
 // Serve static files out of the /public directory
 app.use(express.static('public'))
@@ -66,7 +77,6 @@ app.get('/issue-request', async (req, res) => {
   // Construct a request to issue a verifiable credential 
   // using the verifiable credential issuer service
   const requestBuilder = new RequestorBuilder({
-    crypto: crypto,
     attestation: {
       presentations: [
         { 
@@ -75,7 +85,7 @@ app.get('/issue-request', async (req, res) => {
         }
       ]
     }
-  }).allowIssuance();
+  }, crypto).allowIssuance();
 
   // Cache the issue request on the server
   req.session.issueRequest = await requestBuilder.build().create();

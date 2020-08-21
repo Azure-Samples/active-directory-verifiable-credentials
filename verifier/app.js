@@ -12,20 +12,14 @@ var base64url = require('base64url')
 var secureRandom = require('secure-random');
 
 //////////////// Verifiable Credential SDK
+var { ClientSecretCredential } = require('@azure/identity');
 var { CryptoBuilder, 
-      LongFormDid, 
       RequestorBuilder, 
-      ValidatorBuilder
+      ValidatorBuilder,
+      KeyReference
     } = require('verifiablecredentials-verification-sdk-typescript');
 
-
-//////////// Main Express server function
-// Note: You'll want to update the host and port values for your setup.
-const app = express()
-const port = 8082
-const host = 'https://bf78b9d81182.ngrok.io'
-
-/////////// OpenID Connect Client Registration
+/////////// Verifier's client details
 const client = {
   client_name: 'Sample Verifier',
   logo_uri: 'https://storagebeta.blob.core.windows.net/static/ninja-icon.png',
@@ -33,27 +27,32 @@ const client = {
   client_purpose: 'To check if you know how to use verifiable credentials.'
 }
 
-/////////// Verifiable Credential configuration values
+////////// Verifier's DID configuration values
+const config = require('./didconfig.json')
+if (!config.did) {
+  throw new Error('Make sure you run the DID generation script before starting the server.')
+}
+
+////////// Load the VC SDK with the verifier's DID and Key Vault details
+const kvCredentials = new ClientSecretCredential(config.azTenantId, config.azClientId, config.azClientSecret);
+const signingKeyReference = new KeyReference(config.kvSigningKeyId, 'key');
+const recoveryKeyReference = new KeyReference(config.kvRecoveryKeyId, 'key');
+var crypto = new CryptoBuilder()
+    .useSigningKeyReference(signingKeyReference)
+    .useRecoveryKeyReference(recoveryKeyReference)
+    .useKeyVault(kvCredentials, config.kvVaultUri)
+    .useDid(config.did)
+    .build();
+
+/////////// Set the expected values for the Verifiable Credential
 const credentialType = 'VerifiedCredentialNinja';
 const issuerDid = 'did:ion:EiAQ8DKCI3WmQnab84lohz6-JODQOwV9-esWesruBLq54Q?-ion-initial-state=eyJkZWx0YV9oYXNoIjoiRWlCN0R1dEdZNG5NTWJtY2RXcDZLVDhjY2ZoVVBDSVlWVFEwUmkyUWtDXzNXUSIsInJlY292ZXJ5X2NvbW1pdG1lbnQiOiJFaURrT0tUQ2duUWIxWmg3ZTZsWGVXOGJGdmFqLTB2Y0wxcXRrel9ZdjMwZUxnIn0.eyJ1cGRhdGVfY29tbWl0bWVudCI6IkVpRHlDYXFGMFpENllFbmFCaUJjZkgyT3h0dHhyd1ZxaFZ4Wjg0Q1lNNUVpQ0EiLCJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljX2tleXMiOlt7ImlkIjoic2lnX2IxNDIzZGU5IiwidHlwZSI6IkVjZHNhU2VjcDI1NmsxVmVyaWZpY2F0aW9uS2V5MjAxOSIsImp3ayI6eyJrdHkiOiJFQyIsImNydiI6InNlY3AyNTZrMSIsIngiOiJPWlVueGMtRnBScS1JZjd3YWN6VUoxejdIdEpSTEF6UDViR1lGU250TlVJIiwieSI6Ikl1Q2c2ZHJ1bm84WjkxX2MwYVhvdnRfWVV0THBNQl9OMy11azZhcVU3YmsifSwicHVycG9zZSI6WyJhdXRoIiwiZ2VuZXJhbCJdfV19fV19';
 
-/////////// Load credentials for issuer organization from Key Vault
-// TODO: Update this sample to use Key Vault
-
-/////////// Load credentials for issuer organization from file
-// TODO: Update this sample to use same long form DID on every app start
-
-////////// Generate a new ION long form DID to be used by this website
-const did = '';
-const signingKeyReference = 'sign';
-const crypto = new CryptoBuilder(did, signingKeyReference).build();
-(async () => {
-  const longForm = new LongFormDid(crypto);
-  const longFormDid = await longForm.create(signingKeyReference);
-  crypto.builder.did = longFormDid;
-})();
-
-
+//////////// Main Express server function
+// Note: You'll want to update the host and port values for your setup.
+const app = express()
+const port = 8082
+const host = 'https://cdc102676476.ngrok.io'
 
 // Serve static files out of the /public directory
 app.use(express.static('public'))
@@ -87,7 +86,6 @@ app.get('/presentation-request', async (req, res) => {
   const clientId = `${host}/presentation-response`;
 
   const requestBuilder = new RequestorBuilder({
-    crypto: crypto,
     clientName: client.client_name,
     clientId: clientId,
     redirectUri: clientId,
@@ -102,7 +100,8 @@ app.get('/presentation-request', async (req, res) => {
         }
       ]
     }
-  }).useNonce(nonce)
+  }, crypto)
+    .useNonce(nonce)
     .useState(state);
 
   // Cache the issue request on the server

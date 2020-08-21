@@ -47,6 +47,7 @@ issuer/public/            Contains HTML and javascript files used in the issuer 
 verifier                  The website acting as the verifier of the verifiable credential.
 verifier/README.md        Instructions for running the verifier website and consuming a verifiable credential.
 verifier/app.js           The simple NodeJS server containing all code.
+verifier/generate.js      A simple script that helps you generate a DID for your website.
 verifier/public/          Contains HTML and javascript files used in the issuer website.
 ```
 
@@ -57,11 +58,12 @@ Running this code sample will require:
 - NodeJS version `10.14` or higher installed on your machine.
 - Git installed on your machine.
 - An Android device.
+- An Azure subscription where you have access to create Azure key vaults.
 
 To run this code sample with your own issuer, you will require a few more things:
 
 - An Azure Active Directory tenant, with a free trial of Azure AD Premium.
-- An Azure subscription where you have access to create Azure storage accounts and Azure key vaults.
+- An Azure subscription where you have access to create Azure storage accounts.
 - An identity provider, such as Azure AD or Azure AD B2C, that will authenticate users that receive verifiable credentials.
 
 Refer to our [documentation](https://aka.ms/didfordevs) for more instructions on creating your own issuer.

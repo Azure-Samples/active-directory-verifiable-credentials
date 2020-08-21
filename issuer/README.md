@@ -15,13 +15,12 @@ There are two ways to run this code sample.
 - Set up your own issuer, and change the code to use that issuer to issue a verifiable credential. Our [documentation](https://aka.ms/didfordevs) describes how to set up your own issuer.
 
 
-## Run the sample 
+## Running the sample 
 
 Follow these steps to run the sample using a pre-configured Verified Credential Ninja card on your local machine.
 
 1. Clone this repository and `cd` to this `issuer` directory.
 2. Run `npm install` to install all dependencies for the issuer website.
-3. Run `node ./app.js` to start the website.
 
 ### Installing Microsoft Authenticator.
 
@@ -29,7 +28,7 @@ To run this sample, you'll need Microsoft Authenticator installed on an android 
 
 ### Connecting Authenticator to your local Node server
 
-Your android device will need to be able to communicate with your Node server via HTTPS requests. Setting this up can be a bit tricky - you have a few options to choose from:
+When you run the sample website, your android device will need to be able to communicate with your Node server via HTTPS requests. Setting this up can be a bit tricky - you have a few options to choose from:
 
 1. You can deploy the Node server to the cloud, so that Authenticator can communicate with it over the public internet.
 2. You can connect your android device to your machine via USB and configure the network settings appropriately.
@@ -46,22 +45,32 @@ We recommend the last option. Here are the steps we used to do so:
 ngrok http 8081
 ```
 
-4. Copy the `https://` URL output by ngrok. Copy its value into the `host` variable in `app.js`.
-5. Run the website, and navigate to the site in a browser usign the ngrok URL.
+4. Copy the `https://` URL output by ngrok. In the `issuer/app.js` file, update the `host` variable to its value.
+
+
+### Run the website
+
+Finally, you're ready to run the website on your local machine:
+
+```bash
+node ./app.js
+```
+
+Once the site is up and running, navigate to the site in a browser using the ngrok URL.
 
 ### Using the website
 
 To issue a verifiable credential, run the website and navigate to the homepage. Then:
 
-1. Click the button to display a QR code.
+1. Click the button to display a QR code (or a deep link on mobile browsers).
 2. In Authenticator, add an account and choose **Other account**. Scan the QR code.
 3. Follow the instructions to receive your verifiable credential.
 
 ## Modifying the code to use your issuer
 
-If you've created your own issuer following our [documentation](https://aka.ms/didfordevs), you can edit the code in `app.js` to use your issuer.
+If you've created your own issuer following our [documentation](https://aka.ms/didfordevs), you can edit the code to use your issuer.
 
-1. Update the `credential` and `credentialType` values for your verifiable credential.
-2. Optionally, update the `client` values to reflect your issuer website.
+1. In `issuer/app.js`, update the `credential` and `credentialType` values for your verifiable credential.
+2. In `issuer/issuer_config/didconfig.json`, update all values to use your Azure Key Vault instance.
 
 More instructions on using the VC SDK to issue verifiable credentials can be found in our [documentation](https://aka.ms/didfordevs).
