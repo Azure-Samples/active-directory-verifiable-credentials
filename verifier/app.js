@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+// Verifiable Credentials Verifier Sample v2020.09a
+
 ////////////// Node packages
 var http = require('http');
 var fs = require('fs');
