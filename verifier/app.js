@@ -52,7 +52,7 @@ const issuerDid = 'did:ion:EiAQ8DKCI3WmQnab84lohz6-JODQOwV9-esWesruBLq54Q?-ion-i
 // Note: You'll want to update the host and port values for your setup.
 const app = express()
 const port = 8082
-const host = 'https://cdc102676476.ngrok.io'
+const host2 = 'https://cdc102676476.ngrok.io'
 
 // Serve static files out of the /public directory
 app.use(express.static('public'))
@@ -83,7 +83,7 @@ app.get('/presentation-request', async (req, res) => {
   // using the verifiable credential issuer service
   state = req.session.id;
   const nonce = base64url.encode(Buffer.from(secureRandom.randomUint8Array(10)));
-  const clientId = `${host}/presentation-response`;
+  const clientId = `https://${req.hostname}/presentation-response`;
 
   const requestBuilder = new RequestorBuilder({
     clientName: client.client_name,
@@ -108,7 +108,7 @@ app.get('/presentation-request', async (req, res) => {
   req.session.presentationRequest = await requestBuilder.build().create();
   
   // Return a reference to the presentation request that can be encoded as a QR code
-  var requestUri = encodeURIComponent(`${host}/presentation-request.jwt?id=${req.session.id}`);
+  var requestUri = encodeURIComponent(`https://${req.hostname}/presentation-request.jwt?id=${req.session.id}`);
   var presentationRequestReference = 'openid://vc/?request_uri=' + requestUri;
   res.send(presentationRequestReference);
 
@@ -137,7 +137,7 @@ app.post('/presentation-response', parser, async (req, res) => {
 
   // Set up the Verifiable Credentials SDK to validate all signatures
   // and claims in the credential presentation.
-  const clientId = `${host}/presentation-response`
+  const clientId = `https://${req.hostname}/presentation-response`
 
   // Validate the credential presentation and extract the credential's attributes.
   // If this check succeeds, the user is a Verified Credential Ninja.
