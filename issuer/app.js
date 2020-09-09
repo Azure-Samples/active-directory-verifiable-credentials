@@ -77,7 +77,7 @@ app.get('/issue-request', async (req, res) => {
   // Construct a request to issue a verifiable credential 
   // using the verifiable credential issuer service
   const requestBuilder = new RequestorBuilder({
-    attestation: {
+    attestations: {
       presentations: [
         { 
           credentialType: credentialType, 

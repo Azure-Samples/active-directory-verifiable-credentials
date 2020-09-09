@@ -92,7 +92,7 @@ app.get('/presentation-request', async (req, res) => {
     logoUri: client.logo_uri,
     tosUri: client.tos_uri,
     client_purpose: client.client_purpose,
-    attestation: {
+    attestations: {
       presentations: [
         { 
           credentialType: credentialType, 
