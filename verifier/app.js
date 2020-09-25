@@ -46,13 +46,13 @@ var crypto = new CryptoBuilder()
 
 /////////// Set the expected values for the Verifiable Credential
 const credentialType = 'VerifiedCredentialNinja';
-const issuerDid = 'did:ion:EiAQ8DKCI3WmQnab84lohz6-JODQOwV9-esWesruBLq54Q?-ion-initial-state=eyJkZWx0YV9oYXNoIjoiRWlCN0R1dEdZNG5NTWJtY2RXcDZLVDhjY2ZoVVBDSVlWVFEwUmkyUWtDXzNXUSIsInJlY292ZXJ5X2NvbW1pdG1lbnQiOiJFaURrT0tUQ2duUWIxWmg3ZTZsWGVXOGJGdmFqLTB2Y0wxcXRrel9ZdjMwZUxnIn0.eyJ1cGRhdGVfY29tbWl0bWVudCI6IkVpRHlDYXFGMFpENllFbmFCaUJjZkgyT3h0dHhyd1ZxaFZ4Wjg0Q1lNNUVpQ0EiLCJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljX2tleXMiOlt7ImlkIjoic2lnX2IxNDIzZGU5IiwidHlwZSI6IkVjZHNhU2VjcDI1NmsxVmVyaWZpY2F0aW9uS2V5MjAxOSIsImp3ayI6eyJrdHkiOiJFQyIsImNydiI6InNlY3AyNTZrMSIsIngiOiJPWlVueGMtRnBScS1JZjd3YWN6VUoxejdIdEpSTEF6UDViR1lGU250TlVJIiwieSI6Ikl1Q2c2ZHJ1bm84WjkxX2MwYVhvdnRfWVV0THBNQl9OMy11azZhcVU3YmsifSwicHVycG9zZSI6WyJhdXRoIiwiZ2VuZXJhbCJdfV19fV19';
+const issuerDid = ['did:ion:EiAQ8DKCI3WmQnab84lohz6-JODQOwV9-esWesruBLq54Q?-ion-initial-state=eyJkZWx0YV9oYXNoIjoiRWlCN0R1dEdZNG5NTWJtY2RXcDZLVDhjY2ZoVVBDSVlWVFEwUmkyUWtDXzNXUSIsInJlY292ZXJ5X2NvbW1pdG1lbnQiOiJFaURrT0tUQ2duUWIxWmg3ZTZsWGVXOGJGdmFqLTB2Y0wxcXRrel9ZdjMwZUxnIn0.eyJ1cGRhdGVfY29tbWl0bWVudCI6IkVpRHlDYXFGMFpENllFbmFCaUJjZkgyT3h0dHhyd1ZxaFZ4Wjg0Q1lNNUVpQ0EiLCJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljX2tleXMiOlt7ImlkIjoic2lnX2IxNDIzZGU5IiwidHlwZSI6IkVjZHNhU2VjcDI1NmsxVmVyaWZpY2F0aW9uS2V5MjAxOSIsImp3ayI6eyJrdHkiOiJFQyIsImNydiI6InNlY3AyNTZrMSIsIngiOiJPWlVueGMtRnBScS1JZjd3YWN6VUoxejdIdEpSTEF6UDViR1lGU250TlVJIiwieSI6Ikl1Q2c2ZHJ1bm84WjkxX2MwYVhvdnRfWVV0THBNQl9OMy11azZhcVU3YmsifSwicHVycG9zZSI6WyJhdXRoIiwiZ2VuZXJhbCJdfV19fV19'];
 
 //////////// Main Express server function
 // Note: You'll want to update the host and port values for your setup.
 const app = express()
 const port = 8082
-const host = 'https://cdc102676476.ngrok.io'
+const host = 'https://dc4c446f5f1b.ngrok.io'
 
 // Serve static files out of the /public directory
 app.use(express.static('public'))
@@ -92,15 +92,22 @@ app.get('/presentation-request', async (req, res) => {
     logoUri: client.logo_uri,
     tosUri: client.tos_uri,
     client_purpose: client.client_purpose,
-    attestations: {
-      presentations: [
-        { 
-          credentialType: credentialType, 
-          required: true
-        }
-      ]
-    }
-  }, crypto)
+    presentationDefinition: {
+      name: 'Ninja Card',
+      purpose: 'Are you a Ninja?',
+      input_descriptors: [{
+          id: "Ninja card",
+          schema: {
+              uri: [credentialType],
+              name: "Ninja card",
+              purpose: 'Prove you\'re a Ninja'
+          },
+          issuance: [{
+              manifest: 'https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/contracts/Ninja%20Card'
+          }]
+      }]
+  }
+},  crypto)
     .useNonce(nonce)
     .useState(state);
 
@@ -143,7 +150,7 @@ app.post('/presentation-response', parser, async (req, res) => {
   // If this check succeeds, the user is a Verified Credential Ninja.
   // Log a message to the console indicating successful verification of the credential.
   const validator = new ValidatorBuilder(crypto)
-    .useTrustedIssuersForVerifiableCredentials({[credentialType]: [issuerDid]})
+    .useTrustedIssuersForVerifiableCredentials({[credentialType]: issuerDid})
     .useAudienceUrl(clientId)
     .build();
 

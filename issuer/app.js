@@ -42,13 +42,13 @@ var crypto = new CryptoBuilder()
 
 /////////// Set the expected values for the Verifiable Credential
 const credential = 'https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/contracts/Ninja%20Card';
-const credentialType = 'VerifiedCredentialNinja';
+const credentialType = ['VerifiedCredentialNinja'];
 
 //////////// Main Express server function
 // Note: You'll want to update the hostname and port values for your setup.
 const app = express()
 const port = 8081
-const host = 'https://207320b70e33.ngrok.io'
+const host = 'https://25de97ffca60.ngrok.io'
 
 // Serve static files out of the /public directory
 app.use(express.static('public'))
@@ -77,11 +77,22 @@ app.get('/issue-request', async (req, res) => {
   // Construct a request to issue a verifiable credential 
   // using the verifiable credential issuer service
   const requestBuilder = new RequestorBuilder({
-    attestations: {
-      presentations: [
-        { 
-          credentialType: credentialType, 
-          contracts: [credential], 
+    presentationDefinition: {
+      name: 'Ninja',
+      purpose: 'Get your Ninja card',
+      input_descriptors: [
+        {
+          id: 'VerifiedCredentialNinja',
+          schema: {
+            uri: credentialType,
+            name: 'VerifiedCredentialNinja',
+            purpose: 'Prove you\'re a Ninja'
+          },
+          issuance: [
+            {
+              manifest: 'https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/contracts/Ninja%20Card'
+            }
+          ]
         }
       ]
     }
