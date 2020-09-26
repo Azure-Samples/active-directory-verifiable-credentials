@@ -78,19 +78,16 @@ app.get('/issue-request', async (req, res) => {
   // using the verifiable credential issuer service
   const requestBuilder = new RequestorBuilder({
     presentationDefinition: {
-      name: 'Ninja',
-      purpose: 'Get your Ninja card',
       input_descriptors: [
         {
           id: 'VerifiedCredentialNinja',
           schema: {
             uri: credentialType,
             name: 'VerifiedCredentialNinja',
-            purpose: 'Prove you\'re a Ninja'
           },
           issuance: [
             {
-              manifest: 'https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/contracts/Ninja%20Card'
+              manifest: credential
             }
           ]
         }
