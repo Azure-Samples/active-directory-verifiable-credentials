@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+// Verifiable Credentials Issuer Sample v2020.09a
+
 ////////////// Node packages
 var express = require('express')
 var session = require('express-session')
@@ -17,10 +19,10 @@ var { CryptoBuilder,
     } = require('verifiablecredentials-verification-sdk-typescript');
 
 
-////////// Verifier's DID configuration values
+////////// Issuer's DID configuration values
 const config = require('./issuer_config/didconfig.json')
 
-////////// Load the VC SDK with the verifier's DID and Key Vault details
+////////// Load the VC SDK with the Issuer's DID and Key Vault details
 const kvCredentials = new ClientSecretCredential(config.azTenantId, config.azClientId, config.azClientSecret);
 const signingKeyReference = new KeyReference(config.kvSigningKeyId, 'key');
 const recoveryKeyReference = new KeyReference(config.kvRecoveryKeyId, 'key');
@@ -30,9 +32,10 @@ var crypto = new CryptoBuilder()
     .useKeyVault(kvCredentials, config.kvVaultUri)
     .build();
 
-// BUGBUG: This website current does not use the same issuer DID that was 
-// generated in Azure Portal. Instead, it generates a new set of keys 
-// in Key Vault and a new DID on each run.
+// BUGBUG: This website currently does not use the same issuer DID that was 
+// generated in Azure Portal as part of the Portable Identity Cards Service setup. 
+// Instead, a new set of Azure Key Vault keys along with a new DID are generated 
+// on each run of this web app.
 (async () => {
   crypto = await crypto.generateKey(KeyUse.Signature, 'signing');
   crypto = await crypto.generateKey(KeyUse.Signature, 'recovery');
@@ -121,4 +124,4 @@ app.get('/issue-request.jwt', async (req, res) => {
 })
 
 // start server
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example issuer app listening on port ${port}!`))
