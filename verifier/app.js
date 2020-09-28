@@ -94,14 +94,11 @@ app.get('/presentation-request', async (req, res) => {
     tosUri: client.tos_uri,
     client_purpose: client.client_purpose,
     presentationDefinition: {
-      name: 'Ninja Card',
-      purpose: 'Are you a Ninja?',
       input_descriptors: [{
           id: "Ninja card",
           schema: {
               uri: [credentialType],
               name: "Ninja card",
-              purpose: 'Prove you\'re a Ninja'
           },
           issuance: [{
               manifest: 'https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/contracts/Ninja%20Card'
