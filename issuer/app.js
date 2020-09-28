@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-// Verifiable Credentials Issuer Sample v2020.09a
+// Verifiable Credentials Issuer Sample
 
 ////////////// Node packages
 var express = require('express')
@@ -33,7 +33,7 @@ var crypto = new CryptoBuilder()
     .build();
 
 // BUGBUG: This website currently does not use the same issuer DID that was 
-// generated in Azure Portal as part of the Portable Identity Cards Service setup. 
+// generated in Azure Portal as part of issuer setup. 
 // Instead, a new set of Azure Key Vault keys along with a new DID are generated 
 // on each run of this web app.
 (async () => {
@@ -82,10 +82,8 @@ app.get('/issue-request', async (req, res) => {
     presentationDefinition: {
       input_descriptors: [
         {
-          id: 'VerifiedCredentialNinja',
           schema: {
             uri: credentialType,
-            name: 'VerifiedCredentialNinja',
           },
           issuance: [
             {

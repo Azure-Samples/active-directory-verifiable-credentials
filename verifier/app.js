@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-// Verifiable Credentials Verifier Sample v2020.09a
+// Verifiable Credentials Verifier Sample
 
 ////////////// Node packages
 var http = require('http');
@@ -95,14 +95,9 @@ app.get('/presentation-request', async (req, res) => {
     client_purpose: client.client_purpose,
     presentationDefinition: {
       input_descriptors: [{
-          id: "Ninja card",
           schema: {
               uri: [credentialType],
-              name: "Ninja card",
-          },
-          issuance: [{
-              manifest: 'https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/contracts/Ninja%20Card'
-          }]
+          }
       }]
   }
 },  crypto)

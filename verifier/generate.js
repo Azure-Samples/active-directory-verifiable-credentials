@@ -2,6 +2,7 @@
 // Key Vault details are provided in ./didconfig.json.
 // You should only need to run this script once to generate your verifier's DID and its keys.
 const fs = require('fs');
+const crypt = require('crypto');
 const config = require('./didconfig.json');
 
 //////////////// Load DID packages
@@ -11,6 +12,10 @@ var { CryptoBuilder,
       KeyReference,
       KeyUse
     } = require('verifiablecredentials-verification-sdk-typescript');
+
+///////////////// Generate random key IDs to use with default key vault instances
+config.kvSigningKeyId = crypt.randomBytes(8).toString('hex');
+config.kvRecoveryKeyId = crypt.randomBytes(8).toString('hex');
 
 ///////////////// Setup the crypto class from the VC SDK
 const kvCredentials = new ClientSecretCredential(config.azTenantId, config.azClientId, config.azClientSecret);

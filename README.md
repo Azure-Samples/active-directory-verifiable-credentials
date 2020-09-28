@@ -12,8 +12,6 @@ urlFragment: "verifiable-credentials"
 
 This code sample demonstrates how to use Microsoft's verifiable credential preview to issue and consume verifiable credentials. 
 
-Current Version: **2020.09a**
-
 ## About this sample
 
 Welcome to Verifiable Credentials, powered by Azure. In this hello world code sample, we'll teach you to issue your first verifiable credential: a Verified Credential Ninja Card. You'll then use this card to prove to a verifier that you are a Verified Credential Ninja, mastered in the art of digital credentialing.
@@ -81,30 +79,6 @@ npm install verifiablecredentials-verification-sdk-typescript
 The VC SDK provides classes and functions for implementing verifiable credential exchanges. This includes issuing credentials, requesting credentials from users, validating credentials, registering decentralized identifiers, and more. The VC SDK is currently in preview; you should expect breaking changes to occur with each release.
 
 In addition to the VC SDK, this code sample will use the Microsoft Authenticator mobile app for Android. The README for each website provides instructions on installing Authenticator. Verifiable credential support in Authenticator is not available for iOS at this time.
-
-## Sample Code Release Notes
-### 2020.09a
-
-> Released 8/28/20
-
-**Issuer Changes**
-
-- The VC verification typescript SDK has been bumped to `0.10.0-preview.4`
-- The Azure Identity package has been bumped to `1.1.0`
-- Azure Key Vault is now used for key generation and storage of the Issuer app's keys
-- A new didconfig.json file is added for the Azure Key Vault configuration
-- `crypto` is now passed to `requestBuilder` instead of being set inside the function
-
-**Verifier Changes**
-
-- The VC verification typescript SDK has been bumped to `0.10.0-preview.4`
-- The Azure Identity package has been bumped to `1.1.0`
-- A new script has been added to generate the verifier's DID in Key Vault (`generate.js`)
-- A new didconfig.json file is added for the Azure Key Vault configuration and the Verifier's DID
-- `crypto` is now passed to `requestBuilder` instead of being set inside the function
-
-For complete details about the September 2020 release, see the [Decentralized identity project release notes](https://didproject.azurewebsites.net/docs/release-notes.html).
-
 
 ## Contributing
 

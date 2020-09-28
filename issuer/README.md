@@ -45,9 +45,6 @@ We recommend the last option. Here are the steps we used to do so:
 ngrok http 8081
 ```
 
-4. Copy the `https://` URL output by ngrok. In the `issuer/app.js` file, update the `host` variable to its value.
-
-
 ### Run the website
 
 Finally, you're ready to run the website on your local machine:
@@ -56,7 +53,7 @@ Finally, you're ready to run the website on your local machine:
 node ./app.js
 ```
 
-Once the site is up and running, navigate to the site in a browser using the ngrok URL.
+Once the site is up and running, navigate to the site in a browser using the secure ngrok URL, like `https://2ebe3ce0095c.ngrok.io/`.
 
 ### Using the website
 

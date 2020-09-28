@@ -28,6 +28,16 @@ Follow these steps to run the sample using a pre-configured Verified Credential 
 
 Before you can use the verifier sample, you'll first need to issue a verifiable credential to Authenticator. If you haven't done so already, head on over to the  `../issuer` sample first, and then return to this verifier sample.
 
+### Generate a DID for your verifier
+
+Before running the website, you need to generate a decentralized identifier (DID) that your website will use when it communicates with users. Each DID requires a set of cryptographic keys, whose private key can be stored in Azure Key Vault. To run this sample you can use a key vault we've set up for you. Run the following command to generate a new DID for your verifier and create keys in our key vault:
+
+```
+node ./generate.js
+```
+
+You can also use your own Azure Key Vault by following the instructions at the bottom of this README.
+
 ### Connect Authenticator to your local Node server
 
 When you run the sample website, your android device will need to be able to communicate with your Node server via HTTPS requests. Setting this up can be a bit tricky - you have a few options to choose from:
@@ -47,9 +57,6 @@ We recommend the last option. Here are the steps we used to do so:
 ngrok http 8082
 ```
 
-4. Copy the `https://` URL output by ngrok. In the `verifier/app.js` file, update the `host` variable to its value.
-
-
 ### Run the website
 
 Finally, you're ready to run the website on your local machine:
@@ -58,7 +65,7 @@ Finally, you're ready to run the website on your local machine:
 node ./app.js
 ```
 
-Once the site is up and running, navigate to the site in a browser using the ngrok URL.
+Once the site is up and running, navigate to the site in a browser using the secure ngrok URL, like `https://ac808a8fbe54.ngrok.io`.
 
 ### Using the website
 
@@ -76,6 +83,6 @@ If you've created your own issuer following our [documentation](https://aka.ms/d
 2. In `app.js`, update the `issuerDid` value to the expected DID of the issuer of the verifiable credential you expect.
 3. In `app.js`, optionally update the `client` values to reflect your verifier website.
 4. In `didconfig.json`, update all values to use your Azure Key Vault.
-6. Run `node ./generate.js` to generate a new DID for your website and create keys in your Key Vault. 
+5. Run `node ./generate.js` to generate a new DID for your website and create keys in your Key Vault. 
 
 More instructions on using the VC SDK to request and verify verifiable credentials can be found in our [documentation](https://aka.ms/didfordevs).
