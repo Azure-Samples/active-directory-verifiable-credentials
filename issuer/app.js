@@ -48,7 +48,7 @@ const credential = 'https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd
 const credentialType = ['VerifiedCredentialNinja'];
 
 //////////// Main Express server function
-// Note: You'll want to update the hostname and port values for your setup.
+// Note: You'll want to update port values for your setup.
 const app = express()
 const port = 8081
 

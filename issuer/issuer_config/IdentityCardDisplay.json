@@ -1,7 +1,6 @@
 {
   "default": {
     "locale": "en-US",
-    "contract": "https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/contracts/IdentityCard",
     "card": {
       "title": "Verified Credential Ninja",
       "issuedBy": "Microsoft",
