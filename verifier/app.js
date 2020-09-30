@@ -51,7 +51,7 @@ const credentialType = 'VerifiedCredentialNinja';
 const issuerDid = ['did:ion:EiAQ8DKCI3WmQnab84lohz6-JODQOwV9-esWesruBLq54Q?-ion-initial-state=eyJkZWx0YV9oYXNoIjoiRWlCN0R1dEdZNG5NTWJtY2RXcDZLVDhjY2ZoVVBDSVlWVFEwUmkyUWtDXzNXUSIsInJlY292ZXJ5X2NvbW1pdG1lbnQiOiJFaURrT0tUQ2duUWIxWmg3ZTZsWGVXOGJGdmFqLTB2Y0wxcXRrel9ZdjMwZUxnIn0.eyJ1cGRhdGVfY29tbWl0bWVudCI6IkVpRHlDYXFGMFpENllFbmFCaUJjZkgyT3h0dHhyd1ZxaFZ4Wjg0Q1lNNUVpQ0EiLCJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljX2tleXMiOlt7ImlkIjoic2lnX2IxNDIzZGU5IiwidHlwZSI6IkVjZHNhU2VjcDI1NmsxVmVyaWZpY2F0aW9uS2V5MjAxOSIsImp3ayI6eyJrdHkiOiJFQyIsImNydiI6InNlY3AyNTZrMSIsIngiOiJPWlVueGMtRnBScS1JZjd3YWN6VUoxejdIdEpSTEF6UDViR1lGU250TlVJIiwieSI6Ikl1Q2c2ZHJ1bm84WjkxX2MwYVhvdnRfWVV0THBNQl9OMy11azZhcVU3YmsifSwicHVycG9zZSI6WyJhdXRoIiwiZ2VuZXJhbCJdfV19fV19'];
 
 //////////// Main Express server function
-// Note: You'll want to update the host and port values for your setup.
+// Note: You'll want to update port values for your setup.
 const app = express()
 const port = 8082
 
@@ -147,14 +147,14 @@ app.post('/presentation-response', parser, async (req, res) => {
     .useAudienceUrl(clientId)
     .build();
 
-  const validationResult = await validator.validate(req.body.id_token);
+  const validationResponse = await validator.validate(req.body.id_token);
   
-  if (!validationResult.result) {
-      console.error(`Validation failed: ${validationResult.detailedError}`);
+  if (!validationResponse.result) {
+      console.error(`Validation failed: ${validationResponse.detailedError}`);
       return res.send()
   }
 
-  var verifiedCredential = validationResult.validationResult.verifiableCredentials[credentialType].decodedToken;
+  var verifiedCredential = validationResponse.validationResult.verifiableCredentials[credentialType].decodedToken;
   console.log(`${verifiedCredential.vc.credentialSubject.firstName} ${verifiedCredential.vc.credentialSubject.lastName} is a Verified Credential Ninja!`);
 
   // Store the successful presentation in session storage
