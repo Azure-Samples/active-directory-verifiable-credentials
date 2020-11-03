@@ -48,7 +48,7 @@ var crypto = new CryptoBuilder()
 
 /////////// Set the expected values for the Verifiable Credential
 const credentialType = 'VerifiedCredentialNinja';
-const issuerDid = ['did:ion:EiAQ8DKCI3WmQnab84lohz6-JODQOwV9-esWesruBLq54Q?-ion-initial-state=eyJkZWx0YV9oYXNoIjoiRWlCN0R1dEdZNG5NTWJtY2RXcDZLVDhjY2ZoVVBDSVlWVFEwUmkyUWtDXzNXUSIsInJlY292ZXJ5X2NvbW1pdG1lbnQiOiJFaURrT0tUQ2duUWIxWmg3ZTZsWGVXOGJGdmFqLTB2Y0wxcXRrel9ZdjMwZUxnIn0.eyJ1cGRhdGVfY29tbWl0bWVudCI6IkVpRHlDYXFGMFpENllFbmFCaUJjZkgyT3h0dHhyd1ZxaFZ4Wjg0Q1lNNUVpQ0EiLCJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljX2tleXMiOlt7ImlkIjoic2lnX2IxNDIzZGU5IiwidHlwZSI6IkVjZHNhU2VjcDI1NmsxVmVyaWZpY2F0aW9uS2V5MjAxOSIsImp3ayI6eyJrdHkiOiJFQyIsImNydiI6InNlY3AyNTZrMSIsIngiOiJPWlVueGMtRnBScS1JZjd3YWN6VUoxejdIdEpSTEF6UDViR1lGU250TlVJIiwieSI6Ikl1Q2c2ZHJ1bm84WjkxX2MwYVhvdnRfWVV0THBNQl9OMy11azZhcVU3YmsifSwicHVycG9zZSI6WyJhdXRoIiwiZ2VuZXJhbCJdfV19fV19'];
+const issuerDid = ['did:ion:EiDRCyqCjGGy-ILyZBOO8QejJei7pG0V-RyO-BDQieiteg?-ion-initial-state=eyJkZWx0YV9oYXNoIjoiRWlDczFxa2RwbGxrbzN5OGJvNE9aVjNjTEoyUkNaeTI3SXp5ZkNYLUNlR1ZZUSIsInJlY292ZXJ5X2NvbW1pdG1lbnQiOiJFaUNFZXNtZ0hSbXZSckRCVlpiLU1jT1lTVURoZERuMGhsRVlKSzBIQnpETG9RIn0.eyJ1cGRhdGVfY29tbWl0bWVudCI6IkVpQ1lDVU9pRWZ6T0tXVm1pVmpJZUJLX0tkVGZReEdyMGdFMjR0WUxySmVVUHciLCJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljX2tleXMiOlt7ImlkIjoic2lnX2Y1ZTA0ZDVlIiwidHlwZSI6IkVjZHNhU2VjcDI1NmsxVmVyaWZpY2F0aW9uS2V5MjAxOSIsImp3ayI6eyJrdHkiOiJFQyIsImNydiI6InNlY3AyNTZrMSIsIngiOiJBVjRPUTc1eGNvSmxzVkpMcHkxUjlGVTdzd0FaTFJ0ZW44VTZhb0lKU2hnIiwieSI6Ik8tMGJBcUR2NFZsSlZ2SGhJMUgwS2FVcTVia1ZjRjdpbjRlSDVDTVB6TlUifSwicHVycG9zZSI6WyJhdXRoIiwiZ2VuZXJhbCJdfV19fV19'];
 
 //////////// Main Express server function
 // Note: You'll want to update port values for your setup.
@@ -147,6 +147,7 @@ app.post('/presentation-response', parser, async (req, res) => {
     .useAudienceUrl(clientId)
     .build();
 
+  const token = req.body.id_token;
   const validationResponse = await validator.validate(req.body.id_token);
   
   if (!validationResponse.result) {

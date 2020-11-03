@@ -7,7 +7,7 @@
       "backgroundColor": "#000000",
       "textColor": "#ffffff",
       "logo": {
-        "uri": "https://storagebeta.blob.core.windows.net/static/ninja-icon.png",
+        "uri": "https://didcustomerplayground.blob.core.windows.net/public/ninja-icon.png",
         "description": "Ninja Logo"
       },
       "description": "Use your verified credential ninja card to prove to anyone that you know all about verifiable credentials."
