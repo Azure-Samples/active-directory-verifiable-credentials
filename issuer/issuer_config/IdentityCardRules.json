@@ -6,9 +6,9 @@
           "firstName": { "claim": "given_name" },
           "lastName": { "claim": "family_name" }
         },
-        "configuration": "https://verifiablecreds.b2clogin.com/verifiablecreds.onmicrosoft.com/B2C_1_sisu/v2.0/.well-known/openid-configuration",
-        "client_id": "7c0c4ab2-2410-4361-994a-4c03ca576cd7",
-        "redirect_uri": "portableidentity://verify"
+        "configuration": "https://didplayground.b2clogin.com/didplayground.onmicrosoft.com/B2C_1_sisu/v2.0/.well-known/openid-configuration",
+        "client_id": "8d5b446e-22b2-4e01-bb2e-9070f6b20c90",
+        "redirect_uri": "vcclient://openid"
       }
     ]
   },

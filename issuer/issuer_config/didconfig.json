@@ -1,8 +1,8 @@
 {
-    "azTenantId": "9c59be8b-bd18-45d9-b9d9-082bc07c094f",
-    "azClientId": "7defc11c-9e7e-4f08-853c-1baf15cba092",
-    "azClientSecret": "0lpGkXOa7n~-uUMi5WIGkn~fLUgMD~Yi8r",
-    "kvVaultUri": "https://betajun20-kv.vault.azure.net/",
+    "azTenantId": "3c32ed40-8a10-465b-8ba4-0b1e86882668",
+    "azClientId": "f9ba52fa-7908-4e28-8e18-5c3e75fc9db9",
+    "azClientSecret": "1bWD_tu3~9B0_.ROW3BFJN-Hu_xjfR8EL5",
+    "kvVaultUri": "https://didkvforsamplehost.vault.azure.net/",
     "kvSigningKeyId": "issuer-signing-key",
     "kvRecoveryKeyId": "issuer-recovery-key"
 }

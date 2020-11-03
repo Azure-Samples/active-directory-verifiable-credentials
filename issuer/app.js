@@ -44,7 +44,7 @@ var crypto = new CryptoBuilder()
 })();
 
 /////////// Set the expected values for the Verifiable Credential
-const credential = 'https://portableidentitycards.azure-api.net/v1.0/9c59be8b-bd18-45d9-b9d9-082bc07c094f/portableIdentities/contracts/Ninja%20Card';
+const credential = 'https://portableidentitycards.azure-api.net/v1.0/3c32ed40-8a10-465b-8ba4-0b1e86882668/portableIdentities/contracts/VerifiedCredentialNinja';
 const credentialType = ['VerifiedCredentialNinja'];
 
 //////////// Main Express server function
