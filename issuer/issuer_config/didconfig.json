@@ -4,5 +4,6 @@
     "azClientSecret": "1bWD_tu3~9B0_.ROW3BFJN-Hu_xjfR8EL5",
     "kvVaultUri": "https://didkvforsamplehost.vault.azure.net/",
     "kvSigningKeyId": "issuer-signing-key",
-    "kvRecoveryKeyId": "issuer-recovery-key"
+    "kvRecoveryKeyId": "issuer-recovery-key",
+    "kvUpdateKeyId": "issuer-update-key"
 }

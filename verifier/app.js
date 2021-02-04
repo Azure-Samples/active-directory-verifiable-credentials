@@ -18,7 +18,8 @@ var { ClientSecretCredential } = require('@azure/identity');
 var { CryptoBuilder, 
       RequestorBuilder, 
       ValidatorBuilder,
-      KeyReference
+      KeyReference,
+      ManagedHttpResolver
     } = require('verifiablecredentials-verification-sdk-typescript');
 
 /////////// Verifier's client details
@@ -39,16 +40,19 @@ if (!config.did) {
 const kvCredentials = new ClientSecretCredential(config.azTenantId, config.azClientId, config.azClientSecret);
 const signingKeyReference = new KeyReference(config.kvSigningKeyId, 'key');
 const recoveryKeyReference = new KeyReference(config.kvRecoveryKeyId, 'key');
+const updateKeyReference = new KeyReference(config.kvUpdateKeyId, 'key');
+
 var crypto = new CryptoBuilder()
     .useSigningKeyReference(signingKeyReference)
     .useRecoveryKeyReference(recoveryKeyReference)
+    .useUpdateKeyReference(updateKeyReference)
     .useKeyVault(kvCredentials, config.kvVaultUri)
     .useDid(config.did)
     .build();
 
 /////////// Set the expected values for the Verifiable Credential
 const credentialType = 'VerifiedCredentialNinja';
-const issuerDid = ['did:ion:EiDRCyqCjGGy-ILyZBOO8QejJei7pG0V-RyO-BDQieiteg?-ion-initial-state=eyJkZWx0YV9oYXNoIjoiRWlDczFxa2RwbGxrbzN5OGJvNE9aVjNjTEoyUkNaeTI3SXp5ZkNYLUNlR1ZZUSIsInJlY292ZXJ5X2NvbW1pdG1lbnQiOiJFaUNFZXNtZ0hSbXZSckRCVlpiLU1jT1lTVURoZERuMGhsRVlKSzBIQnpETG9RIn0.eyJ1cGRhdGVfY29tbWl0bWVudCI6IkVpQ1lDVU9pRWZ6T0tXVm1pVmpJZUJLX0tkVGZReEdyMGdFMjR0WUxySmVVUHciLCJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljX2tleXMiOlt7ImlkIjoic2lnX2Y1ZTA0ZDVlIiwidHlwZSI6IkVjZHNhU2VjcDI1NmsxVmVyaWZpY2F0aW9uS2V5MjAxOSIsImp3ayI6eyJrdHkiOiJFQyIsImNydiI6InNlY3AyNTZrMSIsIngiOiJBVjRPUTc1eGNvSmxzVkpMcHkxUjlGVTdzd0FaTFJ0ZW44VTZhb0lKU2hnIiwieSI6Ik8tMGJBcUR2NFZsSlZ2SGhJMUgwS2FVcTVia1ZjRjdpbjRlSDVDTVB6TlUifSwicHVycG9zZSI6WyJhdXRoIiwiZ2VuZXJhbCJdfV19fV19'];
+const issuerDid = ['did:ion:EiCbzwA19W4I2S2aups60-4DwRkPHMIfxv_PbaF4vdA7Jw:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJzaWdfMTE2M2NiYWQiLCJwdWJsaWNLZXlKd2siOnsiY3J2Ijoic2VjcDI1NmsxIiwia3R5IjoiRUMiLCJ4IjoiU3dwbzVuTWhhNnhCWTFVZGM0azNTU19EUE9WeGtGeXAta09oZVFGckFCMCIsInkiOiJVMW51QTI5YnN2OWNsRm1qZmhyLTR4and0WFVSYWUyLXpKWUdmaFRJbk9VIn0sInB1cnBvc2VzIjpbImF1dGhlbnRpY2F0aW9uIiwiYXNzZXJ0aW9uTWV0aG9kIl0sInR5cGUiOiJFY2RzYVNlY3AyNTZrMVZlcmlmaWNhdGlvbktleTIwMTkifV0sInNlcnZpY2VzIjpbeyJpZCI6ImxpbmtlZGRvbWFpbnMiLCJzZXJ2aWNlRW5kcG9pbnQiOnsib3JpZ2lucyI6WyJodHRwczovL2RpZGN1c3RvbWVycGxheWdyb3VuZC56MTMud2ViLmNvcmUud2luZG93cy5uZXQvIl19LCJ0eXBlIjoiTGlua2VkRG9tYWlucyJ9XX19XSwidXBkYXRlQ29tbWl0bWVudCI6IkVpQXJKdXpoVlV4SHhKUGNiWFVsNHJWNEhoVEx4OFh3ZlZNczJOd24xTlNxcGcifSwic3VmZml4RGF0YSI6eyJkZWx0YUhhc2giOiJFaUJwOC1EQmxqdmc0bkI2U29vMkJkYUJHZExXMDdPaFhYTjJhRnlBdVdzVUZRIiwicmVjb3ZlcnlDb21taXRtZW50IjoiRWlBdFdLbDVJSHhZZE1fZXlKakdESEl3bnhkaGZKSzhkMExOb3JCLTJmQzdjdyJ9fQ'];
 
 //////////// Main Express server function
 // Note: You'll want to update port values for your setup.
@@ -142,9 +146,15 @@ app.post('/presentation-response', parser, async (req, res) => {
   // Validate the credential presentation and extract the credential's attributes.
   // If this check succeeds, the user is a Verified Credential Ninja.
   // Log a message to the console indicating successful verification of the credential.
+
+  // TEMPORARY OVERRIDE OF THE RESOLVER
+  const didResolver = new ManagedHttpResolver('https://beta.discover.did.msidentity.com/1.0/identifiers/');
+
   const validator = new ValidatorBuilder(crypto)
     .useTrustedIssuersForVerifiableCredentials({[credentialType]: issuerDid})
     .useAudienceUrl(clientId)
+    .useResolver(didResolver)
+    .enableFeatureVerifiedCredentialsStatusCheck(false)
     .build();
 
   const token = req.body.id_token;
