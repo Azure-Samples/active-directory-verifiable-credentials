@@ -18,8 +18,7 @@ var { ClientSecretCredential } = require('@azure/identity');
 var { CryptoBuilder, 
       RequestorBuilder, 
       ValidatorBuilder,
-      KeyReference,
-      ManagedHttpResolver
+      KeyReference
     } = require('verifiablecredentials-verification-sdk-typescript');
 
 /////////// Verifier's client details
@@ -147,14 +146,9 @@ app.post('/presentation-response', parser, async (req, res) => {
   // If this check succeeds, the user is a Verified Credential Ninja.
   // Log a message to the console indicating successful verification of the credential.
 
-  // TEMPORARY OVERRIDE OF THE RESOLVER
-  const didResolver = new ManagedHttpResolver('https://beta.discover.did.msidentity.com/1.0/identifiers/');
-
   const validator = new ValidatorBuilder(crypto)
     .useTrustedIssuersForVerifiableCredentials({[credentialType]: issuerDid})
     .useAudienceUrl(clientId)
-    .useResolver(didResolver)
-    .enableFeatureVerifiedCredentialsStatusCheck(false)
     .build();
 
   const token = req.body.id_token;
