@@ -26,19 +26,22 @@ const config = require('./issuer_config/didconfig.json')
 const kvCredentials = new ClientSecretCredential(config.azTenantId, config.azClientId, config.azClientSecret);
 const signingKeyReference = new KeyReference(config.kvSigningKeyId, 'key');
 const recoveryKeyReference = new KeyReference(config.kvRecoveryKeyId, 'key');
+const updateKeyReference = new KeyReference(config.kvUpdateKeyId, 'key');
 var crypto = new CryptoBuilder()
     .useSigningKeyReference(signingKeyReference)
     .useRecoveryKeyReference(recoveryKeyReference)
+    .useUpdateKeyReference(updateKeyReference)
     .useKeyVault(kvCredentials, config.kvVaultUri)
     .build();
 
-// BUGBUG: This website currently does not use the same issuer DID that was 
+// This website currently does not use the same issuer DID that was 
 // generated in Azure Portal as part of issuer setup. 
 // Instead, a new set of Azure Key Vault keys along with a new DID are generated 
 // on each run of this web app.
 (async () => {
   crypto = await crypto.generateKey(KeyUse.Signature, 'signing');
   crypto = await crypto.generateKey(KeyUse.Signature, 'recovery');
+  crypto = await crypto.generateKey(KeyUse.Signature, 'update');
   const did = await new LongFormDid(crypto).serialize();
   crypto.builder.useDid(did);
 })();
