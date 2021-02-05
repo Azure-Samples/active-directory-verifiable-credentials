@@ -37,21 +37,18 @@ if (!config.did) {
 
 ////////// Load the VC SDK with the verifier's DID and Key Vault details
 const kvCredentials = new ClientSecretCredential(config.azTenantId, config.azClientId, config.azClientSecret);
-const signingKeyReference = new KeyReference(config.kvSigningKeyId, 'key');
-const recoveryKeyReference = new KeyReference(config.kvRecoveryKeyId, 'key');
-const updateKeyReference = new KeyReference(config.kvUpdateKeyId, 'key');
-
-var crypto = new CryptoBuilder()
-    .useSigningKeyReference(signingKeyReference)
-    .useRecoveryKeyReference(recoveryKeyReference)
-    .useUpdateKeyReference(updateKeyReference)
-    .useKeyVault(kvCredentials, config.kvVaultUri)
-    .useDid(config.did)
-    .build();
+const signingKeyReference = new KeyReference(config.kvSigningKeyId, 'key', config.kvRemoteSigningKeyId);
 
 /////////// Set the expected values for the Verifiable Credential
 const credentialType = 'VerifiedCredentialNinja';
 const issuerDid = ['did:ion:EiCbzwA19W4I2S2aups60-4DwRkPHMIfxv_PbaF4vdA7Jw:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJzaWdfMTE2M2NiYWQiLCJwdWJsaWNLZXlKd2siOnsiY3J2Ijoic2VjcDI1NmsxIiwia3R5IjoiRUMiLCJ4IjoiU3dwbzVuTWhhNnhCWTFVZGM0azNTU19EUE9WeGtGeXAta09oZVFGckFCMCIsInkiOiJVMW51QTI5YnN2OWNsRm1qZmhyLTR4and0WFVSYWUyLXpKWUdmaFRJbk9VIn0sInB1cnBvc2VzIjpbImF1dGhlbnRpY2F0aW9uIiwiYXNzZXJ0aW9uTWV0aG9kIl0sInR5cGUiOiJFY2RzYVNlY3AyNTZrMVZlcmlmaWNhdGlvbktleTIwMTkifV0sInNlcnZpY2VzIjpbeyJpZCI6ImxpbmtlZGRvbWFpbnMiLCJzZXJ2aWNlRW5kcG9pbnQiOnsib3JpZ2lucyI6WyJodHRwczovL2RpZGN1c3RvbWVycGxheWdyb3VuZC56MTMud2ViLmNvcmUud2luZG93cy5uZXQvIl19LCJ0eXBlIjoiTGlua2VkRG9tYWlucyJ9XX19XSwidXBkYXRlQ29tbWl0bWVudCI6IkVpQXJKdXpoVlV4SHhKUGNiWFVsNHJWNEhoVEx4OFh3ZlZNczJOd24xTlNxcGcifSwic3VmZml4RGF0YSI6eyJkZWx0YUhhc2giOiJFaUJwOC1EQmxqdmc0bkI2U29vMkJkYUJHZExXMDdPaFhYTjJhRnlBdVdzVUZRIiwicmVjb3ZlcnlDb21taXRtZW50IjoiRWlBdFdLbDVJSHhZZE1fZXlKakdESEl3bnhkaGZKSzhkMExOb3JCLTJmQzdjdyJ9fQ'];
+
+var crypto = new CryptoBuilder()
+    .useSigningKeyReference(signingKeyReference)
+    .useKeyVault(kvCredentials, config.kvVaultUri)
+    .useDid(config.did)
+    .build();
+
 
 //////////// Main Express server function
 // Note: You'll want to update port values for your setup.
