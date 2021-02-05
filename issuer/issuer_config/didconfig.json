@@ -1,9 +1,0 @@
-{
-    "azTenantId": "3c32ed40-8a10-465b-8ba4-0b1e86882668",
-    "azClientId": "f9ba52fa-7908-4e28-8e18-5c3e75fc9db9",
-    "azClientSecret": "1bWD_tu3~9B0_.ROW3BFJN-Hu_xjfR8EL5",
-    "kvVaultUri": "https://didkvforsamplehost.vault.azure.net/",
-    "kvSigningKeyId": "issuer-signing-key",
-    "kvRecoveryKeyId": "issuer-recovery-key",
-    "kvUpdateKeyId": "issuer-update-key"
-}
