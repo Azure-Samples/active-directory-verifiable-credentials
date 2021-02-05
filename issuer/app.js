@@ -85,6 +85,7 @@ app.get('/issue-request', async (req, res) => {
     presentationDefinition: {
       input_descriptors: [
         {
+          id: "ninja",
           schema: {
             uri: credentialType,
           },
