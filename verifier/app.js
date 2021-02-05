@@ -35,7 +35,7 @@ if (!config.did) {
   throw new Error('Make sure you run the DID generation script before starting the server.')
 }
 
-////////// Load the VC SDK with the verifier's DID and Key Vault details
+////////// Load the VC SDK with the Issuing Service's DID and Key Vault details
 const kvCredentials = new ClientSecretCredential(config.azTenantId, config.azClientId, config.azClientSecret);
 const signingKeyReference = new KeyReference(config.kvSigningKeyId, 'key', config.kvRemoteSigningKeyId);
 
@@ -95,6 +95,7 @@ app.get('/presentation-request', async (req, res) => {
     client_purpose: client.client_purpose,
     presentationDefinition: {
       input_descriptors: [{
+          id:"ninja",
           schema: {
               uri: [credentialType],
           }

@@ -20,31 +20,17 @@ var { CryptoBuilder,
 
 
 ////////// Issuer's DID configuration values
-const config = require('./issuer_config/didconfig.json')
+const config = require('./didconfig.json')
 
 ////////// Load the VC SDK with the Issuer's DID and Key Vault details
 const kvCredentials = new ClientSecretCredential(config.azTenantId, config.azClientId, config.azClientSecret);
-const signingKeyReference = new KeyReference(config.kvSigningKeyId, 'key');
-const recoveryKeyReference = new KeyReference(config.kvRecoveryKeyId, 'key');
-const updateKeyReference = new KeyReference(config.kvUpdateKeyId, 'key');
+const signingKeyReference = new KeyReference(config.kvSigningKeyId, 'key', config.kvRemoteSigningKeyId);
+
 var crypto = new CryptoBuilder()
     .useSigningKeyReference(signingKeyReference)
-    .useRecoveryKeyReference(recoveryKeyReference)
-    .useUpdateKeyReference(updateKeyReference)
     .useKeyVault(kvCredentials, config.kvVaultUri)
+    .useDid(config.did)
     .build();
-
-// This website currently does not use the same issuer DID that was 
-// generated in Azure Portal as part of issuer setup. 
-// Instead, a new set of Azure Key Vault keys along with a new DID are generated 
-// on each run of this web app.
-(async () => {
-  crypto = await crypto.generateKey(KeyUse.Signature, 'signing');
-  crypto = await crypto.generateKey(KeyUse.Signature, 'recovery');
-  crypto = await crypto.generateKey(KeyUse.Signature, 'update');
-  const did = await new LongFormDid(crypto).serialize();
-  crypto.builder.useDid(did);
-})();
 
 /////////// Set the expected values for the Verifiable Credential
 const credential = 'https://portableidentitycards.azure-api.net/v1.0/3c32ed40-8a10-465b-8ba4-0b1e86882668/portableIdentities/contracts/VerifiedCredentialNinja';
