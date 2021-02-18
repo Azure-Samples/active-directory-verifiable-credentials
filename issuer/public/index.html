@@ -37,7 +37,7 @@
                 var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
         
                 signIn.addEventListener('click', () => {
-                    fetch('/issue-request')
+                    fetch('issue-request')
                     .then(function(response) {
                         response.text().then(function(message) {
                             if( /Android/i.test(navigator.userAgent) ) {
