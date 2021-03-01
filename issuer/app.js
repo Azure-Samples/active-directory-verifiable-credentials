@@ -33,7 +33,7 @@ var crypto = new CryptoBuilder()
     .build();
 
 /////////// Set the expected values for the Verifiable Credential
-const credential = 'https://portableidentitycards.azure-api.net/v1.0/3c32ed40-8a10-465b-8ba4-0b1e86882668/portableIdentities/contracts/VerifiedCredentialNinja';
+const credential = 'https://beta.did.msidentity.com/v1.0/3c32ed40-8a10-465b-8ba4-0b1e86882668/verifiableCredential/contracts/VerifiedCredentialNinja';
 const credentialType = ['VerifiedCredentialNinja'];
 
 //////////// Main Express server function
