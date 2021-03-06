@@ -54,7 +54,7 @@ var crypto = new CryptoBuilder()
 //////////// Main Express server function
 // Note: You'll want to update port values for your setup.
 const app = express()
-const port = 8082
+const port = process.env.PORT || 8082;
 
 // Serve static files out of the /public directory
 app.use(express.static('public'))
@@ -70,6 +70,22 @@ app.use(session({
   saveUninitialized: true,
   store: sessionStore
 }))
+
+// echo function so you can test deployment
+app.get("/echo",
+    function (req, res) {
+        res.status(200).json({
+            'date': new Date().toISOString(),
+            'api': req.protocol + '://' + req.hostname + req.originalUrl,
+            'Host': req.hostname,
+            'x-forwarded-for': req.headers['x-forwarded-for'],
+            'x-original-host': req.headers['x-original-host'],
+            'issuerDid': issuerDid,
+            'credentialType': credentialType,
+            'client_purpose': client.client_purpose
+            });
+    }
+);
 
 // Serve index.html as the home page
 app.get('/', function (req, res) { 
