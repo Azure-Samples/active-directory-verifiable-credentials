@@ -33,8 +33,8 @@ var crypto = new CryptoBuilder()
     .build();
 
 /////////// Set the expected values for the Verifiable Credential
-const credential = 'https://beta.did.msidentity.com/v1.0/3c32ed40-8a10-465b-8ba4-0b1e86882668/verifiableCredential/contracts/VerifiedCredentialNinja';
-const credentialType = ['VerifiedCredentialNinja'];
+const credential = 'https://beta.did.msidentity.com/v1.0/3c32ed40-8a10-465b-8ba4-0b1e86882668/verifiableCredential/contracts/VerifiedCredentialExpert';
+const credentialType = ['VerifiedCredentialExpert'];
 
 //////////// Main Express server function
 // Note: You'll want to update port values for your setup.
@@ -77,7 +77,7 @@ app.get('/', function (req, res) {
 })
 
 // Generate an issuance request, cache it on the server,
-// and return a reference to the issuance reqeust. The reference
+// and return a reference to the issuance request. The reference
 // will be displayed to the user on the client side as a QR code.
 app.get('/issue-request', async (req, res) => {
 
@@ -87,7 +87,7 @@ app.get('/issue-request', async (req, res) => {
     presentationDefinition: {
       input_descriptors: [
         {
-          id: "ninja",
+          id: "expert",
           schema: {
             uri: credentialType,
           },
@@ -117,7 +117,7 @@ app.get('/issue-request', async (req, res) => {
 // issue request to Authenticator.
 app.get('/issue-request.jwt', async (req, res) => {
 
-  // Look up the issue reqeust by session ID
+  // Look up the issue request by session ID
   sessionStore.get(req.query.id, (error, session) => {
     res.send(session.issueRequest.request);
   })

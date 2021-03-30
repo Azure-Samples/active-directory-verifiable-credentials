@@ -24,7 +24,7 @@ var { CryptoBuilder,
 /////////// Verifier's client details
 const client = {
   client_name: 'Sample Verifier',
-  logo_uri: 'https://storagebeta.blob.core.windows.net/static/ninja-icon.png',
+  logo_uri: 'https://didcustomerplayground.blob.core.windows.net/public/VerifiedCredentialExpert_icon.png',
   tos_uri: 'https://www.microsoft.com/servicesagreement',
   client_purpose: 'To check if you know how to use verifiable credentials.'
 }
@@ -40,8 +40,8 @@ const kvCredentials = new ClientSecretCredential(config.azTenantId, config.azCli
 const signingKeyReference = new KeyReference(config.kvSigningKeyId, 'key', config.kvRemoteSigningKeyId);
 
 /////////// Set the expected values for the Verifiable Credential
-const credential = 'https://beta.did.msidentity.com/v1.0/3c32ed40-8a10-465b-8ba4-0b1e86882668/verifiableCredential/contracts/VerifiedCredentialNinja';
-const credentialType = 'VerifiedCredentialNinja';
+const credential = 'https://beta.did.msidentity.com/v1.0/3c32ed40-8a10-465b-8ba4-0b1e86882668/verifiableCredential/contracts/VerifiedCredentialExpert';
+const credentialType = 'VerifiedCredentialExpert';
 const issuerDid = ['did:ion:EiAUeAySrc1qgPucLYI_ytfudT8bFxUETNolzz4PCdy1bw:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJzaWdfMjRiYjMwNzQiLCJwdWJsaWNLZXlKd2siOnsiY3J2Ijoic2VjcDI1NmsxIiwia3R5IjoiRUMiLCJ4IjoiRDlqYUgwUTFPZW1XYVVfeGtmRzBJOVoyYnctOFdLUFF2TWt2LWtkdjNxUSIsInkiOiJPclVUSzBKSWN0UnFQTHRCQlQxSW5iMTdZS29sSFJvX1kyS0Zfb3YyMEV3In0sInB1cnBvc2VzIjpbImF1dGhlbnRpY2F0aW9uIiwiYXNzZXJ0aW9uTWV0aG9kIl0sInR5cGUiOiJFY2RzYVNlY3AyNTZrMVZlcmlmaWNhdGlvbktleTIwMTkifV0sInNlcnZpY2VzIjpbeyJpZCI6ImxpbmtlZGRvbWFpbnMiLCJzZXJ2aWNlRW5kcG9pbnQiOnsib3JpZ2lucyI6WyJodHRwczovL2RpZC53b29kZ3JvdmVkZW1vLmNvbS8iXX0sInR5cGUiOiJMaW5rZWREb21haW5zIn1dfX1dLCJ1cGRhdGVDb21taXRtZW50IjoiRWlBeWF1TVgzRWtBcUg2RVFUUEw4SmQ4alVvYjZXdlZrNUpSamdodEVYWHhDQSJ9LCJzdWZmaXhEYXRhIjp7ImRlbHRhSGFzaCI6IkVpQ1NvajVqSlNOUjBKU0tNZEJ1Y2RuMlh5U2ZaYndWVlNIWUNrREllTHV5NnciLCJyZWNvdmVyeUNvbW1pdG1lbnQiOiJFaUR4Ym1ELTQ5cEFwMDBPakd6VXdoNnY5ZjB5cnRiaU5TbXA3dldwbTREVHpBIn19'];
 
 var crypto = new CryptoBuilder()
@@ -93,7 +93,7 @@ app.get('/', function (req, res) {
 })
 
 // Generate an presentation request, cache it on the server,
-// and return a reference to the issuance reqeust. The reference
+// and return a reference to the issuance request. The reference
 // will be displayed to the user on the client side as a QR code.
 app.get('/presentation-request', async (req, res) => {
 
@@ -112,7 +112,7 @@ app.get('/presentation-request', async (req, res) => {
     client_purpose: client.client_purpose,
     presentationDefinition: {
       input_descriptors: [{
-          id:"ninja",
+          id:"expert",
           schema: {
               uri: [credentialType],
           },
@@ -141,18 +141,21 @@ app.get('/presentation-request', async (req, res) => {
 // presentation request to Authenticator.
 app.get('/presentation-request.jwt', async (req, res) => {
 
-  // Look up the issue reqeust by session ID
+  // Look up the issue request by session ID
   sessionStore.get(req.query.id, (error, session) => {
-    res.send(session.presentationRequest.request);
-  })
-
+    if (error || !session) {
+        res.status(404).send({ 'error': 'session not found' }).end();
+    } else {
+      res.send(session.presentationRequest.request);
+    }
+  });
 })
 
 
 // Once the user approves the presentation request,
 // Authenticator will present the credential back to this server
 // at this URL. We can verify the credential and extract its contents
-// to verify the user is a Verified Credential Ninja.
+// to verify the user is a Verified Credential Expert.
 var parser = bodyParser.urlencoded({ extended: false });
 app.post('/presentation-response', parser, async (req, res) => {
 
@@ -161,7 +164,7 @@ app.post('/presentation-response', parser, async (req, res) => {
   const clientId = `https://${req.hostname}/presentation-response`
 
   // Validate the credential presentation and extract the credential's attributes.
-  // If this check succeeds, the user is a Verified Credential Ninja.
+  // If this check succeeds, the user is a Verified Credential Expert.
   // Log a message to the console indicating successful verification of the credential.
 
   const validator = new ValidatorBuilder(crypto)
@@ -178,7 +181,7 @@ app.post('/presentation-response', parser, async (req, res) => {
   }
 
   var verifiedCredential = validationResponse.validationResult.verifiableCredentials[credentialType].decodedToken;
-  console.log(`${verifiedCredential.vc.credentialSubject.firstName} ${verifiedCredential.vc.credentialSubject.lastName} is a Verified Credential Ninja!`);
+  console.log(`${verifiedCredential.vc.credentialSubject.firstName} ${verifiedCredential.vc.credentialSubject.lastName} is a Verified Credential Expert!`);
 
   // Store the successful presentation in session storage
   sessionStore.get(req.body.state, (error, session) => {
@@ -192,8 +195,8 @@ app.post('/presentation-response', parser, async (req, res) => {
 
 
 // Checks to see if the server received a successful presentation
-// of a Verified Credential Ninja card. Updates the browser UI with
-// a successful message if the user is a verified ninja.
+// of a Verified Credential Expert card. Updates the browser UI with
+// a successful message if the user is a Verified Credential Expert.
 app.get('/presentation-response', async (req, res) => {
 
   // If a credential has been received, display the contents in the browser
@@ -201,7 +204,7 @@ app.get('/presentation-response', async (req, res) => {
 
     presentedCredential = req.session.verifiedCredential;
     req.session.verifiedCredential = null;
-    return res.send(`Congratulations, ${presentedCredential.vc.credentialSubject.firstName} ${presentedCredential.vc.credentialSubject.lastName} is a Verified Credential Ninja!`)  
+    return res.send(`Congratulations, ${presentedCredential.vc.credentialSubject.firstName} ${presentedCredential.vc.credentialSubject.lastName} is a Verified Credential Expert!`)  
   }
 
   // If no credential has been received, just display an empty message
