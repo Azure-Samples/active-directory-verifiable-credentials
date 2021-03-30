@@ -10,11 +10,11 @@ urlFragment: "verifiable-credentials"
 
 # Verifiable Credentials Code Sample
 
-This code sample demonstrates how to use Microsoft's Azure Active Directory Verifiable Credential preview to issue and consume verifiable credentials. 
+This code sample demonstrates how to use Microsoft's Azure Active Directory Verifiable Credentials preview to issue and consume verifiable credentials. 
 
 ## About this sample
 
-Welcome to Azure Active Directory Verifiable Credentials. In this hello world code sample, we'll teach you to issue your first verifiable credential: a Verified Credential Ninja Card. You'll then use this card to prove to a verifier that you are a Verified Credential Ninja, mastered in the art of digital credentialing.
+Welcome to Azure Active Directory Verifiable Credentials. In this hello world code sample, we'll teach you to issue your first verifiable credential: a Verified Credential Expert Card. You'll then use this card to prove to a verifier that you are a Verified Credential Expert, mastered in the art of digital credentialing.
 
 ![Screenshot of a verifiable ninja card](./img/verifiedcredentialexpert-card.png)
 
