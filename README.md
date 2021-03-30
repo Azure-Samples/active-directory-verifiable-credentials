@@ -10,22 +10,22 @@ urlFragment: "verifiable-credentials"
 
 # Verifiable Credentials Code Sample
 
-This code sample demonstrates how to use Microsoft's verifiable credential preview to issue and consume verifiable credentials. 
+This code sample demonstrates how to use Microsoft's Azure Active Directory Verifiable Credentials preview to issue and consume verifiable credentials. 
 
 ## About this sample
 
-Welcome to Verifiable Credentials, powered by Azure. In this hello world code sample, we'll teach you to issue your first verifiable credential: a Verified Credential Ninja Card. You'll then use this card to prove to a verifier that you are a Verified Credential Ninja, mastered in the art of digital credentialing.
+Welcome to Azure Active Directory Verifiable Credentials. In this hello world code sample, we'll teach you to issue your first verifiable credential: a Verified Credential Expert Card. You'll then use this card to prove to a verifier that you are a Verified Credential Expert, mastered in the art of digital credentialing.
 
-![Screenshot of a verifiable ninja card](./img/ninja-card.png)
+![Screenshot of a verifiable ninja card](./img/verifiedcredentialexpert-card.png)
 
 There are two ways to run this code sample. 
 
-- Run the code as-is. The sample is set up to issue anyone a Credential Ninja Card, using a issuer in the cloud run by Microsoft. 
+- Run the code as-is. The sample is set up to issue anyone a Verified Credential Expert Card, using a issuer in the cloud run by Microsoft. 
 - Set up your own issuer, and change the code to use that issuer to issue a verifiable credential. Our [documentation](https://aka.ms/didfordevs) describes how to set up your own issuer.
 
-Read on for more instructions, and good luck ninjas!
+Read on for more instructions, and good luck!
 
-> NOTE: Verifiable Credentials are currently in an invitation-only preview. Only approved participants in the preview will be able to set up their own issuer. Furthermore, Verifiable Credentials must **not** be used for production use cases at this time. Please contact us if you would like to join the preview.
+> **Important**: Azure Active Directory Verifiable Credentials is currently in public preview. This preview version is provided without a service level agreement, and it's not recommended for production workloads. Certain features might not be supported or might have constrained capabilities. For more information, see [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/).
 
 ## Contents
 
@@ -47,7 +47,6 @@ issuer/public/            Contains HTML and javascript files used in the issuer 
 verifier                  The website acting as the verifier of the verifiable credential.
 verifier/README.md        Instructions for running the verifier website and consuming a verifiable credential.
 verifier/app.js           The simple NodeJS server containing all code.
-verifier/generate.js      A simple script that helps you generate a DID for your website.
 verifier/public/          Contains HTML and javascript files used in the issuer website.
 ```
 
@@ -57,8 +56,7 @@ Running this code sample will require:
 
 - NodeJS version `10.14` or higher installed on your machine.
 - Git installed on your machine.
-- An Android device.
-- An Azure subscription where you have access to create Azure key vaults.
+- An Android or IOS device.
 
 To run this code sample with your own issuer, you will require a few more things:
 
@@ -70,15 +68,15 @@ Refer to our [documentation](https://aka.ms/didfordevs) for more instructions on
 
 ## Key concepts
 
-The code in this sample demonstrates proper usage of the VC SDK, which is available on NPM:
+The code in this sample demonstrates proper usage of the VC SDK, which is available on NPM. If you create your own application and want to install the SDK type:
 
 ```
 npm install verifiablecredentials-verification-sdk-typescript
 ```
 
-The VC SDK provides classes and functions for implementing verifiable credential exchanges. This includes issuing credentials, requesting credentials from users, validating credentials, registering decentralized identifiers, and more. The VC SDK is currently in preview; you should expect breaking changes to occur with each release.
+The VC SDK provides classes and functions for implementing verifiable credential exchanges. This includes issuing credentials, requesting credentials from users, validating credentials, registering decentralized identifiers, and more. The VC SDK is currently in preview; you can expect breaking changes to occur with each release.
 
-In addition to the VC SDK, this code sample will use the Microsoft Authenticator mobile app for Android. The README for each website provides instructions on installing Authenticator. Verifiable credential support in Authenticator is not available for iOS at this time.
+In addition to the VC SDK, this code sample will use the Microsoft Authenticator mobile app for Android or IOS. The README for each website provides instructions on installing Authenticator.
 
 ## Contributing
 
