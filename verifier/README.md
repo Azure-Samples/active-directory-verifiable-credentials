@@ -73,6 +73,5 @@ If you've created your own issuer following our [documentation](https://aka.ms/d
 2. In `app.js`, update the `issuerDid` value to the expected DID of the issuer of the verifiable credential you expect.
 3. In `app.js`, optionally update the `client` values to reflect your verifier website.
 4. In `didconfig.json`, update all values to use your Azure Key Vault.
-5. Run `node ./generate.js` to generate a new DID for your website and create keys in your Key Vault. 
 
 More instructions on using the VC SDK to request and verify verifiable credentials can be found in our [documentation](https://aka.ms/didfordevs).
