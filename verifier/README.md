@@ -28,16 +28,6 @@ Follow these steps to run the sample using a pre-configured Verified Credential 
 
 Before you can use the verifier sample, you'll first need to issue a verifiable credential to Authenticator. If you haven't done so already, head on over to the  `../issuer` sample first, and then return to this verifier sample.
 
-### Generate a DID for your verifier
-
-Before running the website, you need to generate a decentralized identifier (DID) that your website will use when it communicates with users. Each DID requires a set of cryptographic keys, whose private key can be stored in Azure Key Vault. To run this sample you can use a key vault we've set up for you. Run the following command to generate a new DID for your verifier and create keys in our key vault:
-
-```
-node ./generate.js
-```
-
-You can also use your own Azure Key Vault by following the instructions at the bottom of this README.
-
 ### Connect Authenticator to your local Node server
 
 When you run the sample website, your android device will need to be able to communicate with your Node server via HTTPS requests. Setting this up can be a bit tricky - you have a few options to choose from:
