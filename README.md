@@ -7,7 +7,6 @@ products:
 description: "A code sample demonstrating issuance and verification of verifiable credentials."
 urlFragment: "verifiable-credentials"
 ---
-> **NOTE**: At this moment there is an issue with this sample the current version of Authenticator on Android. We are aware of the issue and trying to address it as soon as possible.
 
 # Verifiable Credentials Code Sample
 
