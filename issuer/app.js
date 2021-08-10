@@ -80,7 +80,8 @@ app.get('/', function (req, res) {
 // and return a reference to the issuance request. The reference
 // will be displayed to the user on the client side as a QR code.
 app.get('/issue-request', async (req, res) => {
-
+  state = req.session.id;
+  const nonce = base64url.encode(Buffer.from(secureRandom.randomUint8Array(10)));
   // Construct a request to issue a verifiable credential 
   // using the verifiable credential issuer service
   const requestBuilder = new RequestorBuilder({
@@ -99,7 +100,9 @@ app.get('/issue-request', async (req, res) => {
         }
       ]
     }
-  }, crypto).allowIssuance();
+  }, crypto).allowIssuance()
+  .useNonce(nonce)
+  .useState(state);
 
   // Cache the issue request on the server
   req.session.issueRequest = await requestBuilder.build().create();
