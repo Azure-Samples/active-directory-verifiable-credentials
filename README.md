@@ -48,7 +48,7 @@ issuer/public/            Contains HTML and javascript files used in the issuer 
 verifier                  The website acting as the verifier of the verifiable credential.
 verifier/README.md        Instructions for running the verifier website and consuming a verifiable credential.
 verifier/app.js           The simple NodeJS server containing all code.
-verifier/public/          Contains HTML and javascript files used in the issuer website.
+verifier/public/          Contains HTML and javascript files used in the verifier website.
 ```
 
 ## Prerequisites
