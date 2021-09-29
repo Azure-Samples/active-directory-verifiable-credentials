@@ -8,7 +8,7 @@ description: "A code sample demonstrating issuance and verification of verifiabl
 urlFragment: "verifiable-credentials"
 ---
 
-# Verifiable Credentials Code Sample
+# Verifiable Credentials Code Samples
 
 This code sample demonstrates how to use Microsoft's Azure Active Directory Verifiable Credentials preview to issue and consume verifiable credentials. 
 
