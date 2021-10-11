@@ -35,7 +35,7 @@ The typical samples consist of 2 parts, an issuer and a verifier. The holder or 
 
 ![diagram of an issuer and a verifier](./ReadmeFiles/issuer-verifier.png)
 
-The samples are meant as a way to quickly understand the principels and the usa of the Request API. If you are planning to create an application which needs to be run in production make sure you add proper error handling and other best practices.
+The samples are meant as a way to quickly understand the principles and the use of the Request API. If you are planning to create an application which needs to be run in production make sure you add proper error handling and other best practices.
 
 
 ## Prerequisites
