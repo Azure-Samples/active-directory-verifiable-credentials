@@ -1,21 +1,17 @@
-<<<<<<< Updated upstream
-bla
-RG
-=======
 # Use Postman with the Microsoft Azure AD Verifiable Credentials Request API
 
 You can use one of the two options to configure Postman collection to get started with Request APIs in minutes.
-![Postman_VC Request API] (./ReadmeFiles/Postman_VC Request API.png)
+![Screenshot of Postman_VC Request API](./ReadmeFiles/Postman_VC Request API.png)
 
 ## OPTION 1 (Using the Postman collection)
-**Step 1 - Forking the VC Request API Postman collection**
+**Step 1 - Forking the Verifiable Credentials Request API Postman collection**
 To use the Postman collection, fork it to your own Postman workspace. Do this from the web browser.
 1.	Go to Postman and sign in.
-2.	Go to the Postman collection labeled [VC Request API](https://www.postman.com/aadverifiablecredentials/workspace/vc-request-api/collection/18012404-fc35776e-afb7-4795-83d8-713701882c07/fork "VC Request API").
+2.	Go to the Postman collection labeled [VC Request API](https://www.postman.com/aadverifiablecredentials/workspace/verifiable-credentials-request-api/collection/18012404-fc35776e-afb7-4795-83d8-713701882c07/fork "Verifiable Credentials Request API").
 3.	Fill in a label for your own fork. This can be any text.
 4.	Under Workspace, ensure that My Workspace is selected in the drop-down list.
 5.	Select Fork Collection.
-6.	You will be redirected to a fork of the main **VC Request API** Postman collection in your own workspace.
+6.	You will be redirected to a fork of the main **Verifiable Credentials Request API** Postman collection in your own workspace.
 
 **Step 2 - (Optional - Postman Web browser only) Download the Postman Agent**
 To use this particular Postman collection in your web browser, download the [Postman Desktop Agent]( https://www.postman.com/downloads "Postman Desktop Agent"). You can't use Postman for the web without this due to CORS restrictions in the web browser.
@@ -25,7 +21,7 @@ You don't need the agent if you're using the Postman for Windows app. If you ope
 **Step 3 - Configuring authentication in Postman**
 In this step, you set up the environment variables used to retrieve an access token.
 
-1.	Go to [Fork environment](https://www.postman.com/aadverifiablecredentials/workspace/vc-request-api/environment/18012404-03ae4c46-8ae9-4b00-9062-5b579f02b03b/fork "Fork environment").
+1.	Go to [Fork environment](https://www.postman.com/aadverifiablecredentials/workspace/verifiable-credentials-request-api/environment/18012404-03ae4c46-8ae9-4b00-9062-5b579f02b03b/fork "Fork environment").
 2.	Add a label for fork. This can be any text.
 3.	Under Workspace, ensure that My Workspace is selected in the drop-down list.
 4.	Select Fork Environment.
@@ -65,4 +61,21 @@ Inside the collection, there are requests for issuance and presentation.
 ## OPTION 2 (Manually importing the postman collection and environment JSON files)
 
 You can import postman collection and environment JSON files manually in the Postman Windows app and follow steps 3,4 & 5 from **OPTION1**.
->>>>>>> Stashed changes
+
+Refer to our [documentation](https://aka.ms/didfordevs) for more instructions on setting up your own Azure AD Verifiable Credentials environment.
+
+> **Important**: Azure Active Directory Verifiable Credentials is currently in public preview. This preview version is provided without a service level agreement, and it's not recommended for production workloads. Certain features might not be supported or might have constrained capabilities. For more information, see [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/).
+
+## Contributing
+
+This project welcomes contributions and suggestions.  Most contributions require you to agree to a
+Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
+the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+
+When you submit a pull request, a CLA bot will automatically determine whether you need to provide
+a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
+provided by the bot. You will only need to do this once across all repos using our CLA.
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
+contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
