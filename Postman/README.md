@@ -1,7 +1,8 @@
 # Use Postman with the Microsoft Azure AD Verifiable Credentials Request API
 
 You can use one of the two options to configure Postman collection to get started with Request APIs in minutes.
-![Screenshot of Postman_VC Request API](./ReadmeFiles/Postman_VC Request API.png)
+
+![Screenshot of Postman_VC Request API](./ReadmeFiles/postman_requestapi.png)
 
 ## OPTION 1 (Using the Postman collection)
 **Step 1 - Forking the Verifiable Credentials Request API Postman collection**
@@ -61,6 +62,7 @@ Inside the collection, there are requests for issuance and presentation.
 ## OPTION 2 (Manually importing the postman collection and environment JSON files)
 
 You can import postman collection and environment JSON files manually in the Postman Windows app and follow steps 3,4 & 5 from **OPTION1**.
+
 
 Refer to our [documentation](https://aka.ms/didfordevs) for more instructions on setting up your own Azure AD Verifiable Credentials environment.
 
