@@ -27,7 +27,7 @@ There are several samples:
 - [Node](https://github.com/Azure-Samples/active-directory-verifiable-credentials-node)
 - [Python](https://github.com/Azure-Samples/active-directory-verifiable-credentials-python) 
 
-> **Note** The samples are now using the new preview Verifiable Credential Request API. The previous SDK will not be used anymore. See the [SDK repo](https://github.com/microsoft/VerifiableCredentials-Verification-SDK-Typescript) page for details.
+> **Note** The samples are now using the new [Verifiable Credential Request API](https://aka.ms/vcapi). The previous SDK will not be used anymore. See the [SDK repo](https://github.com/microsoft/VerifiableCredentials-Verification-SDK-Typescript) page for details.
 
 ## Contents
 
