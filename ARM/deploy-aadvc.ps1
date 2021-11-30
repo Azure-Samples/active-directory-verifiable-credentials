@@ -1,11 +1,11 @@
 param (
+    [Parameter(Mandatory=$true)][string]$SubscriptionId = "",                       # the guid of the Azure subscription
     [Parameter(Mandatory=$true)][Alias('t')][string]$TenantId = "",                 # the guid of the tenant
     [Parameter(Mandatory=$true)][Alias('r')][string]$ResourceGroupName = "",        # RG - either existing or the name to create
     [Parameter(Mandatory=$true)][Alias('l')][string]$Location = "",                 # "West Europe" etc
     [Parameter(Mandatory=$true)][Alias('k')][string]$KeyVaultName = "",             # name of your KV resource
     [Parameter(Mandatory=$true)][Alias('s')][string]$StorageAccountName = "",       # name of your storage account - Nothing but aplhanumeric chars
-    [Parameter(Mandatory=$false)][Alias('c')][string]$StorageAccountContainerName = "vcstg",
-    [Parameter(Mandatory=$false)][Alias('a')][string]$VCCredentialsApp = "VC-cred-app"
+    [Parameter(Mandatory=$false)][Alias('c')][string]$StorageAccountContainerName = "vcstg"
     )
 
 if ((Get-Module -ListAvailable -Name "Az.Accounts") -eq $null) {  
@@ -17,7 +17,7 @@ if ((Get-Module -ListAvailable -Name "Az.Resources") -eq $null) {
 
 $ctx = Get-AzContext
 if ( $null -eq $ctx ) {
-    Connect-AzAccount -TenantId $TenantId
+    Connect-AzAccount -TenantId $TenantId -Subscription $SubscriptionId
     $ctx = Get-AzContext
 }
 
@@ -50,19 +50,6 @@ if ( $null -eq $spReqAPI ) {
   $spReqAPI = New-AzADServicePrincipal -ApplicationId $appIdReqAPI -DisplayName "Verifiable Credential Request Service"
 }
 write-host "ServicePrincipal:`t$($spReqAPI.DisplayName)`nObjectID:`t`t$($spReqAPI.Id)`nAppID:`t`t`t$($spReqAPI.ApplicationId)"
-##############################################################################################
-# create the VC Credentials app - used to get get an access_token via client credentials for the Request API
-PrintMsg "Creating your VC Credentials app"
-$spVCCredentialsApp = Get-AzADServicePrincipal -SearchString $VCCredentialsApp 
-if ( $null -eq $spVCCredentialsApp ) {
-  $appSecret = [Convert]::ToBase64String( [System.Text.Encoding]::Unicode.GetBytes( (New-Guid).Guid ) ) # create an app secret
-  $SecureStringPassword = ConvertTo-SecureString -AsPlainText -Force -String $appSecret 
-  $uriName=$VCCredentialsApp.ToLower().Replace(" ", "")
-  $app = New-AzADApplication -DisplayName $VCCredentialsApp -ReplyUrls @("https://localhost","vcclient://openid") -Password $SecureStringPassword
-  $spVCCredentialsApp = ($app | New-AzADServicePrincipal)
-  write-host "Application:`t$VCCredentialsApp`nObjectID:`t`t$($app.ObjectId)`nAppID:`t`t$client_id`nSecret:`t`t$appSecret"
-}
-write-host "ServicePrincipal:`t$($spVCCredentialsApp.DisplayName)`nObjectID:`t`t$($spVCCredentialsApp.Id)`nAppID:`t`t`t$($spVCCredentialsApp.ApplicationId)"
 
 ##############################################################################################
 # create an Azure resource group
@@ -81,7 +68,6 @@ $params = @{
     AdminUserObjectId = $user.Id
     VerifiableCredentialsIssuerServicePrincipalObjectId = $spVCIS.Id
     VerifiableCredentialsRequestServicePrincipalObjectId = $spReqAPI.Id
-    VerifiableCredentialsCredentialsServicePrincipalObjectId = $spVCCredentialsApp.Id
     StorageAccountName = $StorageAccountName
     StorageAccountContainerName = $StorageAccountContainerName
 }
@@ -101,9 +87,3 @@ if (!($roles | where {$_.DisplayName -eq $roleName})) {
     New-AzRoleAssignment -ObjectId $spVCIS.Id -RoleDefinitionName $roleName -Scope $scope   # Verifiable Credentials Issuer app
     New-AzRoleAssignment -ObjectId $user.Id -RoleDefinitionName $roleName -Scope $scope     # you, the admin
 }
-
-##############################################################################################
-# You must complete this step manually in the portal 
-PrintMsg "Manual step you need to complete"
-
-write-host "You need to go to the portal.azure.com for $VCCredentialsApp and grant access to $($spReqAPI.DisplayName) with permission VerifiableCredential.Create.All"

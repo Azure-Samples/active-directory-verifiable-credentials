@@ -43,12 +43,6 @@
                 "description": "The Service Principle id of the Enterprise Application 'Verifiable Credentials Request Service'"
             }  
         },        
-        "VerifiableCredentialsCredentialsServicePrincipalObjectId": {
-            "type": "string",
-            "metadata": {
-                "description": "The Service Principal id of your Issuer app - the app that will issue VCs."
-            }  
-        },
         "StorageAccountName": {
             "type": "string",
             "metadata": {
@@ -78,19 +72,6 @@
                 },
                 "tenantId": "[parameters('AADTenantId')]",
                 "accessPolicies": [
-                    {
-                        "tenantId": "[parameters('AADTenantId')]",
-                        "objectId": "[parameters('VerifiableCredentialsCredentialsServicePrincipalObjectId')]",
-                        "permissions": {
-                            "keys": [
-                                "Get",
-                                "Create",
-                                "Sign"
-                            ],
-                            "secrets": [],
-                            "certificates": []
-                        }
-                    },
                     {
                         "tenantId": "[parameters('AADTenantId')]",
                         "objectId": "[parameters('AdminUserObjectId')]",
