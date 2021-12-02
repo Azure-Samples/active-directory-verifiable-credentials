@@ -15,9 +15,9 @@ This sample demonstrates how to setup and configure Microsoft's Azure Active Dir
 
 ## About these samples
 
-Welcome to Azure Active Directory Verifiable Credentials. The documentation has a [tutorial]((https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant) for setting up the Verifiable Credential service step by step, but in this sample, we'll show you how to automate the setup and configuration of your environment using [ARM templates](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/overview).
+Welcome to Azure Active Directory Verifiable Credentials. The documentation has a tutorial [https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant) for setting up the Verifiable Credential service step by step, but in this sample, we'll show you how to automate the setup and configuration of your environment using [ARM templates](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/overview).
 
-> **Important**: Azure Active Directory Verifiable Credentials is currently in public preview. During preview things may change and this template and from times, it may not work.
+> **Important**: Azure Active Directory Verifiable Credentials is currently in public preview and this template is provided as-is.
 
 The tutorial describes these steps to configure your Azure AD tenant so it can use this credentials service.
 
@@ -32,9 +32,9 @@ The following diagram illustrates the Azure AD Verifiable Credentials architectu
 
 ## Prerequisites
 
-- If you don't have Azure subscription, [create one for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 - Sign up for [Azure Active Directory Premium editions](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-get-started-premium) or join the [Microsoft 365 Developer Program](https://aka.ms/o365devprogram) and create a time limited sandbox tenant.
 subscription in your tenant.
+- If you don't have Azure subscription, [create one for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F). The subscription must have the above Azure AD tenant as its directory. If it doesn't, you need to [switch directory](https://docs.microsoft.com/en-us/azure/role-based-access-control/transfer-subscription) for the subscription. 
 - Ensure that you have the [global administrator](https://docs.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#global-administrator) permission for the directory you want to configure.
 - Ensure that you have [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell) 7.0.6 LTS-x64, PowerShell 7.1.3-x64, or later installed. 
 - Ensure you have the [Azure Az](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-6.6.0) Powershell modeule installed.
@@ -45,7 +45,7 @@ These scripts work on Windows, Mac and Linux, given you have installed the above
 
 These three manual steps in the turorial is replaces by the powershell script [deploy-aadvc.ps1](deploy-aadvc.ps1) and the ARM template [ARM-Template-VC.json](ARM-Template-VC.json).
 
-You run the powershell like this:
+You run the powershell like this (please replace _all_ parameters with your values):
 
 ```powershell
 ./deploy-aadvc.ps1 -TenantId "<YOURTENANTID>" `
@@ -61,13 +61,13 @@ The powershell script will:
 - Sets up the [Request API services princpial](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#set-up-a-service-principal)
 - Creates your resource group in your Azure subscription
 - Deploys the ARM template [ARM-Template-VC.json](ARM-Template-VC.json)
-- Adds you (the user signed in and running the script) and the Verifiable Credentials Issuer Service (VCIS) the role `Storage Blob Data Reader` so you can upload them and so VCIS can access them.
+- Adds you (the user signed in and running the script) and the Verifiable Credentials Issuer Service (VCIS) to the role `Storage Blob Data Reader` so you can upload them and so VCIS can access them.
 
 The ARM template creates the Azure KeyVault instance and adds the VCIS service principal, the Request API service principal and you (the user signed in and running the script) to an KeyVault Access Policy, as described in the [tutorial here](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#create-a-key-vault). It also creates the Azure Storage Account and the blob container needed for storing the Rules and the Display files for a Verifiable Credential.
 
 ## Register an application in Azure AD
 
-As explained in the [tutorial](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#register-an-application-in-azure-ad), Azure AD Verifiable Credentials Request Service needs to be able to get access tokens to issue and verify. To get access tokens, register a web application and grant API permission for the API Verifiable Credential Request Service that you set up in the previous step.
+As explained in the tutorial [https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#register-an-application-in-azure-ad](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#register-an-application-in-azure-ad), Azure AD Verifiable Credentials Request Service needs to be able to get access tokens to issue and verify. To get access tokens, register a web application and grant API permission for the API Verifiable Credential Request Service that you set up in the previous step.
 
 ```powershell
 ./create-aadvc-cred-app.ps1 -TenantId "<YOURTENANTID>" `
@@ -79,12 +79,15 @@ As explained in the [tutorial](https://docs.microsoft.com/en-us/azure/active-dir
 The script will register the application, but you need to manually go to the Azure portal and add and grant the required permisions for the application, as explained [here](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#grant-permissions-to-get-access-tokens).
 
 **Add permission**
+
 ![Add App API permissions](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/media/verifiable-credentials-configure-tenant/add-app-api-permissions.png)
 
 **Select APIs my organization uses**
+
 ![Search for the Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/media/verifiable-credentials-configure-tenant/add-app-api-permissions-select-service-principal.png)
 
 **Choose Application Permission and expand VerifiableCredential.Create.All**
+
 ![Add permission VerifiableCredential.Create.All](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/media/verifiable-credentials-configure-tenant/add-app-api-permissions-verifiable-credentials.png)
 
 The script will end with outputting a direct link you can use in the browser. It will also output details you need to update before running the samples.
