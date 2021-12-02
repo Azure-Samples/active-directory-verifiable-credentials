@@ -43,7 +43,7 @@ These scripts work on Windows, Mac and Linux, given you have installed the above
 
 ## Set up a service principal, create a key vault and set access policies for the key vault
 
-These three manual steps in the turorial is replaces by the powershell script [deploy-aadvc.ps1](deploy-aadvc.ps1) and the ARM template [ARM-Template-VC.json](ARM-Template-VC.json).
+These three manual steps in the turorial is replaced by the powershell script [deploy-aadvc.ps1](deploy-aadvc.ps1) and the ARM template [ARM-Template-VC.json](ARM-Template-VC.json).
 
 You run the powershell like this (please replace _all_ parameters with your values):
 
@@ -65,7 +65,11 @@ The powershell script will:
 
 The ARM template creates the Azure KeyVault instance and adds the VCIS service principal, the Request API service principal and you (the user signed in and running the script) to an KeyVault Access Policy, as described in the [tutorial here](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#create-a-key-vault). It also creates the Azure Storage Account and the blob container needed for storing the Rules and the Display files for a Verifiable Credential.
 
+The powershell script will run for just a minute, but the actual deployment will take som 5-8 minutes to complete. 
+
 ## Register an application in Azure AD
+
+Note - You need to perform this step before running a sample. You do not need to perform this step before creating your Cerifiable Credentials credential and edit/upload the Rules and Display file.
 
 As explained in the tutorial [https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#register-an-application-in-azure-ad](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#register-an-application-in-azure-ad), Azure AD Verifiable Credentials Request Service needs to be able to get access tokens to issue and verify. To get access tokens, register a web application and grant API permission for the API Verifiable Credential Request Service that you set up in the previous step.
 
@@ -76,7 +80,7 @@ As explained in the tutorial [https://docs.microsoft.com/en-us/azure/active-dire
                    -KeyVaultName "myaadvckvname" `
                    -VCCredentialsApp "VC-cred-app"
 ```
-The script will register the application, but you need to manually go to the Azure portal and add and grant the required permisions for the application, as explained [here](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#grant-permissions-to-get-access-tokens).
+The script will register the application and add it to the KeyVault Access Policy, but you need to manually go to the Azure portal and add and grant the required permisions for the application, as explained [here](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#grant-permissions-to-get-access-tokens).
 
 **Add permission**
 
