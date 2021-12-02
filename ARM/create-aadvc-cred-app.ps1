@@ -31,7 +31,6 @@ $spVCCredentialsApp = Get-AzADServicePrincipal -SearchString $VCCredentialsApp
 if ( $null -eq $spVCCredentialsApp ) {
   $appSecret = [Convert]::ToBase64String( [System.Text.Encoding]::Unicode.GetBytes( (New-Guid).Guid ) ) # create an app secret
   $SecureStringPassword = ConvertTo-SecureString -AsPlainText -Force -String $appSecret 
-  $uriName=$VCCredentialsApp.ToLower().Replace(" ", "")
   $app = New-AzADApplication -DisplayName $VCCredentialsApp -ReplyUrls @("https://localhost","vcclient://openid") -Password $SecureStringPassword
   $spVCCredentialsApp = ($app | New-AzADServicePrincipal)
   write-host "Application:`t`t$VCCredentialsApp`nObjectID:`t`t$($app.ObjectId)`nAppID:`t`t$($VCCredentialsApp.ApplicationId)`nSecret:`t`t`t$appSecret"
