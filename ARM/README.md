@@ -66,10 +66,11 @@ The powershell script will:
 The ARM template creates the Azure KeyVault instance and adds the VCIS service principal, the Request API service principal and you (the user signed in and running the script) to an KeyVault Access Policy, as described in the [tutorial here](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#create-a-key-vault). It also creates the Azure Storage Account and the blob container needed for storing the Rules and the Display files for a Verifiable Credential.
 
 The powershell script will run for just a minute, but the actual deployment will take som 5-8 minutes to complete. 
-
+After this part is completed, you can create your first Verifiable Credentials credential and edit/upload the Rules and Display file. In order to run the sample to test issuance and presentation of the Verifiable Credentials credential, you need to complete the next step and register an application.
+ 
 ## Register an application in Azure AD
 
-Note - You need to perform this step before running a sample. You do not need to perform this step before creating your Cerifiable Credentials credential and edit/upload the Rules and Display file.
+Note - You need to perform this step before running a sample. You do not need to perform this step before creating your Verifiable Credentials credential and edit/upload the Rules and Display file.
 
 As explained in the tutorial [https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#register-an-application-in-azure-ad](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#register-an-application-in-azure-ad), Azure AD Verifiable Credentials Request Service needs to be able to get access tokens to issue and verify. To get access tokens, register a web application and grant API permission for the API Verifiable Credential Request Service that you set up in the previous step.
 
