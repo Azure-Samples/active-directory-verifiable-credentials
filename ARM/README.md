@@ -33,11 +33,10 @@ The following diagram illustrates the Azure AD Verifiable Credentials architectu
 ## Prerequisites
 
 - Sign up for [Azure Active Directory Premium editions](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-get-started-premium) or join the [Microsoft 365 Developer Program](https://aka.ms/o365devprogram) and create a time limited sandbox tenant.
-subscription in your tenant.
 - If you don't have Azure subscription, [create one for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F). The subscription must have the above Azure AD tenant as its directory. If it doesn't, you need to [switch directory](https://docs.microsoft.com/en-us/azure/role-based-access-control/transfer-subscription) for the subscription. 
 - Ensure that you have the [global administrator](https://docs.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#global-administrator) permission for the directory you want to configure.
 - Ensure that you have [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell) 7.0.6 LTS-x64, PowerShell 7.1.3-x64, or later installed. 
-- Ensure you have the [Azure Az](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-6.6.0) Powershell modeule installed.
+- Ensure that you have the [Azure Az](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-6.6.0) Powershell modeule installed.
 
 These scripts work on Windows, Mac and Linux, given you have installed the above powershell modules on your machine.
 
@@ -61,7 +60,7 @@ The powershell script will:
 - Sets up the [Request API services princpial](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#set-up-a-service-principal)
 - Creates your resource group in your Azure subscription
 - Deploys the ARM template [ARM-Template-VC.json](ARM-Template-VC.json)
-- Adds you (the user signed in and running the script) and the Verifiable Credentials Issuer Service (VCIS) to the role `Storage Blob Data Reader` so you can upload them and so VCIS can access them.
+- Adds you (the user signed in and running the script) and the Verifiable Credentials Issuer Service (VCIS) to the role `Storage Blob Data Reader` so you can upload Rules & Display files, and so VCIS can access them.
 
 The ARM template creates the Azure KeyVault instance and adds the VCIS service principal, the Request API service principal and you (the user signed in and running the script) to an KeyVault Access Policy, as described in the [tutorial here](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#create-a-key-vault). It also creates the Azure Storage Account and the blob container needed for storing the Rules and the Display files for a Verifiable Credential.
 
