@@ -2,7 +2,7 @@
 
 You can use one of the two options to configure Postman collection to get started with Request APIs in minutes.
 
-![Screenshot of Postman_VC Request API](./ReadmeFiles/postman_requestapi.png)
+![Screenshot of Postman_VC Request API](../ReadmeFiles/postman_requestapi.png)
 
 ## OPTION 1 (Using the Postman collection)
 **Step 1 - Forking the Verifiable Credentials Request API Postman collection**
