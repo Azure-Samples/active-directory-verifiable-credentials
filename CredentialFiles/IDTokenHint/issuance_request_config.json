@@ -1,0 +1,36 @@
+{
+  "includeQRCode": false,
+  "callback": {
+    //In this sample code we will overwrite the callback and use the HOSTNAME dynamicall
+    //make sure you use ngrok or something like that when running on a local devbox. 
+    //The MS AAD VC Request service needs to be able to reach the callback URI
+    "url": "https://YOURPUBLICREACHABLEHOSTNAME/api/issuer/issuanceCallback",
+    "state": "STATEWILLBESETINCODE",
+    "headers": {
+      "api-key": "OPTIONAL API-KEY for ISSUANCE CALLBACK API"
+    }
+  },
+  //The Authority is the DID from your MS AAD Verifiable Credential service, you can copy this from the VC page in azure portal
+  "authority": "did:ion: THIS IS YOUR DID FROM THE VC PAGE IN AZURE PORTAL WHICH IS SET IN THE SAMPLE BY COPYING THE VALUE FROM APPSETTINGS.JSON   ",
+  "registration": {
+    "clientName": "Verifiable Credential Expert Sample"
+  },
+  //The type needs to be the same as defined in the rules json file. The manifest can be copied after the credential has been
+  //created in the azure portal
+  "issuance": {
+    "type": "VerifiedCredentialExpert",
+    "manifest": "CREDENTIAL URL IN THIS SAMPLE WILL BE COPIED FROM APPSETTINGS.JSON",
+    //Recommendation is to protect issuance payload with a PIN code. 
+    //The pincode is set to a random value in code and will be displayed in the UI to the user
+    "pin": {
+      "value": "123456",
+      "length": 4
+    },
+    //This is an example payload which will be used in the rules file of the credential.
+    //The rules files maps information from the ID Token (hint) to the VC
+    "claims": {
+      "given_name": "FIRSTNAME",
+      "family_name": "LASTNAME"
+    }
+  }
+}
