@@ -84,7 +84,7 @@
                                 <a id="deeplink" style="display: none;margin-top: 10px;">Tap to open Authenticator on mobile</a>
                                 <div style="margin-top:20px" id="vcmessage"></div>
                                 <br/>
-                                <a id="issuer" href="https://localhost:5000/issuer.html" target="_blank">Don't have a Verifiable Credential? Get one here</a>
+                                <a id="issuer" id="idlink" href="https://localhost:5000/issuer.html" target="_blank">Don't have a Verifiable Credential? Get one here</a>
                             </div>
                         </div>
 
@@ -105,9 +105,19 @@
         document.getElementById("issuer").href = apiUrl.split("api/")[0];
 
         var respPresReq = null;
+        var requestUrl = apiUrl + '/presentation-request';
+        var isIssuance = (document.getElementById("VCIssued") != null);
+        if ( isIssuance ) {
+            document.getElementById("VCIssued").style = "display:none;";
+            document.getElementById("idlink").style = "display:none;";            
+            requestUrl = apiUrl + '/issue-request?id=' + document.getElementById("VCStateId").value;
+            checkIssuanceResponse();
+        } else {
+            checkPresentationResponse();
+        }
 
         checkPresentationResponse();
-        fetch(apiUrl + '/presentation-request')
+        fetch(requestUrl)
         .then(function(response) {
             response.text().then(function(message) {
                 respPresReq = JSON.parse(message);
@@ -165,6 +175,47 @@
                 }, 2500);
         }
         
+        function checkIssuanceResponse() {
+            console.log('checkIssuanceResponse');
+            tId = setInterval( function () {
+                    if ( null == respPresReq) { return; } 
+                    console.log('setInternal() trigger - GET /vccheck');
+                    document.getElementById("VCStateId").value = respPresReq.id;
+                    fetch(apiUrl + '/issue-response?id=' + respPresReq.id )
+                    .then(response => response.text())
+                    .catch(error => {
+                        displayMessage(error);
+                        console.log('clearInterval');
+                        clearInterval(tId);
+                    })
+                    .then(response => {
+                        count++;
+                        if (response.length > 0) {
+                            console.log(response)
+                            respMsg = JSON.parse(response);
+                            // respMsg.status == 1 -> QR Code scanned
+                            if (respMsg.status == 1) {
+                                displayMessage( respMsg.message );
+                            } else                             
+                            if (respMsg.status == 2) { // respMsg.status == 2 -> VC issued
+                                console.log('clearInterval');
+                                clearInterval(tId);
+                                displayMessage( respMsg.message );
+                                document.getElementById("VCIssued").value = "issued";
+                                document.getElementById("continue").click();
+                            } else                             
+                            if (respMsg.status == 99) { // respMsg.status == 99 -> issuance failure
+                                console.log('clearInterval');
+                                clearInterval(tId);
+                                displayMessage( respMsg.message );
+                            } else {
+                                displayMessage( `Scan the QR code in your Authenticator App to issue VC` );
+                            }
+                        }
+                    })
+                }, 2500);
+        }
+
         function displayMessage(msg) {
             console.log(`'${msg}'`);
             document.getElementById("vcmessage").innerHTML = msg;

@@ -1,9 +1,12 @@
 # Azure AD Verifiable Credentials integration with Azure AD B2C
 This folder includes what you need to integrate Azure AD B2C with Verifiable Credentials. Use cases are:
 
+**UPDATE!** You need to change your existing Rules files since the claim `sub` is now a restricted claim and will no longer work. You need to change it to `oid`. See `oid` in this README file below.
+
 ## What you will be able to do with the solution in this repository is:
 
 - Issue Verifiable Credentials for accounts in your Azure AD B2C tenant
+- Issue Verifiable Credentials during signup of new users in your Azure AD B2C tenant (new)
 - Signin to B2C with your Verifiable Credentials by scanning a QR code
  
 ![Scan QR code](/ReadmeFiles/b2c-vc-scan-qr-code.png)
@@ -11,7 +14,7 @@ This folder includes what you need to integrate Azure AD B2C with Verifiable Cre
 ## What you need to deploy to test this sample
 
 - Deploy your Azure AD Verifiable Credentials
-- Deploy one of the samples and verify that work with the sample VCs
+- Deploy one of the dotnet or nodejs samples and verify that work with the sample VCs 
 - Deploy your Azure AD B2C tenant and create your B2C test user
 - Create your VC credentials that uses your B2C tenant for issuance of VCs
 - Edit and upload the B2C Custom Policies in the [policies](./policies) folder
@@ -23,7 +26,7 @@ To deploy your Azure AD Verifiable Credentials environment, you can either follo
 
 ## Deploy one of the samples and verify that work with the sample VCs
 
-Pick a sample here [here](/#about-these-samples) of your prefered language and follow the respective instructions for getting it to work. It is important that you get the sample to work before you go any further since it will be easier to troubleshoot if you know that the sample works with your Azure AD Verifiable Credentials deployment.
+Pick a sample [here](https://github.com/Azure-Samples/active-directory-verifiable-credentials/#about-these-samples) of your prefered language and follow the respective instructions for getting it to work. It is important that you get the sample to work before you go any further since it will be easier to troubleshoot if you know that the sample works with your Azure AD Verifiable Credentials deployment.
 
 Once you have the sample app working, and you can issue and verify the sample credential, you can verify that it also will respond to the API that Azure AD B2C will call. To do this, you need the `id` (guid) that is unique for the browser session. You can either find it in the trace output in the console window of the running sample app, or you can find it in the browsers developer console (F12 in Edge/Chrome, then Console) _after_ you have completed a verification in the browser. To test the B2C API, run the below in a powershell prompt (change the `$id` and `$ngrokUrl` values first).
 
@@ -48,7 +51,7 @@ Create your Rules & Display file for the credential you will be using for the B2
 For the files, replace the values in `<...>` for your values and make sure the `configuration` points to the metadata of your deployed B2C Custom Policy.
 After you have saved the files, upload them to the storage account that was created with your Azure AD Verifiable Credentials deployment. The documentation for how to do that is found here [https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-issuer#upload-the-configuration-files](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-issuer#upload-the-configuration-files).
 
-**Rules file**
+**Rules file for id_token flow**
 ```json
 {
   "vc": {
@@ -60,7 +63,7 @@ After you have saved the files, upload them to the storage account that was crea
       {
         "mapping": {
           "displayName": { "claim": "name" },
-          "sub": { "claim": "sub" },
+          "oid": { "claim": "oid" },
           "tid": { "claim": "tid" },
           "username": { "claim": "email" },
           "lastName": { "claim": "family_name" },
@@ -70,6 +73,38 @@ After you have saved the files, upload them to the storage account that was crea
         "client_id": "<your-app-id>",
         "scope": "openid",
         "redirect_uri": "vcclient://openid"
+      }
+    ]
+  }
+}
+```
+
+**Rules file for id_token_hint flow**
+```json
+{
+  "vc": {
+    "type": [ "<NameOfYourCredential>" ]
+  },
+  "validityInterval": 2592000,
+  "attestations": {
+    "idTokens": [
+      {
+        "mapping": {
+          "displayName": { "claim": "displayName" },
+          "oid": { "claim": "oid" },
+          "tid": { "claim": "tid" },
+          "username": { "claim": "username", "indexed": true },
+          "lastName": { "claim": "lastName" },
+          "firstName": { "claim": "firstName" }
+        },
+        "configuration": "https://self-issued.me",
+        "client_id": "",
+        "redirect_uri": "",
+        "issuers": [
+          {
+            "iss": "<your-issuing-did>"
+          }
+        ]
       }
     ]
   }
@@ -133,7 +168,8 @@ The policies for the B2V+VC integration are B2C Custom Policies with custom html
 | File   | Description |
 | -------- | ----------- |
 | TrustFrameworkExtensionsVC.xml | Extensions for VC's to the TrustFrameworkExtensions from the Starter Pack |
-| SignUpOrSignInVC.xml | Standard Signup/Signin B2C policy but with Verifiable Credentials added as a claims rpovider option (button) |
+| SignUpVCOrSignin.xml | Standard Signup/Signin B2C policy but that issues a VC during user signup |
+| SignUpOrSignInVC.xml | Standard Signup/Signin B2C policy but with Verifiable Credentials added as a claims provider option (button) |
 | SigninVC.xml | Policy lets you signin to your B2C account via scanning the QR code and present your VC |
 | SigninVCMFA.xml | Policy that uses VCs as a MFA after you've signed in with userid/password |
 
@@ -142,6 +178,9 @@ The policies for the B2V+VC integration are B2C Custom Policies with custom html
 -  You can use the same storage account that you use for your VC credentials, but create a new container because you need to CORS enable it as explained [here](https://docs.microsoft.com/en-us/azure/active-directory-b2c/customize-ui-with-html?pivots=b2c-user-flow#2-create-an-azure-blob-storage-account). If you create a new storage account, you should perform step 2 through 3.1. Note that you can select `LRS` for Replication as `RA-GRS` is a bit overkill.
 - Upload the file `selfAsserted.html` to the container in the Azure Storage.
 - Copy the full url to the file and test that you can access them in a browser. If it fails, the B2C UX will not work either. If it works, you need to update the [TrustFrameworkExtensionsVC.xml](.\policies\TrustFrameworkExtensionsVC.xml) file as the `LoadUri` reference.
+
+### Create the REST API key in the portal
+The Technical Profile `REST-VC-PostIssuanceClaims`, that is used during VC innuance during user signup, is configured to use an api-key for security. Therefor, create a Policy Key in the B2C portal with the name `RestApiKey` and manually set the key value to something unique. You need to add this value to the sample app's appSettings file also.
 
 ### Edit and upload the B2C Custom Policies
 
@@ -152,8 +191,8 @@ Do search and replace in all the xml files in [policies](.\policies) folder for:
 Then do the following changes to the [TrustFrameworkExtensionsVC.xml](.\policies\TrustFrameworkExtensionsVC.xml) file:
 
 - Find `LoadUri` and replace the value of the url for `selfAsserted.html` that you uploaded in the previous step. 
-- two places where `VCServiceUrl` references your deployment of the samples, like `https://df4a-256-714-401-356.ngrok.io/api/verifier`
-- one place where `ServiceUrl` references your deployment of the samples, like `https://df4a-256-714-401-356.ngrok.io/api/verifier`
+- three places where `VCServiceUrl` references your deployment of the samples, like `https://df4a-256-714-401-356.ngrok.io/api/`
+- two place where `ServiceUrl` references your deployment of the samples, like `https://df4a-256-714-401-356.ngrok.io/api/`
 
 Upload the xml policy files to your B2C tenant starting with TrustFrameworkExtensionsVC.xml first. Note that you already should have uploaded the TrustFrameworkBase.xml and trustFrameworkExtensions.xml in a previous step. 
 
@@ -167,8 +206,7 @@ Regardless which language you picked for your sample, you need to update the `is
 
 Steps:
 
-1. Sign up for a B2C local account if you haven't done so already
-1. Run the sample and issue yourself a VC. You should be asked to signin to your B2C tenant in the Authenticator.
+1. Run the `B2C_1A_VC_susi_issuevc` policy and sign up for a new user. During the signup flow you will issue this user a VC
 1. Run the `B2C_1A_signin_VC` policy, scan the QR code and signin to your B2C account using your VC. 
 
 ![B2C+VC jwt token](/ReadmeFiles/b2c-vc-jwt-token.png)
@@ -176,5 +214,4 @@ Steps:
 ## Notes & ideas for further enhancements
 
 - There is no authentication in the B2C REST API configuration in TrustFrameworkExtensionsVC.xml in the `REST-VC-GetAuthResult` TechnicalProfile. You should consider adding this.
-- Issuance of VCs based on a user profile could be implemented in an webapp that lets the user sign in to B2C, where the app then uses the claims in B2C's id_token and pass it to the Request API. For inspiration how that could be done in aspnet, please see [this](https://github.com/cljung/did-samples/tree/main/vc-onboarding) github repo
 - B2C signup policy could also make use of a VC in that way that you could present arbitrary VC and let the verifier pick up any usefull claims, like firstname, lastname, etc. This would make the signup journey more smooth from a user perspective

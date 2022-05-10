@@ -58,6 +58,25 @@ PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensio
         <DisplayName>signInNames.vckey</DisplayName>
         <DataType>string</DataType>
       </ClaimType>
+      <!-- status from UX if we managed to issue a VC or not -->
+      <ClaimType Id="VCIssued">
+        <DisplayName>VCIssued</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>If we managed to issue a VC</UserHelpText>
+        <UserInputType>TextBox</UserInputType>
+      </ClaimType>
+      <ClaimType Id="correlationId">
+        <DisplayName>CorrelationId</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>B2C CorrelationId</UserHelpText>
+        <UserInputType>TextBox</UserInputType>
+      </ClaimType>
+      <ClaimType Id="IPAddress">
+        <DisplayName>IPAddress</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>User's ip address</UserHelpText>
+        <UserInputType>TextBox</UserInputType>
+      </ClaimType>
     </ClaimsSchema>
 
     <ContentDefinitions>
@@ -102,7 +121,7 @@ PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensio
           <IncludeInSso>false</IncludeInSso>
           <InputClaims>
             <InputClaim ClaimTypeReferenceId="VCStateId" />
-            <!-- if you change this one, you need to change the ServiceUrl for the REST API below -->
+            <!-- if you change this one, you need to change the all ServiceUrl in this file -->
             <!-- CHANGE THE BELOW LINE -->
             <InputClaim ClaimTypeReferenceId="VCServiceUrl" AlwaysUseDefaultValue="true" DefaultValue="https://df4a-158-174-131-118.ngrok.io/api/verifier"/>
           </InputClaims>
@@ -139,7 +158,7 @@ PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensio
           <IncludeInSso>false</IncludeInSso>
           <InputClaims>
             <InputClaim ClaimTypeReferenceId="VCStateId" />
-            <!-- if you change this one, you need to change the ServiceUrl for the REST API below -->
+            <!-- if you change this one, you need to change the all ServiceUrl in this file -->
             <!-- CHANGE THE BELOW LINE -->
             <InputClaim ClaimTypeReferenceId="VCServiceUrl" AlwaysUseDefaultValue="true" DefaultValue="https://df4a-158-174-131-118.ngrok.io/api/verifier"/>
           </InputClaims>
@@ -166,6 +185,34 @@ PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensio
             <ValidationTechnicalProfile ReferenceId="AAD-UserReadUsingObjectId" />
           </ValidationTechnicalProfiles>
         </TechnicalProfile>
+
+        <!-- VC Issuance during B2C Signup -->
+        <TechnicalProfile Id="SelfAsserted-VCIssuance">
+          <DisplayName>Verifiable Credentials</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.SelfAssertedAttributeProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="ContentDefinitionReferenceId">api.selfasserted.vc</Item>
+            <Item Key="setting.showCancelButton">false</Item>
+            <Item Key="IncludeClaimResolvingInClaimsHandling">true</Item>
+          </Metadata>
+          <IncludeInSso>false</IncludeInSso>
+          <InputClaims>
+            <InputClaim ClaimTypeReferenceId="VCStateId"  DefaultValue="{Context:CorrelationId}" AlwaysUseDefaultValue="true" />
+            <!-- if you change this one, you need to change the all ServiceUrl in this file -->
+            <!-- CHANGE THE BELOW LINE -->
+            <InputClaim ClaimTypeReferenceId="VCServiceUrl" AlwaysUseDefaultValue="true" DefaultValue="https://df4a-158-174-131-118.ngrok.io/api/issuer"/>
+            <InputClaim ClaimTypeReferenceId="VCIssued"  DefaultValue="issuance" AlwaysUseDefaultValue="true" />
+          </InputClaims>
+          <DisplayClaims>
+            <DisplayClaim ClaimTypeReferenceId="VCStateId" />
+            <DisplayClaim ClaimTypeReferenceId="VCServiceUrl" />
+            <DisplayClaim ClaimTypeReferenceId="VCIssued" /> 
+          </DisplayClaims>
+          <OutputClaims>
+            <OutputClaim ClaimTypeReferenceId="VCIssued" />
+          </OutputClaims>
+        </TechnicalProfile>
+
       </TechnicalProfiles>
     </ClaimsProvider>
 
@@ -191,7 +238,7 @@ PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensio
             <OutputClaim ClaimTypeReferenceId="vcSubject" PartnerClaimType="vcSub" />
             <OutputClaim ClaimTypeReferenceId="vcIssuer" PartnerClaimType="vcIss" />
             <OutputClaim ClaimTypeReferenceId="vcKey" PartnerClaimType="vcKey" />
-            <OutputClaim ClaimTypeReferenceId="objectId" PartnerClaimType="sub" />
+            <OutputClaim ClaimTypeReferenceId="objectId" PartnerClaimType="oid" />
             <OutputClaim ClaimTypeReferenceId="email" PartnerClaimType="username" />
             <OutputClaim ClaimTypeReferenceId="displayName" />
             <OutputClaim ClaimTypeReferenceId="givenName" PartnerClaimType="firstName" />
@@ -200,6 +247,38 @@ PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensio
           </OutputClaims>
           <UseTechnicalProfileForSessionManagement ReferenceId="SM-Noop" />
         </TechnicalProfile>
+
+        <TechnicalProfile Id="REST-VC-PostIssuanceClaims">
+          <DisplayName>Verifiable Credentials Authentication Result</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="ServiceUrl">https://df4a-158-174-131-118.ngrok.io/api/issuer/issuance-claims-b2c</Item>
+            <Item Key="AuthenticationType">ApiKeyHeader</Item> <!-- change this to None for dev/debug -->
+            <Item Key="SendClaimsIn">Body</Item>
+            <Item Key="IncludeClaimResolvingInClaimsHandling">true</Item>
+          </Metadata>
+          <CryptographicKeys>
+            <Key Id="x-api-key" StorageReferenceId="B2C_1A_RestApiKey" /> <!-- remember to set this in the samples appSettings/etc -->
+          </CryptographicKeys>
+          <InputClaims>
+            <!-- 
+              This list must cover what claims we expect to have in the issued VC, ie claims you have in the rules section for claims mapping.
+              What happens later is that the selfAsserted UX in a subsequent B2C step calls the VC sample REST API to
+              create an issuance request and specifies the B2C correlationId. The VC sample can then retrieve the
+              cached claims. The user scans the QR code with the Authenticator and gets a VC card for the B2C user. 
+            -->
+            <InputClaim ClaimTypeReferenceId="correlationId"  PartnerClaimType="id" DefaultValue="{Context:CorrelationId}" AlwaysUseDefaultValue="true" />
+            <InputClaim ClaimTypeReferenceId="IPAddress" DefaultValue="{Context:IPAddress}" AlwaysUseDefaultValue="true" />
+            <InputClaim ClaimTypeReferenceId="tenantId" PartnerClaimType="tid" DefaultValue="{Policy:TenantObjectId}" AlwaysUseDefaultValue="true"  />
+            <InputClaim ClaimTypeReferenceId="objectId" PartnerClaimType="oid" />
+            <InputClaim ClaimTypeReferenceId="email" PartnerClaimType="username" />
+            <InputClaim ClaimTypeReferenceId="displayName" />
+            <InputClaim ClaimTypeReferenceId="givenName" PartnerClaimType="firstName" />
+            <InputClaim ClaimTypeReferenceId="surName" PartnerClaimType="lastName" />
+          </InputClaims>
+          <UseTechnicalProfileForSessionManagement ReferenceId="SM-Noop" />
+        </TechnicalProfile>
+
       </TechnicalProfiles>
     </ClaimsProvider>
   </ClaimsProviders>
