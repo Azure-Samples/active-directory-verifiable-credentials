@@ -31,23 +31,26 @@ function PrintMsg( $msg ) {
 ##############################################################################################
 # Get the Enterprise App for VC's. The ApplicationId will be the same across all AAD tenants, 
 # the ObjectID will be unique for this tenant
-$nameVCIS = "Verifiable Credentials Issuer Service"
+$appIdVCIS = "bb2a64ee-5d29-4b07-a491-25806dc854d3"
+$nameVCIS = "Verifiable Credentials Service"
 PrintMsg "Verifying $nameVCIS is available"
-$spVCIS = Get-AzADServicePrincipal -SearchString $nameVCIS 
+$spVCIS = Get-AzADServicePrincipal -ApplicationId $appIdVCIS
 if ( $null -eq $spVCIS ) {
     write-host "Enterprise Application missing in tenant : '$nameVCIS'`n`n" `
-                "1) Make sure you are using an Azure AD P2 tenant`n" `
-                "2) Make sure you can see '$nameVCIS' as an Enterprise Application`n"
+                "- Make sure you can see '$nameVCIS' as an Enterprise Application`n"
     exit 1
 }
 write-host "ServicePrincipal:`t$($spVCIS.DisplayName)`nObjectID:`t`t$($spVCIS.Id)`nAppID:`t`t`t$($spVCIS.ApplicationId)"
 ##############################################################################################
-# Create the servicePrincipal for the Request API
-$appIdReqAPI = "bbb94529-53a3-4be5-a069-7eaf2712b826"
-PrintMsg "Creating Request API Service Principal"
+# Get the servicePrincipal for the Request API (should already be there)
+$appIdReqAPI = "3db474b9-6a0c-4840-96ac-1fceb342124f"
+$nameReqAPI = "Verifiable Credentials Service Request"
+PrintMsg "Verifying $nameReqAPI is available"
 $spReqAPI = Get-AzADServicePrincipal -ApplicationId $appIdReqAPI
 if ( $null -eq $spReqAPI ) {
-  $spReqAPI = New-AzADServicePrincipal -ApplicationId $appIdReqAPI -DisplayName "Verifiable Credential Request Service"
+    write-host "Enterprise Application missing in tenant : '$nameReqAPI'`n`n" `
+                "- Make sure you can see '$nameReqAPI' as an Enterprise Application`n"
+    exit 1
 }
 write-host "ServicePrincipal:`t$($spReqAPI.DisplayName)`nObjectID:`t`t$($spReqAPI.Id)`nAppID:`t`t`t$($spReqAPI.ApplicationId)"
 
