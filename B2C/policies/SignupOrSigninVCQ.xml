@@ -1,0 +1,93 @@
+<TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" 
+TenantId="yourtenant.onmicrosoft.com" 
+PolicyId="B2C_1A_VC_susiq" 
+PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_VC_susiq" 
+DeploymentMode="Development" UserJourneyRecorderEndpoint="urn:journeyrecorder:applicationinsights" 
+>
+  <BasePolicy>
+    <TenantId>yourtenant.onmicrosoft.com</TenantId>
+    <PolicyId>B2C_1A_TrustFrameworkExtensionsVC</PolicyId>
+  </BasePolicy>
+  <UserJourneys>
+    <!-- add VC as a Claims Provider -->
+    <UserJourney Id="SignUpOrSignIn">
+      <OrchestrationSteps>
+        <!-- 
+            modify step 1 & 2 to include signin with VC 
+            api.signuporsignin.quick will load the html that helps produce the QR code
+        -->
+        <OrchestrationStep Order="1" Type="CombinedSignInAndSignUp" ContentDefinitionReferenceId="api.signuporsignin.quick">
+          <ClaimsProviderSelections>
+            <ClaimsProviderSelection TargetClaimsExchangeId="VCExchange" />
+          </ClaimsProviderSelections>
+        </OrchestrationStep>
+        <OrchestrationStep Order="2" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <!-- 
+                if the QR code was scanned, this step will be executed to pick up the
+                result of the presentation and read the user's profile
+            -->
+            <ClaimsExchange Id="VCExchange" TechnicalProfileReferenceId="SelfAsserted-VCSigninQuick" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <!-- If it's a new user, pass the claims to the VC sample to prepare for issuing a VC -->
+        <OrchestrationStep Order="7" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
+              <Value>newUser</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="PostVCIssuanceClaims" TechnicalProfileReferenceId="REST-VC-PostIssuanceClaims" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <!-- If it's a new user, show the QR code to the user in order to issue the VC -->
+        <OrchestrationStep Order="8" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
+              <Value>newUser</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="UXVCIssuanceClaims" TechnicalProfileReferenceId="SelfAsserted-VCIssuance" />
+          </ClaimsExchanges>
+        </OrchestrationStep>        
+        <OrchestrationStep Order="9" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
+      </OrchestrationSteps>
+    </UserJourney>
+  </UserJourneys>
+
+  <RelyingParty>
+    <DefaultUserJourney ReferenceId="SignUpOrSignIn" />
+    <UserJourneyBehaviors>
+      <!-- Uncomment the below line if you want events traced to AppInsights. You need to update your key -->
+      <!--<JourneyInsights TelemetryEngine="ApplicationInsights" InstrumentationKey="...key..." DeveloperMode="true" ClientEnabled="true" ServerEnabled="true" TelemetryVersion="1.0.0" />-->
+      <ScriptExecution>Allow</ScriptExecution>
+    </UserJourneyBehaviors>
+    <TechnicalProfile Id="PolicyProfile">
+      <DisplayName>PolicyProfile</DisplayName>
+      <Protocol Name="OpenIdConnect" />
+      <OutputClaims>
+        <OutputClaim ClaimTypeReferenceId="displayName" />
+        <OutputClaim ClaimTypeReferenceId="givenName" />
+        <OutputClaim ClaimTypeReferenceId="surname" />
+        <OutputClaim ClaimTypeReferenceId="email" />
+        <OutputClaim ClaimTypeReferenceId="objectId" PartnerClaimType="sub" />
+        <OutputClaim ClaimTypeReferenceId="objectId" />        
+
+        <OutputClaim ClaimTypeReferenceId="signInName" /> <!-- LocalAccount: whatever used to sign in with-->
+        <OutputClaim ClaimTypeReferenceId="signInNames.emailAddress" PartnerClaimType="email" /> <!-- LocalAccount: email -->
+        <OutputClaim ClaimTypeReferenceId="email" /> <!-- Other IDP: email -->
+
+        <OutputClaim ClaimTypeReferenceId="identityProvider" />
+        <OutputClaim ClaimTypeReferenceId="VCCredentialType" />
+        <OutputClaim ClaimTypeReferenceId="VCSubject" />
+        <OutputClaim ClaimTypeReferenceId="VCIssuer" />
+        <OutputClaim ClaimTypeReferenceId="tenantId" AlwaysUseDefaultValue="true" DefaultValue="{Policy:TenantObjectId}" />
+      </OutputClaims>
+      <SubjectNamingInfo ClaimType="sub" />
+    </TechnicalProfile>
+  </RelyingParty>
+</TrustFrameworkPolicy>

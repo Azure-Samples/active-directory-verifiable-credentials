@@ -80,9 +80,31 @@ PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensio
     </ClaimsSchema>
 
     <ContentDefinitions>
+      <!-- This content definition is to render an error page that displays unhandled errors. -->
+      <ContentDefinition Id="api.error">
+        <DataUri>urn:com:microsoft:aad:b2c:elements:contract:globalexception:1.2.0</DataUri>
+      </ContentDefinition>
+      <ContentDefinition Id="api.idpselections">
+        <DataUri>urn:com:microsoft:aad:b2c:elements:contract:providerselection:1.2.0</DataUri>
+      </ContentDefinition>
+      <ContentDefinition Id="api.idpselections.signup">
+        <DataUri>urn:com:microsoft:aad:b2c:elements:contract:providerselection:1.2.0</DataUri>
+      </ContentDefinition>
+      <ContentDefinition Id="api.selfasserted">
+        <DataUri>urn:com:microsoft:aad:b2c:elements:contract:selfasserted:2.1.0</DataUri>
+      </ContentDefinition>
+      <ContentDefinition Id="api.selfasserted.profileupdate">
+        <DataUri>urn:com:microsoft:aad:b2c:elements:contract:selfasserted:2.1.0</DataUri>
+      </ContentDefinition>
+      <ContentDefinition Id="api.localaccountsignup">
+        <DataUri>urn:com:microsoft:aad:b2c:elements:contract:selfasserted:2.1.0</DataUri>
+      </ContentDefinition>
+      <ContentDefinition Id="api.localaccountpasswordreset">
+        <DataUri>urn:com:microsoft:aad:b2c:elements:contract:selfasserted:2.1.0</DataUri>
+      </ContentDefinition>
       <!-- pages uses custom html -->
       <ContentDefinition Id="api.selfasserted.vc">
-        <!-- CHANGE THE BELOW LINE -->
+        <!-- CHANGE THE BELOW LINES -->
         <LoadUri>https://yourstorageaccount.blob.core.windows.net/b2cux/selfAsserted.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:contract:selfasserted:2.1.0</DataUri>
@@ -90,7 +112,42 @@ PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensio
           <Item Key="DisplayName">Verifiable Credentials Signin</Item>
         </Metadata>
       </ContentDefinition>
+            <ContentDefinition Id="api.signuporsignin">
+        <LoadUri>https://yourstorageaccount.blob.core.windows.net/b2cux/unified.html</LoadUri>
+        <DataUri>urn:com:microsoft:aad:b2c:elements:contract:unifiedssp:2.1.0</DataUri>
+        <LocalizedResourcesReferences MergeBehavior="Prepend">
+          <LocalizedResourcesReference Language="en" LocalizedResourcesReferenceId="api.signuporsignin.en" />
+        </LocalizedResourcesReferences>
+      </ContentDefinition>
+      <ContentDefinition Id="api.signuporsignin.quick">
+        <LoadUri>https://yourstorageaccount.blob.core.windows.net/b2cux/unifiedquick.html</LoadUri>
+        <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
+        <DataUri>urn:com:microsoft:aad:b2c:elements:contract:unifiedssp:2.1.0</DataUri>
+        <LocalizedResourcesReferences MergeBehavior="Prepend">
+          <LocalizedResourcesReference Language="en" LocalizedResourcesReferenceId="api.signuporsigninquick.en" />
+        </LocalizedResourcesReferences>
+      </ContentDefinition>
+      <!-- CHANGE THE ABOVE LINES -->
     </ContentDefinitions>
+
+    <Localization Enabled="true">
+      <SupportedLanguages DefaultLanguage="en" MergeBehavior="ReplaceAll">
+        <SupportedLanguage>en</SupportedLanguage>
+      </SupportedLanguages>
+      <LocalizedResources Id="api.signuporsignin.en">
+        <LocalizedStrings>
+          <LocalizedString ElementType="UxElement" StringId="local_intro_generic">Sign in to your account</LocalizedString>
+          <LocalizedString ElementType="UxElement" StringId="social_intro">Other ways to login</LocalizedString>
+        </LocalizedStrings>
+      </LocalizedResources>
+      <LocalizedResources Id="api.signuporsigninquick.en">
+        <LocalizedStrings>
+          <LocalizedString ElementType="UxElement" StringId="local_intro_generic">Sign in to your account</LocalizedString>
+          <LocalizedString ElementType="UxElement" StringId="social_intro">Sign in with your Verifiable Credentials</LocalizedString>
+        </LocalizedStrings>
+      </LocalizedResources>
+    </Localization>
+
   </BuildingBlocks>
 
   <ClaimsProviders>
@@ -104,6 +161,15 @@ PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensio
           </Metadata>
           <IncludeTechnicalProfile ReferenceId="SelfAsserted-LocalAccountSignin-Email" />
         </TechnicalProfile>
+
+        <TechnicalProfile Id="SelfAsserted-LocalAccountSignin-Email">
+          <DisplayName>Local Account Signin</DisplayName>
+          <InputClaims>
+            <!-- Q&D hack - pass API URL in signInName claim as B2C is touchy on adding other claims in signin page -->
+            <InputClaim ClaimTypeReferenceId="signInName" AlwaysUseDefaultValue="true" DefaultValue="https://df4a-158-174-131-118.ngrok.io/api/verifier" />
+          </InputClaims>
+        </TechnicalProfile>
+
       </TechnicalProfiles>
     </ClaimsProvider>
     <!-- Claims Provider for Signin via VC UX -->
@@ -186,6 +252,48 @@ PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensio
           </ValidationTechnicalProfiles>
         </TechnicalProfile>
 
+        <!-- TP that gets executed after QR code is scanned on signin page -->
+        <TechnicalProfile Id="SelfAsserted-VCSigninQuick">
+          <DisplayName>Verifiable Credentials</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.SelfAssertedAttributeProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="ContentDefinitionReferenceId">api.selfasserted.vc</Item>
+            <Item Key="setting.showCancelButton">false</Item>
+            <Item Key="IncludeClaimResolvingInClaimsHandling">true</Item>
+          </Metadata>
+          <IncludeInSso>false</IncludeInSso>
+          <InputClaims>
+            <InputClaim ClaimTypeReferenceId="VCStateId" DefaultValue="{Context:CorrelationId}" AlwaysUseDefaultValue="true" />
+            <!-- if you change this one, you need to change the all ServiceUrl in this file -->
+            <!-- CHANGE THE BELOW LINE -->
+            <InputClaim ClaimTypeReferenceId="VCServiceUrl" AlwaysUseDefaultValue="true" DefaultValue="https://df4a-158-174-131-118.ngrok.io/api/verifier" />
+          </InputClaims>
+          <DisplayClaims>
+            <DisplayClaim ClaimTypeReferenceId="VCStateId" />
+            <DisplayClaim ClaimTypeReferenceId="VCServiceUrl" />
+          </DisplayClaims>
+          <OutputClaims>
+            <OutputClaim ClaimTypeReferenceId="VCStateId" />
+            <OutputClaim ClaimTypeReferenceId="displayName" />
+            <OutputClaim ClaimTypeReferenceId="givenName" />
+            <OutputClaim ClaimTypeReferenceId="surName" />
+            <OutputClaim ClaimTypeReferenceId="VCCredentialType" />
+            <OutputClaim ClaimTypeReferenceId="VCCredentialType" />
+            <OutputClaim ClaimTypeReferenceId="VCSubject" />
+            <OutputClaim ClaimTypeReferenceId="VCIssuer" />
+            <OutputClaim ClaimTypeReferenceId="VCKey" />
+            <OutputClaim ClaimTypeReferenceId="objectId" />
+            <OutputClaim ClaimTypeReferenceId="email" />
+            <OutputClaim ClaimTypeReferenceId="identityProvider" DefaultValue="DID" />
+            <OutputClaim ClaimTypeReferenceId="authenticationSource" DefaultValue="localAccountAuthentication" />
+          </OutputClaims>
+          <ValidationTechnicalProfiles>
+            <ValidationTechnicalProfile ReferenceId="REST-VC-GetAuthResult" />
+            <!-- make sure the user exists in the directory -->
+            <ValidationTechnicalProfile ReferenceId="AAD-UserReadUsingObjectId" />
+          </ValidationTechnicalProfiles>
+        </TechnicalProfile>
+
         <!-- VC Issuance during B2C Signup -->
         <TechnicalProfile Id="SelfAsserted-VCIssuance">
           <DisplayName>Verifiable Credentials</DisplayName>
@@ -209,7 +317,7 @@ PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensio
             <DisplayClaim ClaimTypeReferenceId="VCIssued" /> 
           </DisplayClaims>
           <OutputClaims>
-            <OutputClaim ClaimTypeReferenceId="VCIssued" />
+            <OutputClaim ClaimTypeReferenceId="VCIssued" /> <!-- issued/not issued on return-->
           </OutputClaims>
         </TechnicalProfile>
 
@@ -252,6 +360,7 @@ PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensio
           <DisplayName>Verifiable Credentials Authentication Result</DisplayName>
           <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
           <Metadata>
+            <!-- CHANGE THE BELOW LINE -->
             <Item Key="ServiceUrl">https://df4a-158-174-131-118.ngrok.io/api/issuer/issuance-claims-b2c</Item>
             <Item Key="AuthenticationType">ApiKeyHeader</Item> <!-- change this to None for dev/debug -->
             <Item Key="SendClaimsIn">Body</Item>

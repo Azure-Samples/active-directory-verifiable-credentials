@@ -97,81 +97,92 @@
     <script>
         document.getElementById("VCStateId").style = "display:none;";
         document.getElementById("VCServiceUrl").style = "display:none;";
-        document.getElementById("continue").style = "display:none;";
-
-        var qrcode = new QRCode("qrcode", { width: 300, height: 300 });
-
-        var apiUrl = document.getElementById("VCServiceUrl").value;
-        document.getElementById("issuer").href = apiUrl.split("api/")[0];
-
-        var respPresReq = null;
-        var requestUrl = apiUrl + '/presentation-request';
+        document.getElementById("continue").style = "display:none;";          
         var isIssuance = (document.getElementById("VCIssued") != null);
-        if ( isIssuance ) {
-            document.getElementById("VCIssued").style = "display:none;";
-            document.getElementById("idlink").style = "display:none;";            
-            requestUrl = apiUrl + '/issue-request?id=' + document.getElementById("VCStateId").value;
-            checkIssuanceResponse();
-        } else {
-            checkPresentationResponse();
-        }
+        var apiUrl = document.getElementById("VCServiceUrl").value;
+        
+        var qrcode = null; 
+        var respPresReq = null;
 
-        checkPresentationResponse();
-        fetch(requestUrl)
-        .then(function(response) {
-            response.text().then(function(message) {
-                respPresReq = JSON.parse(message);
-                if (/Android/i.test(navigator.userAgent)) {
-                    console.log(`Android device! Using deep link (${respPresReq.url}).`);
-                    window.location.replace(respPresReq.url);
-                } else if (/iPhone/i.test(navigator.userAgent)) {
-                    console.log(`iOS device! Using deep link (${respPresReq.url}).`);
-                    window.location.replace(respPresReq.url);
-                } else {
-                    console.log(`Not Android. Generating QR code encoded with ${respPresReq.url}`);
-                    qrcode.makeCode(respPresReq.url);
-                }
+        function getQRCode() {
+            document.getElementById("idlink").style = "display:block;";
+            qrcode = new QRCode("qrcode", { width: 150, height: 150 });
+            var requestUrl = apiUrl + '/presentation-request';
+            if ( isIssuance ) {
+                document.getElementById("VCIssued").style = "display:none;";
+                document.getElementById("idlink").style = "display:none;";    
+                requestUrl = apiUrl + '/issue-request?id=' + document.getElementById("VCStateId").value;
+                checkIssuanceResponse();
+            } else {
+                requestUrl = apiUrl + '/presentation-request?id=' + document.getElementById("VCStateId").value;
+                checkPresentationResponse();
+            }
+            fetch(requestUrl)
+            .then(function(response) {
+                response.text().then(function(message) {
+                    respPresReq = JSON.parse(message);
+                    if (/Android/i.test(navigator.userAgent)) {
+                        console.log(`Android device! Using deep link (${respPresReq.url}).`);
+                        window.location.replace(respPresReq.url);
+                    } else if (/iPhone/i.test(navigator.userAgent)) {
+                        console.log(`iOS device! Using deep link (${respPresReq.url}).`);
+                        window.location.replace(respPresReq.url);
+                    } else {
+                        console.log(`Not Android. Generating QR code encoded with ${respPresReq.url}`);
+                        makeQRCode(respPresReq.url);
+                    }
+                }).catch(error => {
+                    console.log(error.message);
+                })
             }).catch(error => {
                 console.log(error.message);
             })
-        }).catch(error => {
-            console.log(error.message);
-        })
+        }
 
         var tId = null;
         var count = 0;
+
+        function callPresentationResponseStatus(id) {
+            document.getElementById("VCStateId").value = id;
+            fetch(apiUrl + '/presentation-response-status?id=' + id )
+            .then(response => response.text())
+            .catch(error => {
+                displayMessage(error);
+                console.log('clearInterval');
+                clearInterval(tId);
+            })
+            .then(response => {
+                count++;
+                if (response.length > 0) {
+                    console.log(response)
+                    respMsg = JSON.parse(response);
+                    // respMsg.status == 0 -> No data
+                    if (respMsg.status == 0) {
+                        if ( respPresReq == null ) {
+                            getQRCode();
+                        }
+                    } else                             
+                    // respMsg.status == 1 -> QR Code scanned
+                    if (respMsg.status == 1) {
+                        dimQRCode();
+                        displayMessage( respMsg.message );
+                    } else                             
+                    if (respMsg.status == 2) { // respMsg.status == 2 -> VC presented and validated
+                        displayMessage( respMsg.message + " validated successfully" );
+                        console.log('clearInterval');
+                        clearInterval(tId);
+                        document.getElementById("continue").click();
+                    } else {
+                        displayMessage( `Scan the QR code in your Authenticator App to signin with your digital membership card` );
+                    }
+                }
+            })
+        }
         function checkPresentationResponse() {
             console.log('checkPresentationResponse');
             tId = setInterval( function () {
-                    if ( null == respPresReq) { return; } 
-                    console.log('setInternal() trigger - GET /vccheck');
-                    document.getElementById("VCStateId").value = respPresReq.id;
-                    fetch(apiUrl + '/presentation-response?id=' + respPresReq.id )
-                    .then(response => response.text())
-                    .catch(error => {
-                        displayMessage(error);
-                        console.log('clearInterval');
-                        clearInterval(tId);
-                    })
-                    .then(response => {
-                        count++;
-                        if (response.length > 0) {
-                            console.log(response)
-                            respMsg = JSON.parse(response);
-                            // QR Code scanned
-                            if (respMsg.status == 'request_retrieved') {
-                                displayMessage( respMsg.message );
-                            } else                             
-                            if (respMsg.status == 'presentation_verified') {
-                                displayMessage( respMsg.message + " validated successfully" );
-                                console.log('clearInterval');
-                                clearInterval(tId);
-                                document.getElementById("continue").click();
-                            } else {
-                                displayMessage( `Scan the QR code in your Authenticator App to signin with your Verifiable Credential` );
-                            }
-                        }
-                    })
+                if ( null == respPresReq) { return; } 
+                callPresentationResponseStatus(respPresReq.id);
                 }, 2500);
         }
         
@@ -195,6 +206,7 @@
                             respMsg = JSON.parse(response);
                             // respMsg.status == 1 -> QR Code scanned
                             if (respMsg.status == 1) {
+                                dimQRCode();
                                 displayMessage( respMsg.message );
                             } else                             
                             if (respMsg.status == 2) { // respMsg.status == 2 -> VC issued
@@ -204,10 +216,11 @@
                                 document.getElementById("VCIssued").value = "issued";
                                 document.getElementById("continue").click();
                             } else                             
-                            if (respMsg.status == 99) { // respMsg.status == 99 -> issuance failure
+                            if (respMsg.status == 99) { // respMsg.status == 2 -> VC issued
                                 console.log('clearInterval');
                                 clearInterval(tId);
                                 displayMessage( respMsg.message );
+                                document.getElementById("VCIssued").value = "not issued";
                             } else {
                                 displayMessage( `Scan the QR code in your Authenticator App to issue VC` );
                             }
@@ -215,13 +228,35 @@
                     })
                 }, 2500);
         }
-
+        
         function displayMessage(msg) {
             console.log(`'${msg}'`);
             document.getElementById("vcmessage").innerHTML = msg;
         }
+        function makeQRCode(url) {
+            qrcode.makeCode(url);
+            document.getElementById("qrcode").getElementsByTagName("img")[0].style="display:block; height:150px;width:150px; margin-left:auto; margin-right:auto";
+        }
+        function dimQRCode() {
+            document.getElementById("qrcode").getElementsByTagName("img")[0].style.opacity = "0.25";
+        }
 
-        displayMessage("Scan the QR code in your Authenticator App to signin with your Verifiable Credential");
+        function getVCStateId() {
+            return document.getElementById("VCStateId").value;
+        }
+
+        var vcStateId = getVCStateId();
+        if ( isIssuance || vcStateId.length == 0 ) {
+            getQRCode();
+        } else {
+            callPresentationResponseStatus( vcStateId );
+        }
+
+        if ( isIssuance ) {
+            displayMessage("Scan the QR code in your Authenticator App to issue yourself a Verifiable Credential");
+        } else {
+            displayMessage("Scan the QR code in your Authenticator App to signin with your digital membership card");
+        }
     </script>
 
 </body>
