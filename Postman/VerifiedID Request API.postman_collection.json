@@ -21,33 +21,6 @@
 						"key": "Content-Type",
 						"value": "application/json",
 						"type": "text"
-					},
-					{
-						"key": "x-ms-functions-key",
-						"value": "MyApiKey",
-						"type": "text"
-					},
-					{
-						"key": "x-ms-clientapi-prefix",
-						"value": "openid://",
-						"type": "text",
-						"disabled": true
-					},
-					{
-						"key": "x-ms-clientapi-oidccompliant",
-						"value": "true",
-						"type": "text",
-						"disabled": true
-					},
-					{
-						"key": "x-ms-clientapi-useaka",
-						"value": "true",
-						"type": "text"
-					},
-					{
-						"key": "prefer",
-						"value": "JWT-interop-profile-0.0.1",
-						"type": "text"
 					}
 				],
 				"body": {
@@ -60,13 +33,10 @@
 					}
 				},
 				"url": {
-					"raw": "https://verified.did.msidentity.com/v1.0/verifiableCredentials/createPresentationRequest",
+					"raw": "https://{{location}}/v1.0/verifiableCredentials/createPresentationRequest",
 					"protocol": "https",
 					"host": [
-						"verified",
-						"did",
-						"msidentity",
-						"com"
+						"{{location}}"
 					],
 					"path": [
 						"v1.0",
@@ -92,12 +62,6 @@
 						"key": "Content-Type",
 						"value": "application/json",
 						"type": "text"
-					},
-					{
-						"key": "x-ms-clientapi-prefix",
-						"value": "openid://",
-						"type": "text",
-						"disabled": true
 					}
 				],
 				"body": {
@@ -110,13 +74,10 @@
 					}
 				},
 				"url": {
-					"raw": "https://verified.did.msidentity.com/v1.0/verifiableCredentials/createPresentationRequest",
+					"raw": "https://{{location}}/v1.0/verifiableCredentials/createPresentationRequest",
 					"protocol": "https",
 					"host": [
-						"verified",
-						"did",
-						"msidentity",
-						"com"
+						"{{location}}"
 					],
 					"path": [
 						"v1.0",
@@ -153,29 +114,6 @@
 						"key": "Content-Type",
 						"value": "application/json",
 						"type": "text"
-					},
-					{
-						"key": "x-ms-functions-key",
-						"value": "MyApiKey",
-						"type": "text",
-						"disabled": true
-					},
-					{
-						"key": "x-ms-clientapi-prefix",
-						"value": "openid://",
-						"type": "text",
-						"disabled": true
-					},
-					{
-						"key": "x-ms-clientapi-oidccompliant",
-						"value": "true",
-						"type": "text",
-						"disabled": true
-					},
-					{
-						"key": "x-ms-clientapi-useaka",
-						"value": "true",
-						"type": "text"
 					}
 				],
 				"body": {
@@ -188,13 +126,10 @@
 					}
 				},
 				"url": {
-					"raw": "https://verified.did.msidentity.com/v1.0/verifiableCredentials/createIssuanceRequest",
+					"raw": "https://{{location}}/v1.0/verifiableCredentials/createIssuanceRequest",
 					"protocol": "https",
 					"host": [
-						"verified",
-						"did",
-						"msidentity",
-						"com"
+						"{{location}}"
 					],
 					"path": [
 						"v1.0",

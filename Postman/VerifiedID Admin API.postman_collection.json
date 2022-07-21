@@ -1,0 +1,720 @@
+{
+	"info": {
+		"_postman_id": "93443848-2153-40a5-9290-4a84fc37a25d",
+		"name": "VerifiedID Admin API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18012592"
+	},
+	"item": [
+		{
+			"name": "Authorities",
+			"item": [
+				{
+					"name": "get authorities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get authority",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": "f0a5b13a-afc1-777a-f039-e9a02b076e5f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create authority",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\":\"didWeb\",\r\n  \"linkedDomainUrl\":\"https://www.hoekstraonline.net/\",\r\n  \"didMethod\": \"web\",\r\n  \"keyVaultMetadata\": {\r\n                \"subscriptionId\": \"2fe1744b-2803-42af-bd5a-05b1ed1ef93a\",\r\n                \"resourceGroup\": \"DID\",\r\n                \"resourceName\": \"mahoekstdevdid\",\r\n                \"resourceUrl\": \"https://mahoekstdevdid.vault.azure.net/\"\r\n            }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update authority",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\":\"ExampleIssuerName\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": "687f37cb-99dd-bb87-b166-8e19027ba0d6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rotate signing key",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"issuerName\":\"ExampleIssuerName\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/rotateSigningKey",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid",
+								"rotateSigningKey"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": "7628e2b5-9780-350c-7be6-5be7d5d0a2bf"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update linked domains",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"domains\" : [\"https://test/asa\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/updateLinkedDomains",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid",
+								"updateLinkedDomains"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": "7628e2b5-9780-350c-7be6-5be7d5d0a2bf"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "generate Wellknown DID Configuration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"domainUrl\":\"https://www.hoekstraonline.net/\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/generateWellKnownDidConfiguration",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid",
+								"generateWellKnownDidConfiguration"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": "f0a5b13a-afc1-777a-f039-e9a02b076e5f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "generate DID Document",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"domainUrl\":\"https://www.contoso.com/\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/generateDidDocument",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid",
+								"generateDidDocument"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": "687f37cb-99dd-bb87-b166-8e19027ba0d6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TODO validate Wellknown DID Configuration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"domainUrl\":\"https://www.contoso.com/\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/validateWellKnownDidConfiguration",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid",
+								"validateWellKnownDidConfiguration"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": "7628e2b5-9780-350c-7be6-5be7d5d0a2bf"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contracts",
+			"item": [
+				{
+					"name": "get contracts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/contracts",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid",
+								"contracts"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": "687f37cb-99dd-bb87-b166-8e19027ba0d6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get contract",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/contracts/:contractId",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid",
+								"contracts",
+								":contractId"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": "7628e2b5-9780-350c-7be6-5be7d5d0a2bf"
+								},
+								{
+									"key": "contractId",
+									"value": "ZjY0MGEzNzQtYjM4MC00MmM5LThlMTQtZDE3NDUwNjgzOGU5dmVyaWZpZWRjcmVkZW50aWFsc2V4cGVydA"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update contract",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rulesFile\": \"https://vctailspin.blob.core.windows.net/credentials/VerifiedCredentialExpertRules.json\",\r\n    \"displayFile\": \"https://vctailspin.blob.core.windows.net/credentials/VerifiedCredentialExpertDisplay.json\",\r\n    \"rulesFileContainerMetadata\": {\r\n        \"container\": \"credentials\",\r\n        \"resourceGroup\": \"verifiablecredentials\",\r\n        \"resourceUrl\": \"https://vctailspin.blob.core.windows.net/credentials/VerifiedCredentialExpertRules.json\",\r\n        \"resourceName\": \"vctailspin\",\r\n        \"subscriptionId\": \"b593ade1-e353-43ab-9fb8-cccf669478d0\"\r\n    },\r\n    \"displayFileContainerMetadata\": {\r\n        \"container\": \"credentials\",\r\n        \"resourceGroup\": \"verifiablecredentials\",\r\n        \"resourceUrl\": \"https://vctailspin.blob.core.windows.net/credentials/VerifiedCredentialExpertDisplay.json\",\r\n        \"resourceName\": \"vctailspin\",\r\n        \"subscriptionId\": \"b593ade1-e353-43ab-9fb8-cccf669478d0\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/contracts/:contractId",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid",
+								"contracts",
+								":contractId"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": null
+								},
+								{
+									"key": "contractId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create contract",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"VerifiedCredentialsExpert\",\r\n\r\n    \"rules\": {\r\n        \"attestations\": {\r\n            \"idTokenHints\": [\r\n                {\r\n                    \"mapping\": [\r\n                        {\r\n                            \"outputClaim\": \"givenName\",\r\n                            \"required\": false,\r\n                            \"inputClaim\": \"given_name\",\r\n                            \"indexed\": false\r\n                        },\r\n                        {\r\n                            \"outputClaim\": \"familyName\",\r\n                            \"required\": false,\r\n                            \"inputClaim\": \"family_name\",\r\n                            \"indexed\": false\r\n                        }\r\n                    ],\r\n                    \"required\": false\r\n                }\r\n            ]\r\n        },\r\n        \"validityInterval\": 2592000,\r\n        \"vc\": {\r\n            \"type\": [\r\n                \"VerifiedCredentialExpert\"\r\n            ]\r\n        }\r\n    },\r\n    \"displays\": [\r\n        {\r\n            \"locale\": \"en-US\",\r\n            \"card\": {\r\n                \"backgroundColor\": \"#FFA500\",\r\n                \"description\": \"This is your Verifiable Credential\",\r\n                \"issuedBy\": \"Contoso\",\r\n                \"textColor\": \"#000001\",\r\n                \"title\": \"Verifiable Credential Expert\",\r\n                \"logo\": {\r\n                    \"description\": \"Default VC logo\",\r\n                    \"uri\": \"https://didcustomerplayground.blob.core.windows.net/public/VerifiedCredentialExpert_icon.png\"\r\n                }\r\n            },\r\n            \"consent\": {\r\n                \"instructions\": \"Please click accept to add this credentials\",\r\n                \"title\": \"Do you want to accept the verified credential expert dentity?\"\r\n            },\r\n            \"claims\": [\r\n                {\r\n                    \"claim\": \"vc.credentialSubject.givenName\",\r\n                    \"label\": \"Name\",\r\n                    \"type\": \"String\"\r\n                },\r\n                {\r\n                    \"claim\": \"vc.credentialSubject.familyName\",\r\n                    \"label\": \"Surname\",\r\n                    \"type\": \"String\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/contracts",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid",
+								"contracts"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": "f0a5b13a-afc1-777a-f039-e9a02b076e5f"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Credentials",
+			"item": [
+				{
+					"name": "search credentials",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}"
+						},
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/contracts/:contractId/credentials?filter=indexclaim eq tmrokKIZoxbM7q/aNkPvJxVTLAHVxo6NHlAVT78tlDI=",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid",
+								"contracts",
+								":contractId",
+								"credentials"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "indexclaim eq tmrokKIZoxbM7q/aNkPvJxVTLAHVxo6NHlAVT78tlDI=",
+									"description": "salted hash"
+								}
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": "687f37cb-99dd-bb87-b166-8e19027ba0d6"
+								},
+								{
+									"key": "contractId",
+									"value": "YTdkYzNiZDEtZDMwYy00YTZjLWJkODItZmJkZGUzZTE5MWMwdmVyaWZpZWQgZW1wbG95ZWUgMQ"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "revoke credential",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/contracts/:contractId/credentials/:credentialId/revoke",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid",
+								"contracts",
+								":contractId",
+								"credentials",
+								":credentialId",
+								"revoke"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": "7628e2b5-9780-350c-7be6-5be7d5d0a2bf"
+								},
+								{
+									"key": "contractId",
+									"value": null
+								},
+								{
+									"key": "credentialId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get credential",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/contracts/:contractId/credentials/:credentialId",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities",
+								":authorityid",
+								"contracts",
+								":contractId",
+								"credentials",
+								":credentialId"
+							],
+							"variable": [
+								{
+									"key": "authorityid",
+									"value": null
+								},
+								{
+									"key": "contractId",
+									"value": null
+								},
+								{
+									"key": "credentialId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Optout WARNING!!",
+			"item": [
+				{
+					"name": "Optout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://{{location}}/v1.0/VerifiableCredentials/optout",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"VerifiableCredentials",
+								"optout"
+							]
+						},
+						"description": "This will completely remove your configured Verifiable Credential service and all contracts from the system. There is no way to recover from this action!!"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Onboard",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{location}}/v1.0/VerifiableCredentials/onboard",
+					"protocol": "https",
+					"host": [
+						"{{location}}"
+					],
+					"path": [
+						"v1.0",
+						"VerifiableCredentials",
+						"onboard"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "useBrowser",
+				"value": true,
+				"type": "boolean"
+			},
+			{
+				"key": "scope",
+				"value": "6a8b4b39-c021-437c-b060-5a14a3fd65f3/full_access",
+				"type": "string"
+			},
+			{
+				"key": "redirect_uri",
+				"value": "https://oauth.pstmn.io/v1/browser-callback",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://login.microsoftonline.com/{{TenantID}}/oauth2/v2.0/token",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://login.microsoftonline.com/{{TenantID}}/oauth2/v2.0/authorize",
+				"type": "string"
+			},
+			{
+				"key": "tokenName",
+				"value": "Delegated Token",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "{{ClientSecret}}",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{ClientID}}",
+				"type": "string"
+			},
+			{
+				"key": "tokenType",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "accessToken",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1yNS1BVWliZkJpaTdOZDFqQmViYXhib1hXMCIsImtpZCI6Ik1yNS1BVWliZkJpaTdOZDFqQmViYXhib1hXMCJ9.eyJhdWQiOiIwMTM1ZmQ4NS0zMDEwLTRlNzMtYTAzOC0xMjU2MGQyYjU4YTkiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9mNWJmMmZjNi03MTM1LTRkOTQtYTZmZS1jMjZlNDU0M2JjNWEvIiwiaWF0IjoxNjQzODQ5Njk0LCJuYmYiOjE2NDM4NDk2OTQsImV4cCI6MTY0Mzg1NDM5NCwiYWNyIjoiMSIsImFpbyI6IkUyWmdZRmo1WS8wdVYvc3NqeVUyZitJeWRCMDFhdUtiZFVKVWpheG1jRTQ3VWVwVHVSRUEiLCJhbXIiOlsicHdkIl0sImFwcGlkIjoiMzIyOTVlYzMtYmUxNy00NmUzLTk3MTYtN2FjZWMyMmY4M2Y1IiwiYXBwaWRhY3IiOiIwIiwiZmFtaWx5X25hbWUiOiJBZG1pbmlzdHJhdG9yIiwiZ2l2ZW5fbmFtZSI6Ik1PRCIsImlwYWRkciI6IjY3LjE4My4yMjguMTIwIiwibmFtZSI6Ik1PRCBBZG1pbmlzdHJhdG9yIiwib2lkIjoiMjBkY2Q3MzMtNmE1Ni00OTgyLWJiMTMtYmY5NmJhM2NlNDNlIiwicHVpZCI6IjEwMDMyMDAxOEZEQkIxNzgiLCJyaCI6IjAuQVVZQXhpLV85VFZ4bEUybV9zSnVSVU84V29YOU5RRVFNSE5Pb0RnU1ZnMHJXS2xHQVBVLiIsInNjcCI6ImZ1bGxfYWNjZXNzIiwic3ViIjoia1dlV2tmbVZtZXdhTVVNUUZGd0dCS1BuVmdSWl9SU1hORS16TERhQVRJcyIsInRpZCI6ImY1YmYyZmM2LTcxMzUtNGQ5NC1hNmZlLWMyNmU0NTQzYmM1YSIsInVuaXF1ZV9uYW1lIjoiYWRtaW5ATTM2NXg1Mjk3Nzkub25taWNyb3NvZnQuY29tIiwidXBuIjoiYWRtaW5ATTM2NXg1Mjk3Nzkub25taWNyb3NvZnQuY29tIiwidXRpIjoiTzQ1b0p1Wk1HRTJ2U1p4MDhHX0tBUSIsInZlciI6IjEuMCIsIndpZHMiOlsiNjJlOTAzOTQtNjlmNS00MjM3LTkxOTAtMDEyMTc3MTQ1ZTEwIiwiYjc5ZmJmNGQtM2VmOS00Njg5LTgxNDMtNzZiMTk0ZTg1NTA5Il19.ffPTuAsdOCzH4Ep8FE_ccTOiFswwZ79m-9jB2wwdb_MjPH_72GdsWwmCJT5lXNPxJA6AFXY5c4e8A2uvnPmVJSyi8cDkmyomIN21XF1nKqjJ1veqcY7jIYr6rQM6GWhIvtQW8L2lTPRaSYZZwpwVDrFxO25OftfnovoIRlTiz2uwMbzPtQluhrEUd19XhrQIoripcuiWtp7ELt8ZqFmgTqMN4_kfN3nsZvQtpvh4PMVhq4MB8Y2LLH8ydyUks2XHx3AorxciYDQthJPuIrKifOdJJTTXN48ScucoskdUijrVr36ppJVlyEKlQotsJdTL-dV7HDgpyO8HMAWHDDdTsg",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
