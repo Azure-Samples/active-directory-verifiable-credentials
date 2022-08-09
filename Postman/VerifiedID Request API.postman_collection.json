@@ -1,0 +1,229 @@
+{
+	"info": {
+		"_postman_id": "cb7a0ab8-f13e-44d7-8811-b26748b34ce4",
+		"name": "VerifiedID Request API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18012592"
+	},
+	"item": [
+		{
+			"name": "POST Present",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true,
+					"user-agent": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"includeQRCode\": true,\r\n  \"callback\": {\r\n    \"url\": \"https://example.com\",\r\n    \"state\": \"dasd\",\r\n    \"headers\": {\r\n      \"api-key\": \"an-api-key-can-go-here\"\r\n    }\r\n  },\r\n  \"authority\": \"{{AuthorityDID}}\",\r\n  \"registration\": {\r\n    \"clientName\": \"Client API Verification\"\r\n  },\r\n  \"requestedCredentials\": [\r\n    {\r\n      \"type\": \"VerifiedCredentialExpert\",\r\n      \"purpose\": \"So we can check your real identity.\",\r\n      \"acceptedIssuers\": [\r\n      ],\r\n      \"configuration\": {\r\n        \"validation\": {\r\n          \"allowRevoked\": false,\r\n          \"validateLinkedDomain\": true\r\n        }\r\n      }\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{location}}/v1.0/verifiableCredentials/createPresentationRequest",
+					"protocol": "https",
+					"host": [
+						"{{location}}"
+					],
+					"path": [
+						"v1.0",
+						"verifiableCredentials",
+						"createPresentationRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Present True Identity",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true,
+					"user-agent": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"includeQRCode\": true,\r\n  \"callback\": {\r\n    \"url\": \"https://example.com\",\r\n    \"state\": \"dasd\",\r\n    \"headers\": {\r\n      \"api-key\": \"an-api-key-can-go-here\"\r\n    }\r\n  },\r\n  \"authority\": \"{{AuthorityDID}}\",\r\n  \"registration\": {\r\n    \"clientName\": \"Client API Verification\",\r\n    \"purpose\": \"So we can see your identity has been verified by True Identity\"\r\n  },\r\n  \"requestedCredentials\": [\r\n    {\r\n      \"includeReceipt\": true,\r\n      \"type\": \"TrueIdentity\",\r\n      \"purpose\": \"So we can check your real identity.\",\r\n      \"acceptedIssuers\": [\r\n        \"did:ion:EiDXOEH-YmaP2ZvxoCI-lA5zT1i5ogjgH6foIc2LFC83nQ:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJzaWdfODEwYmQ1Y2EiLCJwdWJsaWNLZXlKd2siOnsiY3J2Ijoic2VjcDI1NmsxIiwia3R5IjoiRUMiLCJ4IjoiRUZwd051UDMyMmJVM1dQMUR0Smd4NjdMMENVVjFNeE5peHFQVk1IMkw5USIsInkiOiJfZlNUYmlqSUpqcHNxTDE2Y0lFdnh4ZjNNYVlNWThNYnFFcTA2NnlWOWxzIn0sInB1cnBvc2VzIjpbImF1dGhlbnRpY2F0aW9uIiwiYXNzZXJ0aW9uTWV0aG9kIl0sInR5cGUiOiJFY2RzYVNlY3AyNTZrMVZlcmlmaWNhdGlvbktleTIwMTkifV0sInNlcnZpY2VzIjpbeyJpZCI6ImxpbmtlZGRvbWFpbnMiLCJzZXJ2aWNlRW5kcG9pbnQiOnsib3JpZ2lucyI6WyJodHRwczovL2RpZC53b29kZ3JvdmVkZW1vLmNvbS8iXX0sInR5cGUiOiJMaW5rZWREb21haW5zIn0seyJpZCI6Imh1YiIsInNlcnZpY2VFbmRwb2ludCI6eyJpbnN0YW5jZXMiOlsiaHR0cHM6Ly9iZXRhLmh1Yi5tc2lkZW50aXR5LmNvbS92MS4wLzNjMzJlZDQwLThhMTAtNDY1Yi04YmE0LTBiMWU4Njg4MjY2OCJdfSwidHlwZSI6IklkZW50aXR5SHViIn1dfX1dLCJ1cGRhdGVDb21taXRtZW50IjoiRWlCUlNqWlFUYjRzOXJzZnp0T2F3OWVpeDg3N1l5d2JYc2lnaFlMb2xTSV9KZyJ9LCJzdWZmaXhEYXRhIjp7ImRlbHRhSGFzaCI6IkVpQXZDTkJoODlYZTVkdUk1dE1wU2ZyZ0k2aVNMMmV2QS0tTmJfUElmdFhfOGciLCJyZWNvdmVyeUNvbW1pdG1lbnQiOiJFaUN2RFdOTFhzcE1sbGJfbTFJal96ZV9SaWNKOWdFLUM1b2dlN1NnZTc5cy1BIn19\"\r\n      ],\r\n      \"configuration\": {\r\n        \"validation\": {\r\n          \"allowRevoked\": false,\r\n          \"validateLinkedDomain\": true\r\n        }\r\n      }\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{location}}/v1.0/verifiableCredentials/createPresentationRequest",
+					"protocol": "https",
+					"host": [
+						"{{location}}"
+					],
+					"path": [
+						"v1.0",
+						"verifiableCredentials",
+						"createPresentationRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Issuance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true,
+					"user-agent": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"includeQRCode\": true,\r\n    \"callback\": {\r\n        \"url\": \"https://example.com\",\r\n        \"state\": \"dasd\",\r\n        \"headers\": {\r\n            \"api-key\": \"API for ISSUER CALLBACK API\"\r\n        }\r\n    },\r\n    \"authority\": \"{{AuthorityDID}}\",\r\n    \"registration\": {\r\n        \"clientName\": \"Verifiable Credential Expert Sample\"\r\n    },\r\n    \"type\": \"VerifiedCredentialExpert\",\r\n    \"manifest\": \"{{manifest}}\",\r\n    \"pin\": {\r\n        \"value\": \"1234\",\r\n        \"length\": 4\r\n    },\r\n    \"claims\": {\r\n        \"given_name\": \"Megan\",\r\n        \"family_name\": \"Bowen\"            \r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{location}}/v1.0/verifiableCredentials/createIssuanceRequest",
+					"protocol": "https",
+					"host": [
+						"{{location}}"
+					],
+					"path": [
+						"v1.0",
+						"verifiableCredentials",
+						"createIssuanceRequest"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "scope",
+				"value": "3db474b9-6a0c-4840-96ac-1fceb342124f/.default",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://login.microsoftonline.com/{{TenantID}}/oauth2/v2.0/token",
+				"type": "string"
+			},
+			{
+				"key": "tokenType",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "accessToken",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiJiYmI5NDUyOS01M2EzLTRiZTUtYTA2OS03ZWFmMjcxMmI4MjYiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9jYzc3NDNkMi05MDI2LTQ0ZGYtYmEwZS0zM2Y4N2ViYmEwNjIvIiwiaWF0IjoxNjM1NTMxNTQ0LCJuYmYiOjE2MzU1MzE1NDQsImV4cCI6MTYzNTUzNTQ0NCwiYWlvIjoiRTJaZ1lOZ1FYYWxRYytDVnlxcmZWOTY5dERpVkJBQT0iLCJhcHBpZCI6ImMwNGYwZmUzLTkzM2EtNDdlYS04ODZhLTBiMzI0NmQzZWNhZSIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0L2NjNzc0M2QyLTkwMjYtNDRkZi1iYTBlLTMzZjg3ZWJiYTA2Mi8iLCJvaWQiOiI2MDMzNjQwZC1hYWE0LTQxMjgtYjg1My02OTkxNWRlOTgxY2UiLCJyaCI6IjAuQVZvQTBrTjN6Q2FRMzBTNkRqUDRmcnVnWXVNUFQ4QTZrLXBIaUdvTE1rYlQ3SzVhQUFBLiIsInJvbGVzIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsLkNyZWF0ZS5BbGwiXSwic3ViIjoiNjAzMzY0MGQtYWFhNC00MTI4LWI4NTMtNjk5MTVkZTk4MWNlIiwidGlkIjoiY2M3NzQzZDItOTAyNi00NGRmLWJhMGUtMzNmODdlYmJhMDYyIiwidXRpIjoiYXJ2QVlxSkF5a3VSQmI1cHVBbk1BUSIsInZlciI6IjEuMCJ9.Kuy9q1YEb1BdO4O88uVkp1XMa2TVotOa2l6Xlfnz1nYT50zbZ6wApqBen71uTmO1PNytVMLHpnuI6mbK6ieWoS2Q5TFboEY1YSbUeao9EmYnJv5uqqd1cemNJWGHDIwsNdgCHmvNWzfZqRpnSzlyy-bbN0j9Jrod0qwynZD7kY706T0euAGgRFqf96iO0NRWJKn9yzBj78XH2H3IA6Sh9wSiTtXVdK649jwbRan2CAH8gFQsstdTVOTPTg03sHSJYInQ9e0udoGPpV4fPat1DumLtmOHH3RLf3pbks4-TXbFjsgV3Yy5O88o3YCHZ2-A2TlxGx4Kxn_yrWs77eFnkg",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "{{ClientSecret}}",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{ClientID}}",
+				"type": "string"
+			},
+			{
+				"key": "client_authentication",
+				"value": "body",
+				"type": "string"
+			},
+			{
+				"key": "tokenName",
+				"value": "Client Credentials Token",
+				"type": "string"
+			},
+			{
+				"key": "challengeAlgorithm",
+				"value": "S256",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "client_credentials",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"let template = `",
+					"<img src='{{img}}'/>",
+					"`;",
+					"pm.visualizer.set(template, { ",
+					" img: pm.response.json()[\"qrCode\"]",
+					"});"
+				]
+			}
+		}
+	]
+}
