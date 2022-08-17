@@ -6,7 +6,7 @@ DeploymentMode="Development" UserJourneyRecorderEndpoint="urn:journeyrecorder:ap
 >
   <BasePolicy>
     <TenantId>yourtenant.onmicrosoft.com</TenantId>
-    <PolicyId>B2C_1A_VC_TrustFrameworkExtensions</PolicyId>
+    <PolicyId>B2C_1A_TrustFrameworkExtensionsVC</PolicyId>
   </BasePolicy>
   <UserJourneys>
     <!-- add VC as a Claims Provider -->
