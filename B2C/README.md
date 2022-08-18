@@ -56,26 +56,65 @@ After you have saved the files, upload them to the storage account that was crea
 **Rules file for id_token flow**
 ```json
 {
-  "vc": {
-    "type": [ "<NameOfYourCredential>" ]
-  },
-  "validityInterval": 2592000,
   "attestations": {
     "idTokens": [
       {
-        "mapping": {
-          "displayName": { "claim": "name" },
-          "oid": { "claim": "oid" },
-          "tid": { "claim": "tid" },
-          "username": { "claim": "email" },
-          "lastName": { "claim": "family_name" },
-          "firstName": { "claim": "given_name" }
-        },
-        "configuration": "https://yourtenant.b2clogin.com/yourtenant.onmicrosoft.com/B2C_1A_signup_signin/v2.0/.well-known/openid-configuration",
-        "client_id": "<your-app-id>",
+        "clientId": "<your-app-id>",
+        "configuration": "https://yourtenant.b2clogin.com/yourtenant.onmicrosoft.com/B2C_1A_susi/v2.0/.well-known/openid-configuration",
+        "redirectUri": "vcclient://openid",
         "scope": "openid",
-        "redirect_uri": "vcclient://openid"
+        "mapping": [
+          {
+            "outputClaim": "displayName",
+            "required": true,
+            "inputClaim": "name",
+            "indexed": false
+          },
+          {
+            "outputClaim": "oid",
+            "required": true,
+            "inputClaim": "oid",
+            "indexed": false
+          },
+          {
+            "outputClaim": "tid",
+            "required": true,
+            "inputClaim": "tid",
+            "indexed": false
+          },
+          {
+            "outputClaim": "username",
+            "required": true,
+            "inputClaim": "email",
+            "indexed": true
+          },
+          {
+            "outputClaim": "lastName",
+            "required": true,
+            "inputClaim": "family_name",
+            "indexed": false
+          },
+          {
+            "outputClaim": "firstName",
+            "required": true,
+            "inputClaim": "given_name",
+            "indexed": false
+          },
+          {
+            "outputClaim": "country",
+            "required": true,
+            "inputClaim": "ctry",
+            "indexed": false
+          }
+        ],
+        "required": true
       }
+    ]
+  },
+  "validityInterval": 2592000,
+  "vc": {
+    "type": [
+      "<NameOfYourCredential>"
     ]
   }
 }
@@ -84,84 +123,122 @@ After you have saved the files, upload them to the storage account that was crea
 **Rules file for id_token_hint flow**
 ```json
 {
-  "vc": {
-    "type": [ "<NameOfYourCredential>" ]
-  },
-  "validityInterval": 2592000,
   "attestations": {
-    "idTokens": [
+    "idTokenHints": [
       {
-        "mapping": {
-          "displayName": { "claim": "displayName" },
-          "oid": { "claim": "oid" },
-          "tid": { "claim": "tid" },
-          "username": { "claim": "username", "indexed": true },
-          "lastName": { "claim": "lastName" },
-          "firstName": { "claim": "firstName" }
-        },
-        "configuration": "https://self-issued.me",
-        "client_id": "",
-        "redirect_uri": "",
-        "issuers": [
+        "mapping": [
           {
-            "iss": "<your-issuing-did>"
+            "outputClaim": "displayName",
+            "required": true,
+            "inputClaim": "displayName",
+            "indexed": false
+          },
+          {
+            "outputClaim": "oid",
+            "required": true,
+            "inputClaim": "oid",
+            "indexed": false
+          },
+          {
+            "outputClaim": "tid",
+            "required": true,
+            "inputClaim": "tid",
+            "indexed": false
+          },
+          {
+            "outputClaim": "username",
+            "required": true,
+            "inputClaim": "username",
+            "indexed": true
+          },
+          {
+            "outputClaim": "lastName",
+            "required": true,
+            "inputClaim": "lastName",
+            "indexed": false
+          },
+          {
+            "outputClaim": "firstName",
+            "required": true,
+            "inputClaim": "firstName",
+            "indexed": false
+          },
+          {
+            "outputClaim": "country",
+            "required": true,
+            "inputClaim": "country",
+            "indexed": false
           }
-        ]
+        ],
+        "required": true
       }
     ]
+  },
+  "validityInterval": 2592000,
+  "vc": {
+    "type": [
+      "<NameOfYourCredential>"
+    ]
   }
-}
-```
+}```
 
 **Display file**
 ```json
 {
-    "default": {
-      "locale": "en-US",
-      "card": {
-        "title": "<NameOfYourCredential>",
-        "issuedBy": "<yourtenant>",
-        "backgroundColor": "#B8CEC1",
-        "textColor": "#ffffff",
-        "logo": {
-          "uri": "https://yourstorageaccount.blob.core.windows.net/vcimages/logo.png",
-          "description": "<yourtenant> Logo"
-        },
-        "description": "Use your verified credential card to prove you are a B2C user."
-      },
-      "consent": {
-        "title": "Do you want to get your B2C VC card?",
-        "instructions": "Sign in with your account to get your card."
-      },
-      "claims": {
-        "vc.credentialSubject.firstName": {
-          "type": "String",
-          "label": "First name"
-        },
-        "vc.credentialSubject.lastName": {
-          "type": "String",
-          "label": "Last name"
-        },
-        "vc.credentialSubject.oid": {
-          "type": "String",
-          "label": "oid"
-        },
-        "vc.credentialSubject.tid": {
-          "type": "String",
-          "label": "tid"
-        },
-        "vc.credentialSubject.displayName": {
-          "type": "String",
-          "label": "displayName"
-        },
-        "vc.credentialSubject.username": {
-          "type": "String",
-          "label": "username"
-        }
-      }
+  "locale": "en-US",
+  "card": {
+    "title": "B2CverifiedAccount",
+    "issuedBy": "b2ctenant",
+    "backgroundColor": "#B8CEC1",
+    "textColor": "#ffffff",
+    "logo": {
+      "uri": "https://cljungdemob2c.blob.core.windows.net/uxcust/templates/images/snoopy-small.jpg",
+      "description": "B2C Logo"
+    },
+    "description": "Use your verified credential card to prove you have a B2C account."
+  },
+  "consent": {
+    "title": "Do you want to get your B2C VC card?",
+    "instructions": "Sign in with your account to get your card."
+  },
+  "claims": [
+    {
+      "claim": "vc.credentialSubject.firstName",
+      "label": "First name",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.lastName",
+      "label": "Last name",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.country",
+      "label": "Country",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.oid",
+      "label": "oid",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.tid",
+      "label": "tid",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.displayName",
+      "label": "displayName",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.username",
+      "label": "username",
+      "type": "String"
     }
-  }
-```
+  ]
+}```
 
 ## Configure and upload the B2C Custom Policies
 
