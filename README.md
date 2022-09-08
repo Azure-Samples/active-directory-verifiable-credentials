@@ -13,11 +13,11 @@ urlFragment: "verifiable-credentials"
 
 # Verifiable Credentials Code Samples
 
-This code sample demonstrates how to use Microsoft's Azure Active Directory Verifiable Credentials preview to issue and consume verifiable credentials. 
+This code sample demonstrates how to use Entra Verified ID to issue and consume verifiable credentials. 
 
 ## About these samples
 
-Welcome to Azure Active Directory Verifiable Credentials. the code samples, we'll teach you to issue a verifiable credential: a Verified Credential Expert Card. You'll then use this card to prove to a verifier that you are a Verified Credential Expert, mastered in the art of digital credentialing.
+Welcome to Entra Verified ID. Using the code samples, we'll teach you how to issue a verifiable credential: a Verified Credential Expert Card. You'll then use this card to prove to a verifier that you are a Verified Credential Expert, mastered in the art of digital credentialing.
 
 ![Screenshot of a verifiable ninja card](./ReadmeFiles/verifiedcredentialexpert-card.png)
 
@@ -41,8 +41,8 @@ The samples are meant as a way to quickly understand the principles and the use 
 For all the samples this are the minimum requirements:
 
 - An Android or IOS device.
-- An Azure Active Directory tenant with at least 1 P2 license (a free trial of Azure AD Premium will work as well).
-- An Azure subscription where you have access to create Azure storage accounts and a keyvault.
+- An Azure Active Directory tenant (even Azure AD Free SKU is supported).
+- An Azure subscription linked to this Azure AD directory and where you have access to create Azure Keyvault.
 
 Refer to our [documentation](https://aka.ms/didfordevs) for more instructions on setting up your own Azure AD Verifiable Credentials environment.
 
