@@ -42,7 +42,7 @@ For all the samples this are the minimum requirements:
 
 - An Android or IOS device.
 - An Azure Active Directory (free) tenant.
-- An Azure subscription where you have access to create Azure storage accounts and a keyvault.
+- An Azure subscription where you have access to create a keyvault.
 
 Refer to our [documentation](https://aka.ms/didfordevs) for more instructions on setting up your own Azure AD Verifiable Credentials environment.
 
