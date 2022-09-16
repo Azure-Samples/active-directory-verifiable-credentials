@@ -23,8 +23,8 @@ DeploymentMode="Development" UserJourneyRecorderEndpoint="urn:journeyrecorder:ap
             <ClaimsExchange Id="VCExchange" TechnicalProfileReferenceId="SelfAsserted-VCSignin" />
           </ClaimsExchanges>
         </OrchestrationStep>
-        <!-- If it's a new user, pass the claims to the VC sample to prepare for issuing a VC -->
-        <OrchestrationStep Order="7" Type="ClaimsExchange">
+        <!-- If it's a new user, pass the claims to the VC sample to prepare for issuing a VC -->        
+        <OrchestrationStep Order="7" Type="ClaimsExchange"> <!-- change 7 to 9 for SocialAndLocalAccountsWithMfa -->
           <Preconditions>
             <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
               <Value>newUser</Value>
@@ -36,7 +36,7 @@ DeploymentMode="Development" UserJourneyRecorderEndpoint="urn:journeyrecorder:ap
           </ClaimsExchanges>
         </OrchestrationStep>
         <!-- If it's a new user, show the QR code to the user in order to issue the VC -->
-        <OrchestrationStep Order="8" Type="ClaimsExchange">
+        <OrchestrationStep Order="8" Type="ClaimsExchange"> <!-- change 8 to 10 for SocialAndLocalAccountsWithMfa -->
           <Preconditions>
             <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
               <Value>newUser</Value>
@@ -47,6 +47,7 @@ DeploymentMode="Development" UserJourneyRecorderEndpoint="urn:journeyrecorder:ap
             <ClaimsExchange Id="UXVCIssuanceClaims" TechnicalProfileReferenceId="SelfAsserted-VCIssuance" />
           </ClaimsExchanges>
         </OrchestrationStep>        
+        <!-- NOTE! If you are using the starter pack SocialAndLocalAccountsWithMfa, change 9 to 11 -->
         <OrchestrationStep Order="9" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
       </OrchestrationSteps>
     </UserJourney>

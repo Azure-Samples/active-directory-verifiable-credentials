@@ -1,6 +1,8 @@
 # Azure AD Verifiable Credentials integration with Azure AD B2C
 This folder includes what you need to integrate Azure AD B2C with Verifiable Credentials. Use cases are:
 
+**UPDATE 2022-09-16** Added instructions for how make changes if you are using the [SocialAndLocalAccountsWithMfa](#SocialAndLocalAccountsWithMfa-changes) version of the B2C starter pack and get errors when uploading. 
+
 **UPDATE 2022-06-30** Added B2C Policy that presents a QR code on the signin page so you can signin with VC already there.
 
 **UPDATE 2022-05-10** You need to change your existing Rules files since the claim `sub` is now a restricted claim and will no longer work. You need to change it to `oid`. See `oid` in this README file below.
@@ -180,7 +182,8 @@ After you have saved the files, upload them to the storage account that was crea
       "<NameOfYourCredential>"
     ]
   }
-}```
+}
+```
 
 **Display file**
 ```json
@@ -238,7 +241,8 @@ After you have saved the files, upload them to the storage account that was crea
       "type": "String"
     }
   ]
-}```
+}
+```
 
 ## Configure and upload the B2C Custom Policies
 
@@ -296,3 +300,11 @@ The result will be an id_token that looks something like this.
 
 ![B2C+VC jwt token](/ReadmeFiles/b2c-vc-jwt-token.png)
 
+## SocialAndLocalAccountsWithMfa changes
+
+The B2C sample policies in this repo are created using the [SocialAndLocalAccounts](https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/tree/main/SocialAndLocalAccounts). This means that if you try and use them with the [SocialAndLocalAccountsWithMfa](https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/tree/main/SocialAndLocalAccountsWithMfa) version, with a different TrustFrameworkBase.xml file, then you will get errors during uploading of the policies. You need to modify these two files since the orchestration step numbers are different between the two starter pack base files. 
+
+| File | Changes |
+|------|--------|
+| SignupOrSigninVCQ.xml | OrchestrationStep 7-8-9 should be changed to 9-10-11 |
+| SignUpVCOrSignin.xml | OrchestrationStep 7-8-9 should be changed to 9-10-11 |
