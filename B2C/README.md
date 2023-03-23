@@ -55,6 +55,66 @@ Create your Rules & Display file for the credential you will be using for the B2
 For the files, replace the values in `<...>` for your values and make sure the `configuration` points to the metadata of your deployed B2C Custom Policy.
 After you have saved the files, upload them to the storage account that was created with your Azure AD Verifiable Credentials deployment. The documentation for how to do that is found here [https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-issuer#upload-the-configuration-files](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-issuer#upload-the-configuration-files).
 
+**Display file**
+```json
+{
+  "locale": "en-US",
+  "card": {
+    "title": "B2CverifiedAccount",
+    "issuedBy": "b2ctenant",
+    "backgroundColor": "#B8CEC1",
+    "textColor": "#ffffff",
+    "logo": {
+      "uri": "https://cljungdemob2c.blob.core.windows.net/uxcust/templates/images/snoopy-small.jpg",
+      "description": "B2C Logo"
+    },
+    "description": "Use your verified credential card to prove you have a B2C account."
+  },
+  "consent": {
+    "title": "Do you want to get your B2C VC card?",
+    "instructions": "Sign in with your account to get your card."
+  },
+  "claims": [
+    {
+      "claim": "vc.credentialSubject.firstName",
+      "label": "First name",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.lastName",
+      "label": "Last name",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.country",
+      "label": "Country",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.oid",
+      "label": "oid",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.tid",
+      "label": "tid",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.displayName",
+      "label": "displayName",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.username",
+      "label": "username",
+      "type": "String"
+    }
+  ]
+}
+```
+
+
 **Rules file for id_token flow**
 ```json
 {
@@ -182,65 +242,6 @@ After you have saved the files, upload them to the storage account that was crea
       "<NameOfYourCredential>"
     ]
   }
-}
-```
-
-**Display file**
-```json
-{
-  "locale": "en-US",
-  "card": {
-    "title": "B2CverifiedAccount",
-    "issuedBy": "b2ctenant",
-    "backgroundColor": "#B8CEC1",
-    "textColor": "#ffffff",
-    "logo": {
-      "uri": "https://cljungdemob2c.blob.core.windows.net/uxcust/templates/images/snoopy-small.jpg",
-      "description": "B2C Logo"
-    },
-    "description": "Use your verified credential card to prove you have a B2C account."
-  },
-  "consent": {
-    "title": "Do you want to get your B2C VC card?",
-    "instructions": "Sign in with your account to get your card."
-  },
-  "claims": [
-    {
-      "claim": "vc.credentialSubject.firstName",
-      "label": "First name",
-      "type": "String"
-    },
-    {
-      "claim": "vc.credentialSubject.lastName",
-      "label": "Last name",
-      "type": "String"
-    },
-    {
-      "claim": "vc.credentialSubject.country",
-      "label": "Country",
-      "type": "String"
-    },
-    {
-      "claim": "vc.credentialSubject.oid",
-      "label": "oid",
-      "type": "String"
-    },
-    {
-      "claim": "vc.credentialSubject.tid",
-      "label": "tid",
-      "type": "String"
-    },
-    {
-      "claim": "vc.credentialSubject.displayName",
-      "label": "displayName",
-      "type": "String"
-    },
-    {
-      "claim": "vc.credentialSubject.username",
-      "label": "username",
-      "type": "String"
-    }
-  ]
 }
 ```
 
