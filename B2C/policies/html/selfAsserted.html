@@ -61,6 +61,10 @@
       }
     </style>
 
+    <!-- 
+        You should host qrcode.min.js in your own location, like Azure Storage, since using the below link will 
+        give you a CORS error in the browser
+    -->
     <script src="https://raw.githubusercontent.com/davidshimjs/qrcodejs/master/qrcode.min.js"></script>
 
 </head>
@@ -234,7 +238,10 @@
             document.getElementById("vcmessage").innerHTML = msg;
         }
         function makeQRCode(url) {
-            qrcode.makeCode(url);
+            // depending on what version of qrcode.min.js you use, there is a known bug that 
+            // makes it crash rendering a QR code when the url is between 192-220 characters long
+            // to mitigate this, the url is padded with blanks to a length >220
+            qrcode.makeCode(url.padEnd(225));
             document.getElementById("qrcode").getElementsByTagName("img")[0].style="display:block; height:150px;width:150px; margin-left:auto; margin-right:auto";
         }
         function dimQRCode() {

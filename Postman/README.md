@@ -1,11 +1,11 @@
-# Use Postman with the Microsoft Azure AD Verifiable Credentials Request API
+# Use Postman with the Microsoft Entra Verified ID Request Service API
 
 You can use one of the two options to configure Postman collection to get started with Request APIs in minutes.
 
 ![Screenshot of Postman_VC Request API](../ReadmeFiles/postman_requestapi.png)
 
 ## OPTION 1 (Using the Postman collection)
-**Step 1 - Forking the Verifiable Credentials Request API Postman collection**
+**Step 1 - Forking the Verifiable Credentials Request Service API Postman collection**
 To use the Postman collection, fork it to your own Postman workspace. Do this from the web browser.
 1.	Go to Postman and sign in.
 2.	Go to the Postman collection labeled [VerifiedID Request API](https://www.postman.com/aadverifiablecredentials/workspace/ms-entra-verifiedid-api/collection/18012404-fc35776e-afb7-4795-83d8-713701882c07/fork "VerifiedID Request API"). or [VerifiedID Admin API](https://www.postman.com/aadverifiablecredentials/workspace/ms-entra-verifiedid-api/collection/18012592-bcfa1b7a-b449-4d70-98eb-96b69f32c877/fork "VerifiedID Admin API")

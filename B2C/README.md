@@ -259,7 +259,9 @@ The policies for the B2V+VC integration are B2C Custom Policies with custom html
 
 ### Deploy the custom html
 
--  You can use the same storage account that you use for your VC credentials, but create a new container because you need to CORS enable it as explained [here](https://docs.microsoft.com/en-us/azure/active-directory-b2c/customize-ui-with-html?pivots=b2c-user-flow#2-create-an-azure-blob-storage-account). If you create a new storage account, you should perform step 2 through 3.1. Note that you can select `LRS` for Replication as `RA-GRS` is a bit overkill.
+-  You can use the same storage account that you use for your VC credentials, but create a new container because you need to CORS enable it as explained [here](https://docs.microsoft.com/en-us/azure/active-directory-b2c/customize-ui-with-html?pivots=b2c-user-flow#2-create-an-azure-blob-storage-account). If you create a new storage account, you should perform step 2 through 3.1. Note that you can select `LRS` for Replication as `RA-GRS` is a bit overkill. Make sure you enable CORS for your B2C tenant.
+- Download your copy of [qrcode.min.js](https://raw.githubusercontent.com/davidshimjs/qrcodejs/master/qrcode.min.js) and upload it to the container in the Azure Storage.
+- Edit `selfAsserted.html` and change the `script src` reference to point to your Azure Storage location. 
 - Upload the files `selfAsserted.html`, `unified.html` and `unifiedquick.html` to the container in the Azure Storage.
 - Copy the full url to the files and test that you can access them in a browser. If it fails, the B2C UX will not work either. If it works, you need to update the [TrustFrameworkExtensionsVC.xml](.\policies\TrustFrameworkExtensionsVC.xml) files with the `LoadUri` references.
 
