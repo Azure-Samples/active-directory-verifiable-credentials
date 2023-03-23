@@ -11,13 +11,11 @@ urlFragment: "active-directory-verifiable-credentials"
 
 # Verifiable Credentials Code Samples
 
-This sample demonstrates how to setup and configure Microsoft's Azure Active Directory Verifiable Credentials preview using powershell and an ARM template. 
+This sample demonstrates how to setup and configure Microsoft Entra Verified ID using powershell and an ARM template. 
 
 ## About these samples
 
-Welcome to Azure Active Directory Verifiable Credentials. The documentation has a tutorial [https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant) for setting up the Verifiable Credential service step by step, but in this sample, we'll show you how to automate the setup and configuration of your environment using [ARM templates](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/overview).
-
-> **Important**: Azure Active Directory Verifiable Credentials is currently in public preview and this template is provided as-is.
+Welcome to Microsoft Entra Verified ID. The documentation has a tutorial [https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant) for setting up the Verifiable Credential service step by step, but in this sample, we'll show you how to automate the setup and configuration of your environment using [ARM templates](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/overview).
 
 The tutorial describes these steps to configure your Azure AD tenant so it can use this credentials service.
 
@@ -26,7 +24,7 @@ The tutorial describes these steps to configure your Azure AD tenant so it can u
 - Register an application in Azure AD
 - Set up the Verifiable Credentials service
 
-The following diagram illustrates the Azure AD Verifiable Credentials architecture and the component you configure.
+The following diagram illustrates the Entra Verified ID architecture and the component you configure.
 
 ![Diagram that illustrates the Azure AD Verifiable Credentials architecture.](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/media/verifiable-credentials-configure-tenant/verifiable-credentials-architecture.png)
 
@@ -56,13 +54,12 @@ You run the powershell like this (please replace _all_ parameters with your valu
 ``` 
 
 The powershell script will:
-- Check that the `Verifiable Credential Issuer Service` (VCIS) exists in the Azure AD tenant. 
+- Check that the `Verifiable Credential Service` (VCS) exists in the Azure AD tenant. 
 - Sets up the [Request API services princpial](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#set-up-a-service-principal)
 - Creates your resource group in your Azure subscription
 - Deploys the ARM template [ARM-Template-VC.json](ARM-Template-VC.json)
-- Adds you (the user signed in and running the script) and the Verifiable Credentials Issuer Service (VCIS) to the role `Storage Blob Data Reader` so you can upload Rules & Display files, and so VCIS can access them.
 
-The ARM template creates the Azure KeyVault instance and adds the VCIS service principal, the Request API service principal and you (the user signed in and running the script) to an KeyVault Access Policy, as described in the [tutorial here](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#create-a-key-vault). It also creates the Azure Storage Account and the blob container needed for storing the Rules and the Display files for a Verifiable Credential.
+The ARM template creates the Azure KeyVault instance and adds the VCS service principal, the Request API service principal and you (the user signed in and running the script) to an KeyVault Access Policy, as described in the [tutorial here](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-tenant#create-a-key-vault). It also creates the Azure Storage Account and the blob container needed for storing the Rules and the Display files for a Verifiable Credential.
 
 The powershell script will run for just a minute, but the actual deployment will take som 5-8 minutes to complete. 
 After this part is completed, you can create your first Verifiable Credentials credential and edit/upload the Rules and Display file. In order to run the sample to test issuance and presentation of the Verifiable Credentials credential, you need to complete the next step and register an application.
