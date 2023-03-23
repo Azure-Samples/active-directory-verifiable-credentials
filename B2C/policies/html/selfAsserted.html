@@ -220,7 +220,7 @@
                                 document.getElementById("VCIssued").value = "issued";
                                 document.getElementById("continue").click();
                             } else                             
-                            if (respMsg.status == 99) { // respMsg.status == 2 -> VC issued
+                            if (respMsg.status == 99) { // respMsg.status == 99 -> VC issuance error
                                 console.log('clearInterval');
                                 clearInterval(tId);
                                 displayMessage( respMsg.message );
