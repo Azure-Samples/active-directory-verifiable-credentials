@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "93443848-2153-40a5-9290-4a84fc37a25d",
+		"_postman_id": "fbfadbc9-92f3-40fc-8df4-b479326874df",
 		"name": "VerifiedID Admin API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "18012592"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -301,6 +300,35 @@
 									"key": "authorityid",
 									"value": "7628e2b5-9780-350c-7be6-5be7d5d0a2bf"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create CCF authority",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\":\"didCcf\",\r\n  \"linkedDomainUrl\":\"https://www.hoekstraonline.net/\",\r\n  \"didMethod\": \"ccf\",\r\n  \"signingKeyCurve\":\"Ed25519\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities",
+							"protocol": "https",
+							"host": [
+								"{{location}}"
+							],
+							"path": [
+								"v1.0",
+								"verifiableCredentials",
+								"authorities"
 							]
 						}
 					},
