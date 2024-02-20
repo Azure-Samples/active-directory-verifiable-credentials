@@ -469,7 +469,7 @@
 							"raw": "{\r\n    \r\n}"
 						},
 						"url": {
-							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/contracts/:contractId/credentials?filter=indexclaim eq tmrokKIZoxbM7q/aNkPvJxVTLAHVxo6NHlAVT78tlDI=",
+							"raw": "https://{{location}}/v1.0/verifiableCredentials/authorities/:authorityid/contracts/:contractId/credentials?filter=indexclaimhash eq tmrokKIZoxbM7q/aNkPvJxVTLAHVxo6NHlAVT78tlDI=",
 							"protocol": "https",
 							"host": [
 								"{{location}}"
@@ -486,7 +486,7 @@
 							"query": [
 								{
 									"key": "filter",
-									"value": "indexclaim eq tmrokKIZoxbM7q/aNkPvJxVTLAHVxo6NHlAVT78tlDI=",
+									"value": "indexclaimhash eq tmrokKIZoxbM7q/aNkPvJxVTLAHVxo6NHlAVT78tlDI=",
 									"description": "salted hash"
 								}
 							],
