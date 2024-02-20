@@ -11,7 +11,7 @@ description: "A code sample demonstrating issuance and verification of verifiabl
 urlFragment: "verifiable-credentials"
 ---
 
-# Verifiable Credentials Code Samples
+# Microsoft Entra Verified ID Code Samples
 
 This code sample demonstrates how to use Microsoft Entra Verified ID to issue and consume verifiable credentials.
 
