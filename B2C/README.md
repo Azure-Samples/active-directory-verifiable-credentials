@@ -1,8 +1,10 @@
-# Azure AD Verifiable Credentials integration with Azure AD B2C
-This folder includes what you need to integrate Azure AD B2C with Verifiable Credentials. Use cases are:
+# Entra Verified ID integration with Azure AD B2C
 
-**UPDATE 2022-09-16** Added instructions for how make changes if you are using the [SocialAndLocalAccountsWithMfa](#SocialAndLocalAccountsWithMfa-changes) version of the B2C starter pack and get errors when uploading. 
+The B2C Custom Policies have moved [here](https://github.com/Azure-Samples/active-directory-verifiable-credentials-dotnet/tree/main/3-asp-net-core-api-b2c/B2C) to be part of the ASPNet Core sample code. 
 
+<<<<<<< HEAD
+Please check out the new [Microsoft Entra ID for customers](https://learn.microsoft.com/en-us/entra/external-id/customers/overview-customers-ciam) if considering using Azure AD B2C.
+=======
 **UPDATE 2022-06-30** Added B2C Policy that presents a QR code on the signin page so you can signin with VC already there.
 
 **UPDATE 2022-05-10** You need to change your existing Rules files since the claim `sub` is now a restricted claim and will no longer work. You need to change it to `oid`. See `oid` in this README file below.
@@ -311,3 +313,4 @@ The B2C sample policies in this repo are created using the [SocialAndLocalAccoun
 |------|--------|
 | SignupOrSigninVCQ.xml | OrchestrationStep 7-8-9 should be changed to 9-10-11 |
 | SignUpVCOrSignin.xml | OrchestrationStep 7-8-9 should be changed to 9-10-11 |
+>>>>>>> ef5b587e3210e7528d8e64f2ecb5f1c8b093199a
