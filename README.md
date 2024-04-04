@@ -11,13 +11,13 @@ description: "A code sample demonstrating issuance and verification of verifiabl
 urlFragment: "verifiable-credentials"
 ---
 
-# Verifiable Credentials Code Samples
+# Microsoft Entra Verified ID Code Samples
 
-This code sample demonstrates how to use Entra Verified ID to issue and consume verifiable credentials. 
+This code sample demonstrates how to use Microsoft Entra Verified ID to issue and consume verifiable credentials.
 
 ## About these samples
 
-Welcome to Entra Verified ID. Using the code samples, we'll teach you how to issue a verifiable credential: a Verified Credential Expert Card. You'll then use this card to prove to a verifier that you are a Verified Credential Expert, mastered in the art of digital credentialing.
+Welcome to Microsoft Entra Verified ID. With the code samples, we'll teach you to issue a verifiable credential: a Verified Credential Expert Card. You'll then use this card to prove to a verifier that you are a Verified Credential Expert, mastered in the art of digital credentialing.
 
 ![Screenshot of a verifiable ninja card](./ReadmeFiles/verifiedcredentialexpert-card.png)
 
@@ -25,7 +25,7 @@ There are several samples:
 - [.NET](https://github.com/Azure-Samples/active-directory-verifiable-credentials-dotnet)
 - [Java](https://github.com/Azure-Samples/active-directory-verifiable-credentials-java)
 - [Node](https://github.com/Azure-Samples/active-directory-verifiable-credentials-node)
-- [Python](https://github.com/Azure-Samples/active-directory-verifiable-credentials-python) 
+- [Python](https://github.com/Azure-Samples/active-directory-verifiable-credentials-python)
 
 ## Contents
 
@@ -35,14 +35,14 @@ The typical samples consist of 2 parts, an issuer and a verifier. The holder or 
 
 The samples are meant as a way to quickly understand the principles and the use of the Request API. If you are planning to create an application which needs to be run in production make sure you add proper error handling and other best practices.
 
-
 ## Prerequisites
 
 For all the samples this are the minimum requirements:
 
 - An Android or IOS device.
-- An Azure Active Directory tenant (even Azure AD Free SKU is supported).
-- An Azure subscription linked to this Azure AD directory and where you have access to create Azure Keyvault.
+- Microsoft Authenticator installed on the mobile device.
+- An Azure Active Directory (free) tenant.
+- An Azure subscription where you have access to create an Azure Key Vault instance.
 
 Refer to our [documentation](https://aka.ms/didfordevs) for more instructions on setting up your own Azure AD Verifiable Credentials environment.
 

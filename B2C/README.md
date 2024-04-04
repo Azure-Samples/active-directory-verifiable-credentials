@@ -1,6 +1,10 @@
-# Azure AD Verifiable Credentials integration with Azure AD B2C
-This folder includes what you need to integrate Azure AD B2C with Verifiable Credentials. Use cases are:
+# Entra Verified ID integration with Azure AD B2C
 
+The B2C Custom Policies have moved [here](https://github.com/Azure-Samples/active-directory-verifiable-credentials-dotnet/tree/main/3-asp-net-core-api-b2c/B2C) to be part of the ASPNet Core sample code. 
+
+<<<<<<< HEAD
+Please check out the new [Microsoft Entra ID for customers](https://learn.microsoft.com/en-us/entra/external-id/customers/overview-customers-ciam) if considering using Azure AD B2C.
+=======
 **UPDATE 2022-06-30** Added B2C Policy that presents a QR code on the signin page so you can signin with VC already there.
 
 **UPDATE 2022-05-10** You need to change your existing Rules files since the claim `sub` is now a restricted claim and will no longer work. You need to change it to `oid`. See `oid` in this README file below.
@@ -52,6 +56,66 @@ Create your Rules & Display file for the credential you will be using for the B2
 
 For the files, replace the values in `<...>` for your values and make sure the `configuration` points to the metadata of your deployed B2C Custom Policy.
 After you have saved the files, upload them to the storage account that was created with your Azure AD Verifiable Credentials deployment. The documentation for how to do that is found here [https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-issuer#upload-the-configuration-files](https://docs.microsoft.com/en-us/azure/active-directory/verifiable-credentials/verifiable-credentials-configure-issuer#upload-the-configuration-files).
+
+**Display file**
+```json
+{
+  "locale": "en-US",
+  "card": {
+    "title": "B2CverifiedAccount",
+    "issuedBy": "b2ctenant",
+    "backgroundColor": "#B8CEC1",
+    "textColor": "#ffffff",
+    "logo": {
+      "uri": "https://cljungdemob2c.blob.core.windows.net/uxcust/templates/images/snoopy-small.jpg",
+      "description": "B2C Logo"
+    },
+    "description": "Use your verified credential card to prove you have a B2C account."
+  },
+  "consent": {
+    "title": "Do you want to get your B2C VC card?",
+    "instructions": "Sign in with your account to get your card."
+  },
+  "claims": [
+    {
+      "claim": "vc.credentialSubject.firstName",
+      "label": "First name",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.lastName",
+      "label": "Last name",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.country",
+      "label": "Country",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.oid",
+      "label": "oid",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.tid",
+      "label": "tid",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.displayName",
+      "label": "displayName",
+      "type": "String"
+    },
+    {
+      "claim": "vc.credentialSubject.username",
+      "label": "username",
+      "type": "String"
+    }
+  ]
+}
+```
+
 
 **Rules file for id_token flow**
 ```json
@@ -180,65 +244,8 @@ After you have saved the files, upload them to the storage account that was crea
       "<NameOfYourCredential>"
     ]
   }
-}```
-
-**Display file**
-```json
-{
-  "locale": "en-US",
-  "card": {
-    "title": "B2CverifiedAccount",
-    "issuedBy": "b2ctenant",
-    "backgroundColor": "#B8CEC1",
-    "textColor": "#ffffff",
-    "logo": {
-      "uri": "https://cljungdemob2c.blob.core.windows.net/uxcust/templates/images/snoopy-small.jpg",
-      "description": "B2C Logo"
-    },
-    "description": "Use your verified credential card to prove you have a B2C account."
-  },
-  "consent": {
-    "title": "Do you want to get your B2C VC card?",
-    "instructions": "Sign in with your account to get your card."
-  },
-  "claims": [
-    {
-      "claim": "vc.credentialSubject.firstName",
-      "label": "First name",
-      "type": "String"
-    },
-    {
-      "claim": "vc.credentialSubject.lastName",
-      "label": "Last name",
-      "type": "String"
-    },
-    {
-      "claim": "vc.credentialSubject.country",
-      "label": "Country",
-      "type": "String"
-    },
-    {
-      "claim": "vc.credentialSubject.oid",
-      "label": "oid",
-      "type": "String"
-    },
-    {
-      "claim": "vc.credentialSubject.tid",
-      "label": "tid",
-      "type": "String"
-    },
-    {
-      "claim": "vc.credentialSubject.displayName",
-      "label": "displayName",
-      "type": "String"
-    },
-    {
-      "claim": "vc.credentialSubject.username",
-      "label": "username",
-      "type": "String"
-    }
-  ]
-}```
+}
+```
 
 ## Configure and upload the B2C Custom Policies
 
@@ -255,7 +262,9 @@ The policies for the B2V+VC integration are B2C Custom Policies with custom html
 
 ### Deploy the custom html
 
--  You can use the same storage account that you use for your VC credentials, but create a new container because you need to CORS enable it as explained [here](https://docs.microsoft.com/en-us/azure/active-directory-b2c/customize-ui-with-html?pivots=b2c-user-flow#2-create-an-azure-blob-storage-account). If you create a new storage account, you should perform step 2 through 3.1. Note that you can select `LRS` for Replication as `RA-GRS` is a bit overkill.
+-  You can use the same storage account that you use for your VC credentials, but create a new container because you need to CORS enable it as explained [here](https://docs.microsoft.com/en-us/azure/active-directory-b2c/customize-ui-with-html?pivots=b2c-user-flow#2-create-an-azure-blob-storage-account). If you create a new storage account, you should perform step 2 through 3.1. Note that you can select `LRS` for Replication as `RA-GRS` is a bit overkill. Make sure you enable CORS for your B2C tenant.
+- Download your copy of [qrcode.min.js](https://raw.githubusercontent.com/davidshimjs/qrcodejs/master/qrcode.min.js) and upload it to the container in the Azure Storage.
+- Edit `selfAsserted.html` and change the `script src` reference to point to your Azure Storage location. 
 - Upload the files `selfAsserted.html`, `unified.html` and `unifiedquick.html` to the container in the Azure Storage.
 - Copy the full url to the files and test that you can access them in a browser. If it fails, the B2C UX will not work either. If it works, you need to update the [TrustFrameworkExtensionsVC.xml](.\policies\TrustFrameworkExtensionsVC.xml) files with the `LoadUri` references.
 
@@ -296,3 +305,12 @@ The result will be an id_token that looks something like this.
 
 ![B2C+VC jwt token](/ReadmeFiles/b2c-vc-jwt-token.png)
 
+## SocialAndLocalAccountsWithMfa changes
+
+The B2C sample policies in this repo are created using the [SocialAndLocalAccounts](https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/tree/main/SocialAndLocalAccounts). This means that if you try and use them with the [SocialAndLocalAccountsWithMfa](https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/tree/main/SocialAndLocalAccountsWithMfa) version, with a different TrustFrameworkBase.xml file, then you will get errors during uploading of the policies. You need to modify these two files since the orchestration step numbers are different between the two starter pack base files. 
+
+| File | Changes |
+|------|--------|
+| SignupOrSigninVCQ.xml | OrchestrationStep 7-8-9 should be changed to 9-10-11 |
+| SignUpVCOrSignin.xml | OrchestrationStep 7-8-9 should be changed to 9-10-11 |
+>>>>>>> ef5b587e3210e7528d8e64f2ecb5f1c8b093199a
