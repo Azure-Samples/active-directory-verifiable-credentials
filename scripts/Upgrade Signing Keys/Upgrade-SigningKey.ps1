@@ -60,7 +60,7 @@
       - The admin user must have permission to keys in Key Vault.
       - The app registration must have the API Permission for
         'Verifiable Credentials Service Admin' (6a8b4b39-c021-437c-b060-5a14a3fd65f3/full_access).
-      - PowerShell 7+ recommended; works with Windows PowerShell 5.1.
+      - PowerShell 7+ required (pwsh). Windows PowerShell 5.1 is not supported.
       - MSAL.PS module is required for authentication (installed automatically if missing).
 #>
 
@@ -92,11 +92,33 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+# ─── Require PowerShell 7+ ─────────────────────────────────────────────────────
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    Write-Host "  [FAIL] This script requires PowerShell 7 or later." -ForegroundColor Red
+    Write-Host "  You are running PowerShell $($PSVersionTable.PSVersion)." -ForegroundColor Red
+    Write-Host ""
+    Write-Host "  Windows PowerShell 5.1 writes UTF-8 with a BOM, which corrupts" -ForegroundColor Yellow
+    Write-Host "  did.json and did-configuration.json and causes DID resolution failures." -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  Install PowerShell 7: https://aka.ms/install-powershell" -ForegroundColor Cyan
+    Write-Host "  Then re-run this script from a 'pwsh' prompt." -ForegroundColor Cyan
+    exit 1
+}
+
 # ─── Constants ────────────────────────────────────────────────────────────────
 $BaseUrl = "https://verifiedid.did.msidentity.com"
 $Scope   = "6a8b4b39-c021-437c-b060-5a14a3fd65f3/full_access"
 
 # ─── Helper functions ─────────────────────────────────────────────────────────
+
+function Set-Utf8NoBomContent {
+    param(
+        [Parameter(Mandatory)][string]$Path,
+        [Parameter(Mandatory)][string]$Content
+    )
+    $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+    [System.IO.File]::WriteAllText($Path, $Content, $utf8NoBom)
+}
 
 function Write-StepHeader {
     param([int]$StepNumber, [string]$Title)
@@ -270,7 +292,13 @@ try {
         $tokenResult = Get-MsalToken @msalParams -DeviceCode
     }
     else {
-        $tokenResult = Get-MsalToken @msalParams -Interactive
+        try {
+            $tokenResult = Get-MsalToken @msalParams -Interactive
+        }
+        catch {
+            Write-Info "Interactive browser login failed (WebView2 not available). Falling back to device-code flow..."
+            $tokenResult = Get-MsalToken @msalParams -DeviceCode
+        }
     }
 }
 catch {
@@ -454,8 +482,7 @@ if ($currentStep -eq 1) {
             $step1Result = Invoke-VerifiedIdApi -Method POST `
                 -Endpoint "/v1.0/verifiableCredentials/authorities/$authorityId/didInfo/signingKeys" `
                 -AccessToken $accessToken `
-                -Body @{ signingKeyCurve = "P-256" } `
-                -Silent
+                -Body @{ signingKeyCurve = "P-256" }
 
             Write-Success "New signing key created."
             Write-Host "  Key ID   : $($step1Result.id)" -ForegroundColor Gray
@@ -464,9 +491,16 @@ if ($currentStep -eq 1) {
         }
         catch {
             $statusCode = Get-HttpStatusCode $_
-            if ($statusCode -eq 404) {
-                Write-Info "Create signing key endpoint not available (HTTP 404)."
-                Write-Info "This authority may already have P-256 keys. Falling back to key rotation..."
+            $errMsg = if ($_.ErrorDetails -and $_.ErrorDetails.Message) { $_.ErrorDetails.Message } else { "" }
+            if ($statusCode -eq 404 -or ($statusCode -eq 400 -and $errMsg -match "Maximum number of signing keys")) {
+                if ($statusCode -eq 400) {
+                    Write-Info "Maximum number of signing keys reached."
+                    Write-Info "A P-256 key likely already exists from a previous run. Falling back to key rotation..."
+                }
+                else {
+                    Write-Info "Create signing key endpoint not available (HTTP 404)."
+                    Write-Info "This authority may already have P-256 keys. Falling back to key rotation..."
+                }
                 Write-Info "Calling POST .../didInfo/signingKeys/rotate"
 
                 $step1Result = Invoke-VerifiedIdApi -Method POST `
@@ -511,7 +545,8 @@ if ($currentStep -eq 2) {
             -AccessToken $accessToken
 
         $didJsonPath = Join-Path $OutputDir "did.json"
-        $step2Result | ConvertTo-Json -Depth 20 | Set-Content -Path $didJsonPath -Encoding UTF8
+        $jsonContent = $step2Result | ConvertTo-Json -Depth 20
+        Set-Utf8NoBomContent -Path $didJsonPath -Content $jsonContent
 
         Write-Success "DID document generated and saved."
         Write-Host "  File: $didJsonPath" -ForegroundColor Gray
@@ -619,6 +654,10 @@ if ($currentStep -eq 4) {
     Write-StepHeader 4 "Synchronize with DID document (start using new key)"
     Write-Log "Step 4: Starting — Synchronize with DID document"
 
+    Write-Host "  WARNING: This step is irreversible. Once synchronized, the authority" -ForegroundColor Red
+    Write-Host "  will sign with the new P-256 key. There is no API to revert to P-256K." -ForegroundColor Red
+    Write-Host ""
+
     try {
         Write-Info "Calling POST .../didInfo/synchronizeWithDidDocument"
         Write-Info "This validates Key Vault and the public did.json match, then activates the new key."
@@ -697,7 +736,8 @@ if ($currentStep -eq 5) {
             -Body @{ domainUrl = $domainUrl }
 
         $didConfigPath = Join-Path $OutputDir "did-configuration.json"
-        $step5Result | ConvertTo-Json -Depth 20 | Set-Content -Path $didConfigPath -Encoding UTF8
+        $configContent = $step5Result | ConvertTo-Json -Depth 20
+        Set-Utf8NoBomContent -Path $didConfigPath -Content $configContent
 
         Write-Success "DID configuration generated and saved."
         Write-Host "  File: $didConfigPath" -ForegroundColor Gray
